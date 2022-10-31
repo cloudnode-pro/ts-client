@@ -1,88 +1,125 @@
 {
-  "models": {
-    "Error": {
-      "message": {
-        "description": "A human-readable description of this error",
-        "type": "string"
-      },
-      "code": {
-        "description": "Error code",
-        "type": "string"
-      },
-      "fields": {
-        "description": "Affected request fields. The key is the name of the input parameter (e.g. from the request body or query string) and the value is a human-readable error message for that field.",
-        "type": "Record<string, string | Record<string, string>>"
-      }
+  "models": [
+    {
+      "name": "Error",
+      "description": "An API error response.",
+      "fields": [
+        {
+          "name": "message",
+          "description": "A human-readable description of this error",
+          "type": "string"
+        },
+        {
+          "name": "code",
+          "description": "Error code",
+          "type": "string"
+        },
+        {
+          "name": "fields",
+          "description": "Affected request fields. The key is the name of the input parameter (e.g. from the request body or query string) and the value is a human-readable error message for that field.",
+          "type": "Record<string, string | Record<string, string>>"
+        }
+      ]
     },
-    "NewsletterData": {
-      "name": {
-        "description": "The name of the field",
-        "type": "string"
-      },
-      "description": {
-        "description": "Description of the field",
-        "type": "string | undefined"
-      },
-      "type": {
-        "description": "The type of data",
-        "type": [
-          "string",
-          "number",
-          "boolean"
-        ]
-      },
-      "required": {
-        "description": "Whether this field is required",
-        "type": "boolean"
-      }
+    {
+      "name": "NewsletterData",
+      "description": "A data field that is required to subscribe to this newsletter",
+      "fields": [
+        {
+          "name": "name",
+          "description": "The name of the field",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "description": "Description of the field",
+          "type": "string | undefined"
+        },
+        {
+          "name": "type",
+          "description": "The type of data",
+          "type": [
+            "string",
+            "number",
+            "boolean"
+          ]
+        },
+        {
+          "name": "required",
+          "description": "Whether this field is required",
+          "type": "boolean"
+        }
+      ]
     },
-    "Newsletter": {
-      "id": {
-        "description": "The unique identifier for this newsletter",
-        "type": "string"
-      },
-      "name": {
-        "description": "The name of this newsletter",
-        "type": "string"
-      },
-      "data": {
-        "description": "Additional data that is required to subscribe to this newsletter",
-        "type": "Record<string, NewsletterData>"
-      }
+    {
+      "name": "Newsletter",
+      "description": "A newsletter that you can subscribe to",
+      "fields": [
+        {
+          "name": "id",
+          "description": "The unique identifier for this newsletter",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "description": "The name of this newsletter",
+          "type": "string"
+        },
+        {
+          "name": "data",
+          "description": "Additional data that is required to subscribe to this newsletter",
+          "type": "Record<string, NewsletterData>"
+        }
+      ]
     },
-    "NewsletterSubscription": {
-      "id": {
-        "description": "The ID of the subscription. Can be used to unsubscribe.",
-        "type": "string"
-      },
-      "email": {
-        "description": "The email address of the subscriber",
-        "type": "string"
-      },
-      "newsletter": {
-        "description": "The ID of the newsletter that was subscribed to",
-        "type": "string"
-      }
+    {
+      "name": "NewsletterSubscription",
+      "description": "Your subscription to a newsletter",
+      "fields": [
+        {
+          "name": "id",
+          "description": "The ID of the subscription. Can be used to unsubscribe.",
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "description": "The email address of the subscriber",
+          "type": "string"
+        },
+        {
+          "name": "newsletter",
+          "description": "The ID of the newsletter that was subscribed to",
+          "type": "string"
+        }
+      ]
     },
-    "DatedNewsletterSubscription": {
-      "id": {
-        "description": "The ID of the subscription. Can be used to unsubscribe.",
-        "type": "string"
-      },
-      "email": {
-        "description": "The email address of the subscriber",
-        "type": "string"
-      },
-      "newsletter": {
-        "description": "The ID of the newsletter that was subscribed to",
-        "type": "string"
-      },
-      "date": {
-        "description": "The date the subscription was created",
-        "type": "Date"
-      }
+    {
+      "name": "DatedNewsletterSubscription",
+      "description": "A newsletter subscription with a creation date",
+      "fields": [
+        {
+          "name": "id",
+          "description": "The ID of the subscription. Can be used to unsubscribe.",
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "description": "The email address of the subscriber",
+          "type": "string"
+        },
+        {
+          "name": "newsletter",
+          "description": "The ID of the newsletter that was subscribed to",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "description": "The date the subscription was created",
+          "type": "Date"
+        }
+      ]
     }
-  },
+  ],
   "operations": {
     "newsletter": {
       "type": "namespace",
