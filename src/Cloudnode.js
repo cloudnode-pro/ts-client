@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 class Cloudnode {
     /**
      * API token to use for requests

@@ -1,4 +1,5 @@
 import Schema from "../gen/Schema";
+import fetch from "node-fetch";
 
 class Cloudnode {
     /**
@@ -53,7 +54,7 @@ class Cloudnode {
         if (response.status === 204) return undefined as any;
         if (response.headers.get("Content-Type")?.startsWith("application/json")) {
             const json = await response.json();
-            if (response.ok) return json;
+            if (response.ok) return json as T;
             else throw json;
         }
         else {
