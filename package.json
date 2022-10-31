@@ -22,5 +22,12 @@
   "bugs": {
     "url": "https://github.com/cloudnode-pro/ts-client/issues"
   },
-  "homepage": "https://github.com/cloudnode-pro/ts-client#readme"
+  "homepage": "https://github.com/cloudnode-pro/ts-client#readme",
+  "dependencies": {
+    "@types/node": "^18.11.8",
+    "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.2.1"
+  }
 }
