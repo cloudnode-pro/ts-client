@@ -1,0 +1,254 @@
+{
+  "models": {
+    "Error": {
+      "message": {
+        "description": "A human-readable description of this error",
+        "type": "string"
+      },
+      "code": {
+        "description": "Error code",
+        "type": "string"
+      },
+      "fields": {
+        "description": "Affected request fields. The key is the name of the input parameter (e.g. from the request body or query string) and the value is a human-readable error message for that field.",
+        "type": "Record<string, string | Record<string, string>>"
+      }
+    },
+    "NewsletterData": {
+      "name": {
+        "description": "The name of the field",
+        "type": "string"
+      },
+      "description": {
+        "description": "Description of the field",
+        "type": "string | undefined"
+      },
+      "type": {
+        "description": "The type of data",
+        "type": [
+          "string",
+          "number",
+          "boolean"
+        ]
+      },
+      "required": {
+        "description": "Whether this field is required",
+        "type": "boolean"
+      }
+    },
+    "Newsletter": {
+      "id": {
+        "description": "The unique identifier for this newsletter",
+        "type": "string"
+      },
+      "name": {
+        "description": "The name of this newsletter",
+        "type": "string"
+      },
+      "data": {
+        "description": "Additional data that is required to subscribe to this newsletter",
+        "type": "Record<string, NewsletterData>"
+      }
+    },
+    "NewsletterSubscription": {
+      "id": {
+        "description": "The ID of the subscription. Can be used to unsubscribe.",
+        "type": "string"
+      },
+      "email": {
+        "description": "The email address of the subscriber",
+        "type": "string"
+      },
+      "newsletter": {
+        "description": "The ID of the newsletter that was subscribed to",
+        "type": "string"
+      }
+    },
+    "DatedNewsletterSubscription": {
+      "id": {
+        "description": "The ID of the subscription. Can be used to unsubscribe.",
+        "type": "string"
+      },
+      "email": {
+        "description": "The email address of the subscriber",
+        "type": "string"
+      },
+      "newsletter": {
+        "description": "The ID of the newsletter that was subscribed to",
+        "type": "string"
+      },
+      "date": {
+        "description": "The date the subscription was created",
+        "type": "Date"
+      }
+    }
+  },
+  "operations": {
+    "newsletter": {
+      "type": "namespace",
+      "operations": {
+        "list": {
+          "type": "operation",
+          "description": "List newsletters",
+          "method": "GET",
+          "path": "/newsletter",
+          "parameters": {
+            "query": {
+              "limit": {
+                "description": "The number of newsletters to return per page. No more than 50.",
+                "default": "10",
+                "type": "number",
+                "required": false
+              },
+              "page": {
+                "description": "The page number. No more than 2³² (4294967296).",
+                "default": "1",
+                "type": "number",
+                "required": false
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "Newsletter[]"
+            }
+          ]
+        },
+        "get": {
+          "type": "operation",
+          "description": "Get newsletter",
+          "method": "GET",
+          "path": "/newsletter/:id",
+          "parameters": {
+            "path": {
+              "id": {
+                "description": "A newsletter ID",
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "Newsletter"
+            },
+            {
+              "status": 404,
+              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
+            }
+          ]
+        },
+        "subscribe": {
+          "type": "operation",
+          "description": "Subscribe to newsletter",
+          "method": "POST",
+          "path": "/newsletter/:id/subscribe",
+          "parameters": {
+            "path": {
+              "id": {
+                "description": "A newsletter ID",
+                "type": "string",
+                "required": true
+              }
+            },
+            "body": {
+              "email": {
+                "description": "Subscriber's email address",
+                "type": "string",
+                "required": true
+              },
+              "data": {
+                "description": "Additional data that this newsletter requires",
+                "type": "Record<string, string | number | boolean>",
+                "required": false
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 201,
+              "type": "NewsletterSubscription"
+            },
+            {
+              "status": 404,
+              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
+            },
+            {
+              "status": 422,
+              "type": "Error & {code: \"INVALID_DATA\"}"
+            },
+            {
+              "status": 409,
+              "type": "Error & {code: \"CONFLICT\"}"
+            }
+          ]
+        }
+      }
+    },
+    "newsletters": {
+      "type": "namespace",
+      "operations": {
+        "unsubscribe": {
+          "type": "operation",
+          "description": "Revoke a subscription (unsubscribe)",
+          "method": "POST",
+          "path": "/newsletters/unsubscribe",
+          "parameters": {
+            "body": {
+              "subscription": {
+                "description": "The ID of the subscription to revoke",
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 204,
+              "type": "void"
+            },
+            {
+              "status": 404,
+              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
+            },
+            {
+              "status": 422,
+              "type": "Error & {code: \"INVALID_DATA\"}"
+            }
+          ]
+        },
+        "listSubscriptions": {
+          "type": "operation",
+          "description": "List subscriptions of the authenticated user",
+          "token": "newsletter.subscriptions.list.own",
+          "method": "GET",
+          "path": "/newsletters/subscriptions",
+          "parameters": {
+            "query": {
+              "limit": {
+                "description": "The number of subscriptions to return per page. No more than 50.",
+                "default": "10",
+                "type": "number",
+                "required": false
+              },
+              "page": {
+                "description": "The page number. No more than 2³² (4294967296).",
+                "default": "1",
+                "type": "number",
+                "required": false
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "DatedNewsletterSubscription[]"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
