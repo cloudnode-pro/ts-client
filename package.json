@@ -1,0 +1,36 @@
+{
+  "name": "ts-client",
+  "version": "1.0.0",
+  "description": "Cloudnode v5 API TypeScript client ",
+  "main": "src/Cloudnode.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "generate": "./scripts/generate.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudnode-pro/ts-client.git"
+  },
+  "keywords": [
+    "cloudnode",
+    "api",
+    "sdk",
+    "client"
+  ],
+  "author": "Cloudnode",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/cloudnode-pro/ts-client/issues"
+  },
+  "homepage": "https://github.com/cloudnode-pro/ts-client#readme",
+  "dependencies": {
+    "@types/node": "^18.11.8",
+    "mustache": "^4.2.0",
+    "node-fetch": "^3.2.10"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.2.1"
+  }
+}

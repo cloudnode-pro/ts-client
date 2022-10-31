@@ -1,0 +1,143 @@
+import Schema from "../gen/Schema";
+import fetch from "node-fetch";
+
+class {{config.name}} {
+    /**
+     * API token to use for requests
+     * @readonly
+     * @private
+     */
+    readonly #token?: string;
+
+    /**
+     * Base URL of the API
+     * @readonly
+     * @private
+     */
+    readonly #baseUrl: string;
+
+    /**
+     * Construct a new {{config.name}} API client
+     * @param token API token to use for requests
+     * @param [baseUrl="{{{config.baseUrl}}}"] Base URL of the API
+     */
+    public constructor(token?: string, baseUrl = "{{{config.baseUrl}}}") {
+        this.#token = token;
+        this.#baseUrl = baseUrl;
+    }
+
+    /**
+     * Send a request to the API
+     * @param operation The operation to call
+     * @param pathParams Path parameters to use in the request
+     * @param queryParams Query parameters to use in the request
+     * @param body Body to use in the request
+     * @private
+     */
+    #sendRequest = async <T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<T> => {
+        const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
+        for (const [key, value] of Object.entries(pathParams))
+            url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
+        for (const [key, value] of Object.entries(queryParams))
+            url.searchParams.append(key, value);
+        const options: Record<string, any> = {
+            method: operation.method,
+            headers: {}
+        };
+        if (body && !["GET", "HEAD"].includes(operation.method)) {
+            options.body = JSON.stringify(body);
+            options.headers["Content-Type"] = "application/json";
+        }
+        if (this.#token)
+            options.headers["Authorization"] = `Bearer ${this.#token}`;
+        const response = await fetch(url.toString(), options);
+        if (response.status === 204) return undefined as any;
+        if (response.headers.get("Content-Type")?.startsWith("application/json")) {
+            const json = await response.json();
+            if (response.ok) return json as T;
+            else throw json;
+        }
+        else {
+            const text = await response.text();
+            if (response.ok) return text as any;
+            else throw text;
+        }
+    }
+
+    {{#namespaces}}
+    public {{name}} = {
+        {{#operations}}
+        /**
+         * {{{description}}}
+         * @{{method}} {{{path}}}
+         {{#allParams}}
+         * @param {{name}} {{{description}}}
+         {{/allParams}}
+         {{#throws}}
+         {{=<% %>=}}
+         * @throws {<%& . %>}
+         <%={{ }}=%>
+         {{/throws}}
+         */
+         {{name}}: async ({{{tsArgs}}}): Promise<{{{returnType}}}> => {
+            return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
+         },
+        {{/operations}}
+    }
+    {{/namespaces}}
+
+    {{#operations}}
+    /**
+     * {{{description}}}
+     * @{{method}} {{{path}}}
+     {{#allParams}}
+     * @param {{name}} {{{description}}}
+     {{/allParams}}
+     {{#throws}}
+     {{=<% %>=}}
+     * @throws {<%& . %>}
+     <%={{ }}=%>
+     {{/throws}}
+     */
+     public async {{name}}({{{tsArgs}}}): Promise<{{{returnType}}}> {
+        return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
+     }
+    {{/operations}}
+}
+
+namespace {{config.name}} {
+    {{#schema.models}}
+    /**
+     * {{{description}}}
+     */
+    export interface {{name}} {
+        {{#fields}}
+        /**
+         * {{{description}}}
+         */
+        {{name}}: {{{type}}};
+        {{/fields}}
+    }
+    {{/schema.models}}
+
+    export interface PaginatedData<T> {
+        /**
+         * The page items
+         */
+        items: T;
+        /**
+         * The total number of items
+         */
+        total: number;
+        /**
+         * The number of items per page
+         */
+        limit: number;
+        /**
+         * The current page number
+         */
+        page: number;
+    }
+}
+
+export default {{config.name}};
