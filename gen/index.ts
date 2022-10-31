@@ -74,6 +74,14 @@ for (const [name, namespace] of Object.entries(schema.operations).filter(([name,
             body: "{" + p.body.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}"
         }
 
+        if (operation.token !== undefined)
+            operation.returns.push({
+                status: 401,
+                type: 'Error & {code: "UNAUTHORIZED"}'
+            }, {
+                status: 403,
+                type: 'Error & {code: "NO_PERMISSION"}'
+            });
         const throws = operation.returns.filter(r => !(r.status >= 200 && r.status < 300)).map(r => {
             const t = r.type.split(" ")[0];
             // search models
