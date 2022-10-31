@@ -65,6 +65,8 @@ class Cloudnode {
         /**
          * List newsletters
          * @GET /newsletter
+         * @param limit The number of newsletters to return per page. No more than 50.
+         * @param page The page number. No more than 2³² (4294967296).
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
@@ -74,6 +76,7 @@ class Cloudnode {
         /**
          * Get newsletter
          * @GET /newsletter/:id
+         * @param id A newsletter ID
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -84,6 +87,9 @@ class Cloudnode {
         /**
          * Subscribe to newsletter
          * @POST /newsletter/:id/subscribe
+         * @param id A newsletter ID
+         * @param email Subscriber's email address
+         * @param data Additional data that this newsletter requires
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
@@ -98,6 +104,7 @@ class Cloudnode {
         /**
          * Revoke a subscription (unsubscribe)
          * @POST /newsletters/unsubscribe
+         * @param subscription The ID of the subscription to revoke
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
@@ -109,6 +116,8 @@ class Cloudnode {
         /**
          * List subscriptions of the authenticated user
          * @GET /newsletters/subscriptions
+         * @param limit The number of subscriptions to return per page. No more than 50.
+         * @param page The page number. No more than 2³² (4294967296).
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
