@@ -33,6 +33,7 @@ interface FlatOperation {
     description: string;
     method: string;
     path: string;
+    throws: string[];
 }
 
 interface FlatNamespace {
@@ -73,7 +74,13 @@ for (const [name, namespace] of Object.entries(schema.operations).filter(([name,
             body: "{" + p.body.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}"
         }
 
-        operations.push({name, returnType, params, allParams, tsArgs, operation: JSON.stringify(operation), description: operation.description, method: operation.method, path: operation.path});
+        const throws = operation.returns.filter(r => !(r.status >= 200 && r.status < 300)).map(r => {
+            const t = r.type.split(" ")[0];
+            // search models
+            return schema.models.find(m => m.name === t) ? `${config.name}.${r.type}` : r.type;
+        });
+
+        operations.push({name, returnType, params, allParams, tsArgs, operation: JSON.stringify(operation), description: operation.description, method: operation.method, path: operation.path, throws});
     }
     namespaces.push({name, operations});
 }

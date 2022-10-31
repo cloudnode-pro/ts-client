@@ -72,6 +72,7 @@ class Cloudnode {
         /**
          * Get newsletter
          * @GET /newsletter/:id
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          */
          get: async (id: string): Promise<Cloudnode.Newsletter> => {
             return await this.#sendRequest<Cloudnode.Newsletter>({"type":"operation","description":"Get newsletter","method":"GET","path":"/newsletter/:id","parameters":{"path":{"id":{"description":"A newsletter ID","type":"string","required":true}}},"returns":[{"status":200,"type":"Newsletter"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"}]}, {id: `${id}`}, {}, {});
@@ -79,6 +80,9 @@ class Cloudnode {
         /**
          * Subscribe to newsletter
          * @POST /newsletter/:id/subscribe
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          */
          subscribe: async (id: string, email: string, data?: Record<string, string | number | boolean>): Promise<Cloudnode.NewsletterSubscription> => {
             return await this.#sendRequest<Cloudnode.NewsletterSubscription>({"type":"operation","description":"Subscribe to newsletter","method":"POST","path":"/newsletter/:id/subscribe","parameters":{"path":{"id":{"description":"A newsletter ID","type":"string","required":true}},"body":{"email":{"description":"Subscriber's email address","type":"string","required":true},"data":{"description":"Additional data that this newsletter requires","type":"Record<string, string | number | boolean>","required":false}}},"returns":[{"status":201,"type":"NewsletterSubscription"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"}]}, {id: `${id}`}, {}, {email: `${email}`, data: `${data}`});
@@ -88,6 +92,8 @@ class Cloudnode {
         /**
          * Revoke a subscription (unsubscribe)
          * @POST /newsletters/unsubscribe
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          */
          unsubscribe: async (subscription: string): Promise<void> => {
             return await this.#sendRequest<void>({"type":"operation","description":"Revoke a subscription (unsubscribe)","method":"POST","path":"/newsletters/unsubscribe","parameters":{"body":{"subscription":{"description":"The ID of the subscription to revoke","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"}]}, {}, {}, {subscription: `${subscription}`});

@@ -25,11 +25,15 @@ declare class Cloudnode {
         /**
          * Get newsletter
          * @GET /newsletter/:id
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          */
         get: (id: string) => Promise<Cloudnode.Newsletter>;
         /**
          * Subscribe to newsletter
          * @POST /newsletter/:id/subscribe
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          */
         subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.NewsletterSubscription>;
     };
@@ -37,6 +41,8 @@ declare class Cloudnode {
         /**
          * Revoke a subscription (unsubscribe)
          * @POST /newsletters/unsubscribe
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          */
         unsubscribe: (subscription: string) => Promise<void>;
         /**
