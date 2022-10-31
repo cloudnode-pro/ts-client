@@ -38,11 +38,7 @@
         {
           "name": "type",
           "description": "The type of data",
-          "type": [
-            "string",
-            "number",
-            "boolean"
-          ]
+          "type": "\"string\" | \"number\" | \"boolean\""
         },
         {
           "name": "required",

@@ -4,7 +4,7 @@ interface Schema {
 }
 
 namespace Schema {
-    export type Type = string | string[];
+    export type Type = string;
 
     export namespace Model {
         export interface Field {
