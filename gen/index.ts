@@ -19,6 +19,31 @@ catch (e) {
 // load `/gen/config.json`
 const config: Config = JSON.parse(await fs.readFile(path.join("gen", "config.json"), "utf8"));
 
+interface FlatOperation {
+    name: string;
+    returnType: string;
+    params: {
+        path: string;
+        query: string;
+        body: string;
+    }
+    allParams: NamedParameter[];
+    tsArgs: string;
+    operation: string;
+    description: string;
+    method: string;
+    path: string;
+}
+
+interface FlatNamespace {
+    name: string;
+    operations: FlatOperation[];
+}
+
+interface NamedParameter extends Schema.Operation.Parameter {
+    name: string;
+    ts: string;
+}
 // load render main class from `/gen/templates/main.mustache`
 const mainTemplate = await fs.readFile(path.join("gen", "templates", "main.mustache"), "utf8");
 const mainRender = Mustache.render(mainTemplate, {schema, config});
