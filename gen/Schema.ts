@@ -1,5 +1,5 @@
 interface Schema {
-    models: Record<string, Schema.Model>;
+    models: Schema.Model[];
     operations: Record<string, Schema.Operation | Schema.Operation.Namespace>;
 }
 
@@ -15,6 +15,7 @@ namespace Schema {
     }
 
     export interface Model {
+        name: string;
         description: string;
         fields: Schema.Model.Field[];
     }
