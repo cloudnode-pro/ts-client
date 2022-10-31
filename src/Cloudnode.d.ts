@@ -1,4 +1,5 @@
 declare class Cloudnode {
+    #private;
     /**
      * API token to use for requests
      * @readonly
@@ -12,9 +13,38 @@ declare class Cloudnode {
     /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
-     * @param [baseUrl="https://api.cloudnode.pro/v5"] Base URL of the API
+     * @param [baseUrl="https://api.cloudnode.pro/v5/"] Base URL of the API
      */
     constructor(token?: string, baseUrl?: string);
+    newsletter: {
+        /**
+         * List newsletters
+         * @GET /newsletter
+         */
+        list: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>;
+        /**
+         * Get newsletter
+         * @GET /newsletter/:id
+         */
+        get: (id: string) => Promise<Cloudnode.Newsletter>;
+        /**
+         * Subscribe to newsletter
+         * @POST /newsletter/:id/subscribe
+         */
+        subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.NewsletterSubscription>;
+    };
+    newsletters: {
+        /**
+         * Revoke a subscription (unsubscribe)
+         * @POST /newsletters/unsubscribe
+         */
+        unsubscribe: (subscription: string) => Promise<void>;
+        /**
+         * List subscriptions of the authenticated user
+         * @GET /newsletters/subscriptions
+         */
+        listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>;
+    };
 }
 declare namespace Cloudnode {
     /**
@@ -109,6 +139,24 @@ declare namespace Cloudnode {
          * The date the subscription was created
          */
         date: Date;
+    }
+    interface PaginatedData<T> {
+        /**
+         * The page items
+         */
+        items: T;
+        /**
+         * The total number of items
+         */
+        total: number;
+        /**
+         * The number of items per page
+         */
+        limit: number;
+        /**
+         * The current page number
+         */
+        page: number;
     }
 }
 export default Cloudnode;
