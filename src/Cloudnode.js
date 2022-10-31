@@ -2,21 +2,23 @@ class Cloudnode {
     /**
      * API token to use for requests
      * @readonly
+     * @private
      */
-    token;
+    #token;
     /**
      * Base URL of the API
      * @readonly
+     * @private
      */
-    baseUrl;
+    #baseUrl;
     /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
      * @param [baseUrl="https://api.cloudnode.pro/v5/"] Base URL of the API
      */
     constructor(token, baseUrl = "https://api.cloudnode.pro/v5/") {
-        this.token = token;
-        this.baseUrl = baseUrl;
+        this.#token = token;
+        this.#baseUrl = baseUrl;
     }
     /**
      * Send a request to the API
@@ -27,7 +29,7 @@ class Cloudnode {
      * @private
      */
     #sendRequest = async (operation, pathParams, queryParams, body) => {
-        const url = new URL(operation.path.replace(/^\/+/, ""), this.baseUrl);
+        const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
         for (const [key, value] of Object.entries(queryParams))
@@ -40,8 +42,8 @@ class Cloudnode {
             options.body = JSON.stringify(body);
             options.headers["Content-Type"] = "application/json";
         }
-        if (this.token)
-            options.headers["Authorization"] = `Bearer ${this.token}`;
+        if (this.#token)
+            options.headers["Authorization"] = `Bearer ${this.#token}`;
         const response = await fetch(url.toString(), options);
         if (response.status === 204)
             return undefined;

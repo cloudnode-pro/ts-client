@@ -1,16 +1,6 @@
 declare class Cloudnode {
     #private;
     /**
-     * API token to use for requests
-     * @readonly
-     */
-    readonly token?: string;
-    /**
-     * Base URL of the API
-     * @readonly
-     */
-    readonly baseUrl: string;
-    /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
      * @param [baseUrl="https://api.cloudnode.pro/v5/"] Base URL of the API

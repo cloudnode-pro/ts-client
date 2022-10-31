@@ -4,14 +4,16 @@ class {{config.name}} {
     /**
      * API token to use for requests
      * @readonly
+     * @private
      */
-    public readonly token?: string;
+    readonly #token?: string;
 
     /**
      * Base URL of the API
      * @readonly
+     * @private
      */
-    public readonly baseUrl: string;
+    readonly #baseUrl: string;
 
     /**
      * Construct a new {{config.name}} API client
@@ -19,8 +21,8 @@ class {{config.name}} {
      * @param [baseUrl="{{{config.baseUrl}}}"] Base URL of the API
      */
     public constructor(token?: string, baseUrl = "{{{config.baseUrl}}}") {
-        this.token = token;
-        this.baseUrl = baseUrl;
+        this.#token = token;
+        this.#baseUrl = baseUrl;
     }
 
     /**
@@ -32,7 +34,7 @@ class {{config.name}} {
      * @private
      */
     #sendRequest = async <T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<T> => {
-        const url = new URL(operation.path.replace(/^\/+/, ""), this.baseUrl);
+        const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
         for (const [key, value] of Object.entries(queryParams))
@@ -45,8 +47,8 @@ class {{config.name}} {
             options.body = JSON.stringify(body);
             options.headers["Content-Type"] = "application/json";
         }
-        if (this.token)
-            options.headers["Authorization"] = `Bearer ${this.token}`;
+        if (this.#token)
+            options.headers["Authorization"] = `Bearer ${this.#token}`;
         const response = await fetch(url.toString(), options);
         if (response.status === 204) return undefined as any;
         if (response.headers.get("Content-Type")?.startsWith("application/json")) {
