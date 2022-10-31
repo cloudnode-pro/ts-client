@@ -96,8 +96,6 @@ for (const [name, namespace] of Object.entries(schema.operations).filter(([name,
             return schema.models.find(m => m.name === t) ? `${config.name}.${r.type}` : r.type;
         });
 
-        console.log(allParams);
-
         operations.push({name, returnType, params, allParams, tsArgs, operation: JSON.stringify(operation), description: operation.description, method: operation.method, path: operation.path, throws});
     }
     namespaces.push({name, operations});
