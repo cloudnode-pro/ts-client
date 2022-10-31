@@ -1,0 +1,41 @@
+class {{config.name}} {
+	/**
+	 * API token to use for requests
+   * @readonly
+	 */
+	public readonly token?: string;
+
+	/**
+	 * Base URL of the API
+	 * @readonly
+	 */
+  public readonly baseUrl: string;
+
+	/**
+   * Construct a new {{config.name}} API client
+	 * @param token API token to use for requests
+	 * @param [baseUrl="{{config.baseUrl}}"] Base URL of the API
+	 */
+	public constructor(token?: string, baseUrl = "{{config.baseUrl}}") {
+		this.token = token;
+		this.baseUrl = baseUrl;
+	}
+}
+
+namespace {{config.name}} {
+	{{#schema.models}}
+		/**
+		 * {{description}}
+		 */
+		export interface {{name}} {
+			{{#fields}}
+				/**
+				 * {{description}}
+				 */
+				{{name}}: {{type}};
+			{{/fields}}
+		}
+	{{/schema.models}}
+}
+
+export default {{config.name}};
