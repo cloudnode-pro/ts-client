@@ -44,8 +44,42 @@ interface NamedParameter extends Schema.Operation.Parameter {
     name: string;
     ts: string;
 }
+
+// get operation namespaces
+const namespaces: FlatNamespace[] = [];
+for (const [name, namespace] of Object.entries(schema.operations).filter(([name, operation]) => operation.type === "namespace") as [string, Schema.Operation.Namespace][]) {
+    const operations: FlatOperation[] = [];
+    for (const [name, operation] of Object.entries(namespace.operations)) {
+        const returnType = operation.returns.filter(r => r.status >= 200 && r.status < 300).map(r => {
+            return r.type.endsWith("[]") ? `${config.name}.PaginatedData<${schema.models.find(m => m.name === r.type.slice(0, -2)) ? `${config.name}.${r.type}` : r.type}>` : schema.models.find(m => m.name === r.type) ? `${config.name}.${r.type}` : r.type
+        }).join(" | ");
+        const toFlatParam = ([name, parameter]: [string, Schema.Operation.Parameter]): NamedParameter => {
+            const ts = `${name}${!parameter.required && !parameter.default ? "?: " : ": "}${parameter.type}${parameter.default ? ` = ${parameter.default}` : ""}`;
+            return {name, ts, ...parameter};
+        }
+
+        const p = {
+            path: operation.parameters.path ? Object.entries(operation.parameters.path).map(toFlatParam) : [],
+            query: operation.parameters.query ? Object.entries(operation.parameters.query).map(toFlatParam) : [],
+            body: operation.parameters.body ? Object.entries(operation.parameters.body).map(toFlatParam) : []
+        };
+
+        const allParams = [...p.path, ...p.query, ...p.body];
+        const tsArgs = allParams.map(p => p.ts).join(", ");
+
+        const params = {
+            path: "{" + p.path.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}",
+            query: "{" + p.query.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}",
+            body: "{" + p.body.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}"
+        }
+
+        operations.push({name, returnType, params, allParams, tsArgs, operation: JSON.stringify(operation), description: operation.description, method: operation.method, path: operation.path});
+    }
+    namespaces.push({name, operations});
+}
+
 // load render main class from `/gen/templates/main.mustache`
 const mainTemplate = await fs.readFile(path.join("gen", "templates", "main.mustache"), "utf8");
-const mainRender = Mustache.render(mainTemplate, {schema, config});
+const mainRender = Mustache.render(mainTemplate, {schema, config, namespaces});
 // write file to `/src/{{config.name}}.ts`
 await fs.writeFile(path.join("src", `${config.name}.ts`), mainRender);
