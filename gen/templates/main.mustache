@@ -93,6 +93,25 @@ namespace {{config.name}} {
         {{/fields}}
     }
     {{/schema.models}}
+
+    export interface PaginatedData<T> {
+        /**
+         * The page items
+         */
+        items: T;
+        /**
+         * The total number of items
+         */
+        total: number;
+        /**
+         * The number of items per page
+         */
+        limit: number;
+        /**
+         * The current page number
+         */
+        page: number;
+    }
 }
 
 export default {{config.name}};
