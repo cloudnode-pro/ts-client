@@ -82,6 +82,24 @@ class {{config.name}} {
         {{/operations}}
     }
     {{/namespaces}}
+
+    {{#operations}}
+    /**
+     * {{{description}}}
+     * @{{method}} {{{path}}}
+     {{#allParams}}
+     * @param {{name}} {{{description}}}
+     {{/allParams}}
+     {{#throws}}
+     {{=<% %>=}}
+     * @throws {<%& . %>}
+     <%={{ }}=%>
+     {{/throws}}
+     */
+     public async {{name}}({{{tsArgs}}}): Promise<{{{returnType}}}> {
+        return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
+     }
+    {{/operations}}
 }
 
 namespace {{config.name}} {

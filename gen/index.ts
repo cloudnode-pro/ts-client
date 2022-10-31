@@ -46,11 +46,11 @@ interface NamedParameter extends Schema.Operation.Parameter {
     ts: string;
 }
 
-// get operation namespaces
-const namespaces: FlatNamespace[] = [];
-for (const [name, namespace] of Object.entries(schema.operations).filter(([name, operation]) => operation.type === "namespace") as [string, Schema.Operation.Namespace][]) {
+// create flat operations
+// @param [name, value][]
+const flatOperations = (input: [string, Schema.Operation][]): FlatOperation[] => {
     const operations: FlatOperation[] = [];
-    for (const [name, operation] of Object.entries(namespace.operations)) {
+    for (const [name, operation] of input) {
         const returnType = operation.returns.filter(r => r.status >= 200 && r.status < 300).map(r => {
             return r.type.endsWith("[]") ? `${config.name}.PaginatedData<${schema.models.find(m => m.name === r.type.slice(0, -2)) ? `${config.name}.${r.type}` : r.type}>` : schema.models.find(m => m.name === r.type) ? `${config.name}.${r.type}` : r.type
         }).join(" | ");
@@ -98,11 +98,20 @@ for (const [name, namespace] of Object.entries(schema.operations).filter(([name,
 
         operations.push({name, returnType, params, allParams, tsArgs, operation: JSON.stringify(operation), description: operation.description, method: operation.method, path: operation.path, throws});
     }
-    namespaces.push({name, operations});
+    return operations;
 }
+
+// get operation namespaces
+const namespaces: FlatNamespace[] = [];
+for (const [name, namespace] of Object.entries(schema.operations).filter(([name, operation]) => operation.type === "namespace") as [string, Schema.Operation.Namespace][]) {
+    namespaces.push({name, operations: flatOperations(Object.entries(namespace.operations))});
+}
+
+// get operations without namespace
+const operations = flatOperations(Object.entries(schema.operations).filter(([name, operation]) => operation.type !== "namespace") as [string, Schema.Operation][]);
 
 // load render main class from `/gen/templates/main.mustache`
 const mainTemplate = await fs.readFile(path.join("gen", "templates", "main.mustache"), "utf8");
-const mainRender = Mustache.render(mainTemplate, {schema, config, namespaces});
+const mainRender = Mustache.render(mainTemplate, {schema, config, namespaces, operations});
 // write file to `/src/{{config.name}}.ts`
 await fs.writeFile(path.join("src", `${config.name}.ts`), mainRender);

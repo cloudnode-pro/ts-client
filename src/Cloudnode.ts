@@ -127,6 +127,7 @@ class Cloudnode {
             return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>({"type":"operation","description":"List subscriptions of the authenticated user","token":"newsletter.subscriptions.list.own","method":"GET","path":"/newsletters/subscriptions","parameters":{"query":{"limit":{"description":"The number of subscriptions to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"DatedNewsletterSubscription[]"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"}]}, {}, {limit: `${limit}`, page: `${page}`}, {});
          },
     }
+
 }
 
 namespace Cloudnode {
