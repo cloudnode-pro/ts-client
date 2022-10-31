@@ -82,6 +82,14 @@ for (const [name, namespace] of Object.entries(schema.operations).filter(([name,
                 status: 403,
                 type: 'Error & {code: "NO_PERMISSION"}'
             });
+        operation.returns.push({
+            status: 500,
+            type: 'Error & {code: "INTERNAL_SERVER_ERROR"}'
+        }, {
+            status: 429,
+            type: 'Error & {code: "RATE_LIMITED"}'
+        });
+
         const throws = operation.returns.filter(r => !(r.status >= 200 && r.status < 300)).map(r => {
             const t = r.type.split(" ")[0];
             // search models
