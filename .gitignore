@@ -105,3 +105,7 @@ dist
 
 # Ignore .idea folder
 .idea
+
+# Ignore .js and .d.ts files in /gen
+/gen/*.js
+/gen/*.d.ts
