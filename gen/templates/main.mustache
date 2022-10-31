@@ -60,6 +60,23 @@ class {{config.name}} {
             else throw text;
         }
     }
+
+    {{#namespaces}}
+    public {{name}} = {
+        {{#operations}}
+        /**
+         * {{{description}}}
+         * @{{method}} {{{path}}}
+         {{#params.allParams}}
+         * @param {{name}} {{{description}}}
+         {{/params.allParams}}
+         */
+         {{name}}: async ({{{tsArgs}}}): Promise<{{{returnType}}}> => {
+            return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
+         },
+        {{/operations}}
+    }
+    {{/namespaces}}
 }
 
 namespace {{config.name}} {
