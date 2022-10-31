@@ -14,9 +14,9 @@ class {{config.name}} {
 	/**
 	 * Construct a new {{config.name}} API client
 	 * @param token API token to use for requests
-	 * @param [baseUrl="{{config.baseUrl}}"] Base URL of the API
+	 * @param [baseUrl="{{{config.baseUrl}}}"] Base URL of the API
 	 */
-	public constructor(token?: string, baseUrl = "{{config.baseUrl}}") {
+	public constructor(token?: string, baseUrl = "{{{config.baseUrl}}}") {
 		this.token = token;
 		this.baseUrl = baseUrl;
 	}
@@ -25,14 +25,14 @@ class {{config.name}} {
 namespace {{config.name}} {
 	{{#schema.models}}
 		/**
-		 * {{description}}
+		 * {{{description}}}
 		 */
 		export interface {{name}} {
 			{{#fields}}
 				/**
-				 * {{description}}
+				 * {{{description}}}
 				 */
-				{{name}}: {{type}};
+				{{name}}: {{{type}}};
 			{{/fields}}
 		}
 	{{/schema.models}}
