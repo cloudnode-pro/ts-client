@@ -67,7 +67,7 @@ const tasks = new Listr([
     {
         title: "Create tag",
         task: async ctx => {
-            await asyncExec(`git tag -s ${ctx.version} -m "${ctx.version}"`);
+            await asyncExec(`git tag -s v${ctx.version} -m "v${ctx.version}"`);
         }
     },
     {
