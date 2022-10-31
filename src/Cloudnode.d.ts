@@ -20,12 +20,16 @@ declare class Cloudnode {
         /**
          * List newsletters
          * @GET /newsletter
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
         list: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>;
         /**
          * Get newsletter
          * @GET /newsletter/:id
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
         get: (id: string) => Promise<Cloudnode.Newsletter>;
         /**
@@ -34,6 +38,8 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
         subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.NewsletterSubscription>;
     };
@@ -43,11 +49,17 @@ declare class Cloudnode {
          * @POST /newsletters/unsubscribe
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
         unsubscribe: (subscription: string) => Promise<void>;
         /**
          * List subscriptions of the authenticated user
          * @GET /newsletters/subscriptions
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
         listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>;
     };

@@ -65,17 +65,21 @@ class Cloudnode {
         /**
          * List newsletters
          * @GET /newsletter
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
          list: async (limit: number = 10, page: number = 1): Promise<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>> => {
-            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>({"type":"operation","description":"List newsletters","method":"GET","path":"/newsletter","parameters":{"query":{"limit":{"description":"The number of newsletters to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"Newsletter[]"}]}, {}, {limit: `${limit}`, page: `${page}`}, {});
+            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>({"type":"operation","description":"List newsletters","method":"GET","path":"/newsletter","parameters":{"query":{"limit":{"description":"The number of newsletters to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"Newsletter[]"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"}]}, {}, {limit: `${limit}`, page: `${page}`}, {});
          },
         /**
          * Get newsletter
          * @GET /newsletter/:id
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
          get: async (id: string): Promise<Cloudnode.Newsletter> => {
-            return await this.#sendRequest<Cloudnode.Newsletter>({"type":"operation","description":"Get newsletter","method":"GET","path":"/newsletter/:id","parameters":{"path":{"id":{"description":"A newsletter ID","type":"string","required":true}}},"returns":[{"status":200,"type":"Newsletter"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"}]}, {id: `${id}`}, {}, {});
+            return await this.#sendRequest<Cloudnode.Newsletter>({"type":"operation","description":"Get newsletter","method":"GET","path":"/newsletter/:id","parameters":{"path":{"id":{"description":"A newsletter ID","type":"string","required":true}}},"returns":[{"status":200,"type":"Newsletter"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"}]}, {id: `${id}`}, {}, {});
          },
         /**
          * Subscribe to newsletter
@@ -83,9 +87,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
          subscribe: async (id: string, email: string, data?: Record<string, string | number | boolean>): Promise<Cloudnode.NewsletterSubscription> => {
-            return await this.#sendRequest<Cloudnode.NewsletterSubscription>({"type":"operation","description":"Subscribe to newsletter","method":"POST","path":"/newsletter/:id/subscribe","parameters":{"path":{"id":{"description":"A newsletter ID","type":"string","required":true}},"body":{"email":{"description":"Subscriber's email address","type":"string","required":true},"data":{"description":"Additional data that this newsletter requires","type":"Record<string, string | number | boolean>","required":false}}},"returns":[{"status":201,"type":"NewsletterSubscription"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"}]}, {id: `${id}`}, {}, {email: `${email}`, data: `${data}`});
+            return await this.#sendRequest<Cloudnode.NewsletterSubscription>({"type":"operation","description":"Subscribe to newsletter","method":"POST","path":"/newsletter/:id/subscribe","parameters":{"path":{"id":{"description":"A newsletter ID","type":"string","required":true}},"body":{"email":{"description":"Subscriber's email address","type":"string","required":true},"data":{"description":"Additional data that this newsletter requires","type":"Record<string, string | number | boolean>","required":false}}},"returns":[{"status":201,"type":"NewsletterSubscription"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"}]}, {id: `${id}`}, {}, {email: `${email}`, data: `${data}`});
          },
     }
     public newsletters = {
@@ -94,16 +100,22 @@ class Cloudnode {
          * @POST /newsletters/unsubscribe
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
          unsubscribe: async (subscription: string): Promise<void> => {
-            return await this.#sendRequest<void>({"type":"operation","description":"Revoke a subscription (unsubscribe)","method":"POST","path":"/newsletters/unsubscribe","parameters":{"body":{"subscription":{"description":"The ID of the subscription to revoke","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"}]}, {}, {}, {subscription: `${subscription}`});
+            return await this.#sendRequest<void>({"type":"operation","description":"Revoke a subscription (unsubscribe)","method":"POST","path":"/newsletters/unsubscribe","parameters":{"body":{"subscription":{"description":"The ID of the subscription to revoke","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"}]}, {}, {}, {subscription: `${subscription}`});
          },
         /**
          * List subscriptions of the authenticated user
          * @GET /newsletters/subscriptions
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
          listSubscriptions: async (limit: number = 10, page: number = 1): Promise<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>> => {
-            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>({"type":"operation","description":"List subscriptions of the authenticated user","token":"newsletter.subscriptions.list.own","method":"GET","path":"/newsletters/subscriptions","parameters":{"query":{"limit":{"description":"The number of subscriptions to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"DatedNewsletterSubscription[]"}]}, {}, {limit: `${limit}`, page: `${page}`}, {});
+            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>({"type":"operation","description":"List subscriptions of the authenticated user","token":"newsletter.subscriptions.list.own","method":"GET","path":"/newsletters/subscriptions","parameters":{"query":{"limit":{"description":"The number of subscriptions to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"DatedNewsletterSubscription[]"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"}]}, {}, {limit: `${limit}`, page: `${page}`}, {});
          },
     }
 }
