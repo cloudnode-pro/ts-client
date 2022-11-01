@@ -93,7 +93,7 @@ export async function generateReadme (docMD: string, config: Config, pkg: Packag
     const template = await fs.readFile("README.template.md", "utf8");
     const shield = {
         version: `![Client Version: ${pkg.version}](https://img.shields.io/badge/Client%20Version-${pkg.version}-%2316a34a)`,
-        apiVersion: `![API Version: ${config.apiVersion}](https://img.shields.io/badge/API%20Version-${config.apiVersion}-%2316a34a)`
+        apiVersion: `![API Version: ${config.apiVersion}](https://img.shields.io/badge/API%20Version-${config.apiVersion}-%232563eb)`
     }
     const rendered = Mustache.render(template, {config, pkg, docMD, shield});
     await fs.writeFile("README.md", rendered);

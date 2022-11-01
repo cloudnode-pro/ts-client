@@ -1,7 +1,7 @@
 # Cloudnode API SDK
 
 ![Client Version: 1.0.1](https://img.shields.io/badge/Client%20Version-1.0.1-%2316a34a)
-![API Version: 5.6.1](https://img.shields.io/badge/API%20Version-5.6.1-%2316a34a)
+![API Version: 5.6.1](https://img.shields.io/badge/API%20Version-5.6.1-%232563eb)
 
 Cloudnode v5 API TypeScript client
 
