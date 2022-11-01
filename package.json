@@ -1,5 +1,5 @@
 {
-  "name": "ts-client",
+  "name": "cloudnode-ts",
   "version": "1.0.1",
   "description": "Cloudnode v5 API TypeScript client ",
   "main": "src/Cloudnode.js",
