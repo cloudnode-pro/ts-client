@@ -1,7 +1,7 @@
 import Schema from "./Schema";
 import {Config} from "./Config";
-import {getReturnType, getThrows} from "./util";
-import DocSchema from "./DocSchema";
+import {getReturnType, getThrows} from "./util.js";
+import DocSchema from "./DocSchema.js";
 import fs from "node:fs/promises";
 import Package from "./Package";
 import Mustache from "mustache";

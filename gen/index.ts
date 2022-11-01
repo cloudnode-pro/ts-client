@@ -2,9 +2,10 @@ import Schema from "./Schema";
 import fs from "node:fs/promises";
 import {Config} from "./Config";
 import path from "node:path";
-import source from "./source";
-import {generateDocSchema, generateMarkdownDocs, generateReadme} from "./docs";
+import source from "./source.js";
+import {generateDocSchema, generateMarkdownDocs, generateReadme} from "./docs.js";
 import Package from "./Package";
+import {addExtraReturns} from "./util.js";
 
 // load `/schema.json`
 const schema: Schema = JSON.parse(await fs.readFile("schema.json", "utf8"));
