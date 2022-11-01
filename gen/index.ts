@@ -25,6 +25,8 @@ catch (e) {
 // load `/gen/config.json`
 const config: Config = JSON.parse(await fs.readFile(path.join("gen", "config.json"), "utf8"));
 
+addExtraReturns(schema);
+
 // generate source code
 await source(schema, config, pkg);
 
