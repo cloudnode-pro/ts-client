@@ -13,4 +13,9 @@ export interface Config {
      * Default API base URL
      */
     baseUrl: string;
+
+    /**
+     * Version of the API this client was generated for
+     */
+    apiVersion: string;
 }
