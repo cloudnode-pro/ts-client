@@ -1,5 +1,5 @@
 {
-  "name": "ts-client",
+  "name": "cloudnode-ts",
   "version": "1.0.1",
   "description": "A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)",
   "main": "src/Cloudnode.js",

@@ -7,14 +7,14 @@ A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https
 
 ## Install
 ```shell
-npm install ts-client
+npm install cloudnode-ts
 ```
 
 ## Usage
 ### JavaScript
 #### Node.js (ES6)
 ```js
-import Cloudnode from 'ts-client';
+import Cloudnode from 'cloudnode-ts';
 
 const cloudnode = new Cloudnode("token_YourSecretToken123");
 
@@ -24,7 +24,7 @@ const newsletter = await cloudnode.newsletter.get("newsletter_123asd");
 
 #### Node.js (CommonJS)
 ```js
-const Cloudnode = require('ts-client');
+const Cloudnode = require('cloudnode-ts');
 
 const cloudnode = new Cloudnode("token_YourSecretToken123");
 
@@ -37,7 +37,7 @@ Coming soon!
 
 ### TypeScript
 ```ts
-import Cloudnode from 'ts-client';
+import Cloudnode from 'cloudnode-ts';
 
 const cloudnode = new Cloudnode("token_YourSecretToken123");
 
