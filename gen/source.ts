@@ -61,22 +61,6 @@ export default async (schema: Schema, config: Config, pkg: Package) => {
                 body: "{" + p.body.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}"
             }
 
-            if (operation.token !== undefined)
-                operation.returns.push({
-                    status: 401,
-                    type: 'Error & {code: "UNAUTHORIZED"}'
-                }, {
-                    status: 403,
-                    type: 'Error & {code: "NO_PERMISSION"}'
-                });
-            operation.returns.push({
-                status: 500,
-                type: 'Error & {code: "INTERNAL_SERVER_ERROR"}'
-            }, {
-                status: 429,
-                type: 'Error & {code: "RATE_LIMITED"}'
-            });
-
             const throws = getThrows(operation, schema, config);
 
             operations.push({
