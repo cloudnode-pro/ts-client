@@ -2,7 +2,8 @@ import Schema from "./Schema";
 import fs from "node:fs/promises";
 import {Config} from "./Config";
 import path from "node:path";
-import Mustache from "mustache";
+import source from "./source";
+import {generateDocSchema, generateMarkdownDocs, generateReadme} from "./docs";
 import Package from "./Package";
 
 // load `/schema.json`
@@ -26,3 +27,8 @@ const config: Config = JSON.parse(await fs.readFile(path.join("gen", "config.jso
 // generate source code
 await source(schema, config, pkg);
 
+// generate doc schema
+const docSchema = await generateDocSchema(schema, config, pkg);
+// generate readme
+const docMD = generateMarkdownDocs(docSchema, true);
+await generateReadme(docMD, config, pkg);
