@@ -1,5 +1,5 @@
 /**
- * Cloudnode v5 API TypeScript client
+ * A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https:&#x2F;&#x2F;github.com&#x2F;cloudnode-pro&#x2F;ts-client#documentation)
  * @class
  */
 declare class Cloudnode {

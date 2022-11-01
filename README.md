@@ -3,7 +3,7 @@
 ![Client Version: 1.0.1](https://img.shields.io/badge/Client%20Version-1.0.1-%2316a34a)
 ![API Version: 5.6.1](https://img.shields.io/badge/API%20Version-5.6.1-%232563eb)
 
-Cloudnode v5 API TypeScript client
+A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https:&#x2F;&#x2F;github.com&#x2F;cloudnode-pro&#x2F;ts-client#documentation)
 
 ## Install
 ```shell
@@ -70,7 +70,7 @@ const newsletter: Cloudnode.Newsletter = await cloudnode.newsletter.get("newslet
 
 ## Class: `Cloudnode`
 
-Cloudnode v5 API TypeScript client
+A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
 
 <a name="new-cloudnodetoken-baseurl"></a>
 
@@ -144,7 +144,7 @@ Revoke a subscription (unsubscribe)
 
 ## Namespace: `Cloudnode`
 
-Cloudnode v5 API TypeScript client
+A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
 
 <a name="interface-cloudnodedatednewslettersubscription"></a>
 
