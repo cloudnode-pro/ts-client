@@ -48,18 +48,18 @@ const tasks = new Listr([
             // update package-lock.json
             await asyncExec("npm install");
         }
-    },/*
+    },
     {
         title: "Update readme",
         task: async () => {
             await asyncExec("npm run readme");
         }
-    },*/
+    },
     {
         title: "Commit changes",
         task: async ctx => {
             await asyncExec("git reset");
-            //await asyncExec("git add README.md package.json package-lock.json");
+            await asyncExec("git add README.md package.json package-lock.json");
             await asyncExec("git add package.json package-lock.json");
             await asyncExec(`git commit -m "${ctx.version}"`);
         }
