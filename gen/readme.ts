@@ -4,9 +4,10 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import Schema from "./Schema";
 import Package from "./Package";
+import {addExtraReturns} from "./util.js";
 
 // load `/schema.json`
-const schema: Schema = JSON.parse(await fs.readFile("schema.json", "utf8"));
+const schema: Schema = addExtraReturns(JSON.parse(await fs.readFile("schema.json", "utf8")));
 
 // load `/package.json`
 const pkg: Package = JSON.parse(await fs.readFile("package.json", "utf8"));

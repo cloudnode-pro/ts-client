@@ -8,7 +8,7 @@ import Package from "./Package";
 import {addExtraReturns} from "./util.js";
 
 // load `/schema.json`
-const schema: Schema = JSON.parse(await fs.readFile("schema.json", "utf8"));
+const schema: Schema = addExtraReturns(JSON.parse(await fs.readFile("schema.json", "utf8")));
 
 // load `/package.json`
 const pkg: Package = JSON.parse(await fs.readFile("package.json", "utf8"));
@@ -24,8 +24,6 @@ catch (e) {
 
 // load `/gen/config.json`
 const config: Config = JSON.parse(await fs.readFile(path.join("gen", "config.json"), "utf8"));
-
-addExtraReturns(schema);
 
 // generate source code
 await source(schema, config, pkg);
