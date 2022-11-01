@@ -1,3 +1,7 @@
+/**
+ * Cloudnode v5 API TypeScript client
+ * @class
+ */
 declare class Cloudnode {
     #private;
     /**

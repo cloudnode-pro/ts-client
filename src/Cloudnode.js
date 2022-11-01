@@ -1,4 +1,8 @@
 import fetch from "node-fetch";
+/**
+ * Cloudnode v5 API TypeScript client
+ * @class
+ */
 class Cloudnode {
     /**
      * API token to use for requests
