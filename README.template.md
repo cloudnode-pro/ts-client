@@ -1,6 +1,7 @@
 # {{config.name}} API SDK
-{{shield.version}}
-{{shield.apiVersion}}
+
+{{{shield.version}}}
+{{{shield.apiVersion}}}
 
 {{pkg.description}}
 
