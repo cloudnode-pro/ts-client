@@ -1,4 +1,5 @@
 {
   "name": "Cloudnode",
+  "instanceName": "cloudnode",
   "baseUrl": "https://api.cloudnode.pro/v5/"
 }
