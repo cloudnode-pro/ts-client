@@ -79,7 +79,7 @@ A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https
 Construct a new Cloudnode API client
 
  - `token` `string` API token to use for requests.
- - `baseUrl` `string` Base URL of the API.Default: `https://api.cloudnode.pro/v5/`
+ - `baseUrl` `string` Base URL of the API. Default: `https://api.cloudnode.pro/v5/`
 
 
 
@@ -101,8 +101,8 @@ Get newsletter
 
 List newsletters
 
- - `limit` `number` The number of newsletters to return per page. No more than 50..Default: `10`
- - `page` `number` The page number. No more than 2³² (4294967296)..Default: `1`
+ - `limit` `number` The number of newsletters to return per page. No more than 50. Default: `10`
+ - `page` `number` The page number. No more than 2³² (4294967296). Default: `1`
  - Returns: `Cloudnode.PaginatedData<Cloudnode.Newsletter[]>`
  - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
@@ -129,8 +129,8 @@ Subscribe to newsletter
 
 List subscriptions of the authenticated user
 
- - `limit` `number` The number of subscriptions to return per page. No more than 50..Default: `10`
- - `page` `number` The page number. No more than 2³² (4294967296)..Default: `1`
+ - `limit` `number` The number of subscriptions to return per page. No more than 50. Default: `10`
+ - `page` `number` The page number. No more than 2³² (4294967296). Default: `1`
  - Returns: `Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>`
  - Throws: `Cloudnode.Error & {code: "UNAUTHORIZED"}`
  - Throws: `Cloudnode.Error & {code: "NO_PERMISSION"}`

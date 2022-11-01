@@ -86,7 +86,7 @@ namespace DocSchema {
         }
 
         public override get content(): string {
-            return `${this.description}\n\n${this.params.map(p => ` - \`${p.name}\` \`${p.type}\` ${p.description}.${p.default ? `Default: \`${p.default}\`` : ""}`).join("\n")}\n${this.returns ? ` - Returns: \`${this.returns.type}\`${this.returns.description ? ` ${this.returns.description}` : ""}` : ""}\n${this.throws.map(t => ` - Throws: \`${t.type}\`${t.description ? ` ${t.description}` : ""}`).join("\n")}`;
+            return `${this.description}\n\n${this.params.map(p => ` - \`${p.name}\` \`${p.type}\` ${p.description}${p.description.endsWith(".") ? "" : "."}${p.default ? ` Default: \`${p.default}\`` : ""}`).join("\n")}\n${this.returns ? ` - Returns: \`${this.returns.type}\`${this.returns.description ? ` ${this.returns.description}` : ""}` : ""}\n${this.throws.map(t => ` - Throws: \`${t.type}\`${t.description ? ` ${t.description}` : ""}`).join("\n")}`;
         }
     }
 
