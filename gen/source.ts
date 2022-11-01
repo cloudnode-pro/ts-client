@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import Mustache from "mustache";
 import {Config} from "./Config";
-import {addExtraReturns, getReturnType, getThrows} from "./util.js";
+import {getReturnType, getThrows} from "./util.js";
 import Package from "./Package";
 
 interface FlatOperation {
