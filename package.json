@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "generate": "./scripts/generate.sh",
-    "readme": "node ./gen/readme.js"
+    "readme": "node ./gen/readme.js",
+    "tag": "node scripts/tag"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,8 @@
   "homepage": "https://github.com/cloudnode-pro/ts-client#readme",
   "dependencies": {
     "@types/node": "^18.11.8",
+    "listr-inquirer": "^0.1.0",
+    "listr2": "^5.0.5",
     "mustache": "^4.2.0",
     "node-fetch": "^3.2.10"
   },
