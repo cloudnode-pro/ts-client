@@ -5,7 +5,17 @@ export interface Config {
     name: string;
 
     /**
+     * Preferred instance name
+     */
+    instanceName: string;
+
+    /**
      * Default API base URL
      */
     baseUrl: string;
+
+    /**
+     * Version of the API this client was generated for
+     */
+    apiVersion: string;
 }

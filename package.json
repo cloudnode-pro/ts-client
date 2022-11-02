@@ -1,13 +1,14 @@
 {
   "name": "cloudnode-ts",
   "version": "1.0.1",
-  "description": "Cloudnode v5 API TypeScript client ",
+  "description": "A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)",
   "main": "src/Cloudnode.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "generate": "./scripts/generate.sh",
+    "readme": "node ./gen/readme.js",
     "tag": "node scripts/tag"
   },
   "repository": {
