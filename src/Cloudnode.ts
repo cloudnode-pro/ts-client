@@ -1,6 +1,10 @@
 import Schema from "../gen/Schema";
 import fetch from "node-fetch";
 
+/**
+ * A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
+ * @class
+ */
 class Cloudnode {
     /**
      * API token to use for requests
