@@ -47,8 +47,10 @@ class Cloudnode {
             options.body = JSON.stringify(body);
             options.headers["Content-Type"] = "application/json";
         }
-        if (this.#token)
+        if (this.#token && operation.token !== undefined)
             options.headers["Authorization"] = `Bearer ${this.#token}`;
+        if (operation.token !== undefined)
+            options.credentials = "include";
         const response = await fetch(url.toString(), options);
         if (response.status === 204)
             return undefined;
