@@ -36,10 +36,12 @@ const newsletter = await cloudnode.newsletter.get("newsletter_123asd");
 Download the browser SDK from `browser/Cloudnode.js` or use our hosted version.
 ```html
 <script src="https://cloudnode.pro/assets/js/sdk.min.js"></script>
+<script>
 const cloudnode = new Cloudnode();
 
 // get a newsletter
 const newsletter = await cloudnode.newsletter.get("newsletter_123asd");
+</script>
 ```
 > **Warning**: You most likely don't want to set your private token in a public front-end website, as this will allow anyone who sees your front-end JavaScript code to use it for possibly malicious purposes. We advise you use a back-end server to proxy requests to our API, so you do not expose your token to the public.
 
