@@ -33,7 +33,15 @@ const newsletter = await {{config.instanceName}}.newsletter.get("newsletter_123a
 ```
 
 #### Browser
-Coming soon!
+Download the browser SDK from `browser/{{config.name}}.js` or use our hosted version.
+```html
+<script src="{{{config.browserSdkUrl}}}"></script>
+const {{config.instanceName}} = new {{config.name}}();
+
+// get a newsletter
+const newsletter = await {{config.instanceName}}.newsletter.get("newsletter_123asd");
+```
+> **Warning**: You most likely don't want to set your private token in a public front-end website, as this will allow anyone who sees your front-end JavaScript code to use it for possibly malicious purposes. We advise you use a back-end server to proxy requests to our API, so you do not expose your token to the public.
 
 ### TypeScript
 ```ts

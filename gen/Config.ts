@@ -18,4 +18,9 @@ export interface Config {
      * Version of the API this client was generated for
      */
     apiVersion: string;
+
+    /**
+     * Link to hosted browser SDK
+     */
+    browserSdkUrl: string;
 }
