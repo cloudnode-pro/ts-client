@@ -58,7 +58,7 @@ export default async (schema: Schema, config: Config, pkg: Package) => {
             const params = {
                 path: "{" + p.path.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}",
                 query: "{" + p.query.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}",
-                body: "{" + p.body.map(p => `${p.name}: \`\${${p.name}}\``).join(", ") + "}"
+                body: "{" + p.body.map(p => p.name).join(", ") + "}"
             }
 
             const throws = getThrows(operation, schema, config);

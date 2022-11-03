@@ -44,8 +44,14 @@ class Cloudnode {
             headers: {}
         };
         if (body && !["GET", "HEAD"].includes(operation.method)) {
-            options.body = JSON.stringify(body);
-            options.headers["Content-Type"] = "application/json";
+            if (typeof body !== "string") {
+                options.body = JSON.stringify(body);
+                options.headers["Content-Type"] = "application/json";
+            }
+            else {
+                options.body = body;
+                options.headers["Content-Type"] = "text/plain";
+            }
         }
         if (this.#token && operation.token !== undefined)
             options.headers["Authorization"] = `Bearer ${this.#token}`;
@@ -105,7 +111,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
         subscribe: async (id, email, data) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Subscribe to newsletter", "method": "POST", "path": "/newsletter/:id/subscribe", "parameters": { "path": { "id": { "description": "A newsletter ID", "type": "string", "required": true } }, "body": { "email": { "description": "Subscriber's email address", "type": "string", "required": true }, "data": { "description": "Additional data that this newsletter requires", "type": "Record<string, string | number | boolean>", "required": false } } }, "returns": [{ "status": 201, "type": "NewsletterSubscription" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }] }, { id: `${id}` }, {}, { email: `${email}`, data: `${data}` });
+            return await this.#sendRequest({ "type": "operation", "description": "Subscribe to newsletter", "method": "POST", "path": "/newsletter/:id/subscribe", "parameters": { "path": { "id": { "description": "A newsletter ID", "type": "string", "required": true } }, "body": { "email": { "description": "Subscriber's email address", "type": "string", "required": true }, "data": { "description": "Additional data that this newsletter requires", "type": "Record<string, string | number | boolean>", "required": false } } }, "returns": [{ "status": 201, "type": "NewsletterSubscription" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }] }, { id: `${id}` }, {}, { email, data });
         },
     };
     newsletters = {
@@ -119,7 +125,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          */
         unsubscribe: async (subscription) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Revoke a subscription (unsubscribe)", "method": "POST", "path": "/newsletters/unsubscribe", "parameters": { "body": { "subscription": { "description": "The ID of the subscription to revoke", "type": "string", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }] }, {}, {}, { subscription: `${subscription}` });
+            return await this.#sendRequest({ "type": "operation", "description": "Revoke a subscription (unsubscribe)", "method": "POST", "path": "/newsletters/unsubscribe", "parameters": { "body": { "subscription": { "description": "The ID of the subscription to revoke", "type": "string", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }] }, {}, {}, { subscription });
         },
         /**
          * List subscriptions of the authenticated user
