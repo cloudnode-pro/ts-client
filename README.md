@@ -35,7 +35,7 @@ const newsletter = await cloudnode.newsletter.get("newsletter_123asd");
 #### Browser
 Download the browser SDK from `browser/Cloudnode.js` or use our hosted version.
 ```html
-<script src="https://cloudnode.pro/assets/js/sdk.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cloudnode-ts@latest/browser/Cloudnode.min.js"></script>
 <script>
 const cloudnode = new Cloudnode();
 
