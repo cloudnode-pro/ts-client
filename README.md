@@ -1,7 +1,7 @@
 # Cloudnode API SDK
 
 ![Client Version: 1.3.3](https://img.shields.io/badge/Client%20Version-1.3.3-%2316a34a)
-![API Version: 5.6.2](https://img.shields.io/badge/API%20Version-5.6.2-%232563eb)
+![API Version: 5.7.1](https://img.shields.io/badge/API%20Version-5.7.1-%232563eb)
 
 A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https:&#x2F;&#x2F;github.com&#x2F;cloudnode-pro&#x2F;ts-client#documentation)
 
@@ -102,8 +102,9 @@ Get newsletter
  - `id` `string` A newsletter ID.
  - Returns: `Cloudnode.Newsletter`
  - Throws: `Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}`
- - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
+ - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
+ - Throws: `Cloudnode.Error & {code: "MAINTENANCE"}`
 
 <a name="cloudnodenewsletterlistlimit-page"></a>
 
@@ -114,8 +115,9 @@ List newsletters
  - `limit` `number` The number of newsletters to return per page. No more than 50. Default: `10`
  - `page` `number` The page number. No more than 2³² (4294967296). Default: `1`
  - Returns: `Cloudnode.PaginatedData<Cloudnode.Newsletter[]>`
- - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
+ - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
+ - Throws: `Cloudnode.Error & {code: "MAINTENANCE"}`
 
 <a name="cloudnodenewslettersubscribeid-email-data"></a>
 
@@ -130,8 +132,9 @@ Subscribe to newsletter
  - Throws: `Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}`
  - Throws: `Cloudnode.Error & {code: "INVALID_DATA"}`
  - Throws: `Cloudnode.Error & {code: "CONFLICT"}`
- - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
+ - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
+ - Throws: `Cloudnode.Error & {code: "MAINTENANCE"}`
 
 <a name="cloudnodenewsletterslistsubscriptionslimit-page"></a>
 
@@ -144,8 +147,9 @@ List subscriptions of the authenticated user
  - Returns: `Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>`
  - Throws: `Cloudnode.Error & {code: "UNAUTHORIZED"}`
  - Throws: `Cloudnode.Error & {code: "NO_PERMISSION"}`
- - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
+ - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
+ - Throws: `Cloudnode.Error & {code: "MAINTENANCE"}`
 
 <a name="cloudnodenewslettersunsubscribesubscription"></a>
 
@@ -157,8 +161,9 @@ Revoke a subscription (unsubscribe)
  - Returns: `void`
  - Throws: `Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}`
  - Throws: `Cloudnode.Error & {code: "INVALID_DATA"}`
- - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
+ - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
+ - Throws: `Cloudnode.Error & {code: "MAINTENANCE"}`
 
 
 

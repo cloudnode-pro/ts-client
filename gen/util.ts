@@ -54,11 +54,14 @@ function addExtraReturnsToOperation(operation: Schema.Operation): Schema.Operati
             type: 'Error & {code: "NO_PERMISSION"}'
         });
     operation.returns.push({
+        status: 429,
+        type: 'Error & {code: "RATE_LIMITED"}'
+    }, {
         status: 500,
         type: 'Error & {code: "INTERNAL_SERVER_ERROR"}'
     }, {
-        status: 429,
-        type: 'Error & {code: "RATE_LIMITED"}'
+        status: 503,
+        type: 'Error & {code: "MAINTENANCE"}'
     });
     return operation;
 }
