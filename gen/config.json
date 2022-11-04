@@ -3,5 +3,5 @@
   "instanceName": "cloudnode",
   "baseUrl": "https://api.cloudnode.pro/v5/",
   "apiVersion": "5.7.1",
-  "browserSdkUrl": "https://cloudnode.pro/assets/js/sdk.min.js"
+  "browserSdkUrl": "https://cdn.jsdelivr.net/npm/cloudnode-ts@latest/browser/Cloudnode.min.js"
 }
