@@ -5,6 +5,7 @@ import DocSchema from "./DocSchema.js";
 import fs from "node:fs/promises";
 import Package from "./Package";
 import Mustache from "mustache";
+import * as child_process from "child_process";
 
 /**
  * Generate doc schema
@@ -92,9 +93,16 @@ export function generateMarkdownDocs (schema: DocSchema, tableOfContents: boolea
  */
 export async function generateReadme (docMD: string, config: Config, pkg: Package): Promise<void> {
     const template = await fs.readFile("README.template.md", "utf8");
+    // check if project builds successfully
+    const buildStatus = await new Promise((resolve, reject) => {
+        child_process.exec("npm run build", (error, stdout, stderr) => {
+            resolve(!error);
+        });
+    });
     const shield = {
         version: `![Client Version: ${pkg.version}](https://img.shields.io/badge/Client%20Version-${pkg.version}-%2316a34a)`,
-        apiVersion: `![API Version: ${config.apiVersion}](https://img.shields.io/badge/API%20Version-${config.apiVersion}-%232563eb)`
+        apiVersion: `![API Version: ${config.apiVersion}](https://img.shields.io/badge/API%20Version-${config.apiVersion}-%232563eb)`,
+        build: `[!Build: ${buildStatus ? "passing" : "failing"}](https://img.shields.io/badge/Build-${buildStatus ? "passing" : "failing"}-%23${buildStatus ? "16a34a" : "dc2626"})`
     }
     const rendered = Mustache.render(template, {config, pkg, docMD, shield});
     await fs.writeFile("README.md", rendered);
