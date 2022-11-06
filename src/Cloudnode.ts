@@ -64,16 +64,19 @@ class Cloudnode {
             options.credentials = "include";
         const response = await fetch(url.toString(), options);
         if (response.status === 204) return undefined as any;
+        const text = await response.text();
+        let data: T;
         if (response.headers.get("Content-Type")?.startsWith("application/json")) {
-            const json = await response.json();
-            if (response.ok) return json as T;
-            else throw json;
+            data = JSON.parse(text, (key, value) => {
+                // parse dates
+                if (/^\d{4}-\d{2}-\d{2}T(?:\d{2}:){2}\d{2}(?:\.\d+)?(?:[a-zA-Z]+|\+\d{2}:\d{2})?$/.test(value))
+                    return new Date(value);
+                return value;
+            });
         }
-        else {
-            const text = await response.text();
-            if (response.ok) return text as any;
-            else throw text;
-        }
+        else data = text as any;
+        if (response.ok) return data;
+        else throw data;
     }
 
     public newsletter = {
