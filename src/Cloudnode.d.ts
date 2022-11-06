@@ -71,6 +71,75 @@ declare class Cloudnode {
          */
         listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>;
     };
+    token: {
+        /**
+         * List tokens of user
+         * @GET /token
+         * @param limit The number of tokens to return per page. No more than 50.
+         * @param page The page number. No more than 2³² (4294967296).
+         * @param internal Internal tokens are returned as well if this parameter is present.
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        list: (limit?: number, page?: number, internal?: any) => Promise<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>;
+        /**
+         * Create token
+         * @POST /token
+         * @param permissions List of permissions to grant to the token. You must already have each of these permissions with your current token.
+         * @param lifetime Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
+         * @param note A user-specified note to label the token. Max length: 2⁸ (256) characters.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        create: (permissions: string[], lifetime: number, note?: string) => Promise<Cloudnode.Token>;
+        /**
+         * Get token details
+         * @GET /token/:id
+         * @param id The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        get: (id: string) => Promise<Cloudnode.Token>;
+        /**
+         * Revoke token
+         * @DELETE /token/:id
+         * @param id The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "MODIFICATION_NOT_ALLOWED"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        revoke: (id: string) => Promise<void>;
+    };
+    tokens: {
+        /**
+         * Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.
+         * @POST /token/refresh
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        refresh: () => Promise<Cloudnode.Token>;
+    };
 }
 declare namespace Cloudnode {
     /**
@@ -165,6 +234,69 @@ declare namespace Cloudnode {
          * The date the subscription was created
          */
         date: Date;
+    }
+    /**
+     * A token, however, the `permissions` field is not included
+     */
+    interface PartialToken {
+        /**
+         * The ID or key of the token
+         */
+        id: string;
+        /**
+         * Date and time when this token was created
+         */
+        created: Date;
+        /**
+         * Date and time when this token expires. Null if it never expires.
+         */
+        expires: Date | null;
+        /**
+         * Whether this token is for internal use only, e.g. to power a session. In other words, an internal token is one that was **not** created by the client.
+         */
+        internal: string | undefined;
+        /**
+         * Additional metadata about this token
+         */
+        metadata: Cloudnode.TokenMetadata;
+    }
+    /**
+     * An authentication token
+     */
+    interface Token {
+        /**
+         * The ID or key of the token
+         */
+        id: string;
+        /**
+         * Date and time when this token was created
+         */
+        created: Date;
+        /**
+         * Date and time when this token expires. Null if it never expires.
+         */
+        expires: Date | null;
+        /**
+         * Permission scopes that this token holds
+         */
+        permissions: string[];
+        /**
+         * Whether this token is for internal use only, e.g. to power a session. In other words, an internal token is one that was **not** created by the client.
+         */
+        internal: string | undefined;
+        /**
+         * Additional metadata about this token
+         */
+        metadata: Cloudnode.TokenMetadata;
+    }
+    /**
+     * Token metadata
+     */
+    interface TokenMetadata {
+        /**
+         * A user-supplied note for this token
+         */
+        note: string | undefined;
     }
     interface PaginatedData<T> {
         /**
