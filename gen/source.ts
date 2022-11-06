@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import Mustache from "mustache";
 import {Config} from "./Config";
-import {getReturnType, getThrows} from "./util.js";
+import {getReturnType, getThrows, replaceModelTypes} from "./util.js";
 import Package from "./Package";
 
 interface FlatOperation {
@@ -34,6 +34,8 @@ interface NamedParameter extends Schema.Operation.Parameter {
 }
 
 export default async (schema: Schema, config: Config, pkg: Package) => {
+
+    schema = replaceModelTypes(schema, config);
 
     // create flat operations
     // @param [name, value][]

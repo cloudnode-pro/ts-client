@@ -65,3 +65,21 @@ function addExtraReturnsToOperation(operation: Schema.Operation): Schema.Operati
     });
     return operation;
 }
+
+/**
+ * Replaces types of model properties that are a model
+ * @param schema
+ * @param config
+ * @returns The modified schema
+ */
+export function replaceModelTypes(schema: Schema, config: Config): Schema {
+    for (const modelID in schema.models) {
+        const model = schema.models[modelID];
+        for (const fieldID in model.fields) {
+            const field = model.fields[fieldID];
+            if (schema.models.find(m => m.name === field.type))
+                schema.models[modelID].fields[fieldID].type = `${config.name}.${field.type}`;
+        }
+    }
+    return schema;
+}
