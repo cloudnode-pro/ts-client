@@ -1,6 +1,6 @@
 import Schema from "./Schema";
 import {Config} from "./Config";
-import {getReturnType, getThrows} from "./util.js";
+import {getReturnType, getThrows, replaceModelTypes} from "./util.js";
 import DocSchema from "./DocSchema.js";
 import fs from "node:fs/promises";
 import Package from "./Package";
@@ -14,6 +14,7 @@ import * as child_process from "child_process";
  * @param pkg
  */
 export function generateDocSchema (schema: Schema, config: Config, pkg: Package): DocSchema {
+    schema = replaceModelTypes(schema, config);
     const doc: DocSchema = {groups: []};
     const mainClass = new DocSchema.Group(config.name, "Class", pkg.description, []);
     const mainNamespace = new DocSchema.Group(config.name, "Namespace", pkg.description, []);
