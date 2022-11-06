@@ -1,7 +1,7 @@
 # Cloudnode API SDK
 
-![Client Version: 1.6.0](https://img.shields.io/badge/Client%20Version-1.6.0-%2316a34a)
-![API Version: 5.7.1](https://img.shields.io/badge/API%20Version-5.7.1-%232563eb)
+![Client Version: 1.7.0](https://img.shields.io/badge/Client%20Version-1.7.0-%2316a34a)
+![API Version: 5.8.0](https://img.shields.io/badge/API%20Version-5.8.0-%232563eb)
 ![build: passing](https://img.shields.io/badge/build-passing-%2316a34a)
 
 A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https:&#x2F;&#x2F;github.com&#x2F;cloudnode-pro&#x2F;ts-client#documentation)

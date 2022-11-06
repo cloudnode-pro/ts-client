@@ -1,6 +1,6 @@
 {
   "name": "cloudnode-ts",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)",
   "main": "src/Cloudnode.js",
   "type": "module",
