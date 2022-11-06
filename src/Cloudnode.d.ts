@@ -20,7 +20,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        list: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>;
+        readonly list: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>;
         /**
          * Get newsletter
          * @GET /newsletter/:id
@@ -30,7 +30,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        get: (id: string) => Promise<Cloudnode.Newsletter>;
+        readonly get: (id: string) => Promise<Cloudnode.Newsletter>;
         /**
          * Subscribe to newsletter
          * @POST /newsletter/:id/subscribe
@@ -44,7 +44,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.NewsletterSubscription>;
+        readonly subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.NewsletterSubscription>;
     };
     newsletters: {
         /**
@@ -57,7 +57,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        unsubscribe: (subscription: string) => Promise<void>;
+        readonly unsubscribe: (subscription: string) => Promise<void>;
         /**
          * List subscriptions of the authenticated user
          * @GET /newsletters/subscriptions
@@ -69,7 +69,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>;
+        readonly listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>;
     };
     token: {
         /**
@@ -84,7 +84,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        list: (limit?: number, page?: number, internal?: any) => Promise<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>;
+        readonly list: (limit?: number, page?: number, internal?: any) => Promise<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>;
         /**
          * Create token
          * @POST /token
@@ -98,7 +98,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        create: (permissions: string[], lifetime: number, note?: string) => Promise<Cloudnode.Token>;
+        readonly create: (permissions: string[], lifetime: number, note?: string) => Promise<Cloudnode.Token>;
         /**
          * Get token details
          * @GET /token/:id
@@ -111,7 +111,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        get: (id: string) => Promise<Cloudnode.Token>;
+        readonly get: (id: string) => Promise<Cloudnode.Token>;
         /**
          * Revoke token
          * @DELETE /token/:id
@@ -125,7 +125,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        revoke: (id: string) => Promise<void>;
+        readonly revoke: (id: string) => Promise<void>;
     };
     tokens: {
         /**
@@ -138,7 +138,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        refresh: () => Promise<Cloudnode.Token>;
+        readonly refresh: () => Promise<Cloudnode.Token>;
     };
 }
 declare namespace Cloudnode {
