@@ -98,7 +98,7 @@ class {{config.name}} {
             return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
          },
         {{/operations}}
-    }
+    } as const;
     {{/namespaces}}
 
     {{#operations}}
@@ -116,7 +116,7 @@ class {{config.name}} {
      */
      public async {{name}}({{{tsArgs}}}): Promise<{{{returnType}}}> {
         return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
-     }
+     };
     {{/operations}}
 }
 
