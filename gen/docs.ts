@@ -103,7 +103,8 @@ export async function generateReadme (docMD: string, config: Config, pkg: Packag
     const shield = {
         version: `![Client Version: ${pkg.version}](https://img.shields.io/badge/Client%20Version-${pkg.version}-%2316a34a)`,
         apiVersion: `![API Version: ${config.apiVersion}](https://img.shields.io/badge/API%20Version-${config.apiVersion}-%232563eb)`,
-        build: `![build: ${buildStatus ? "passing" : "failing"}](https://img.shields.io/badge/build-${buildStatus ? "passing" : "failing"}-%23${buildStatus ? "16a34a" : "dc2626"})`
+        build: `![build: ${buildStatus ? "passing" : "failing"}](https://img.shields.io/badge/build-${buildStatus ? "passing" : "failing"}-%23${buildStatus ? "16a34a" : "dc2626"})`,
+        downloads: `![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)`
     };
     const rendered = Mustache.render(template, {config, pkg, docMD, shield});
     await fs.writeFile("README.md", rendered);
