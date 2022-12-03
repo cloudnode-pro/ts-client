@@ -210,6 +210,10 @@ namespace {{config.name}} {
     }
 
     export type ApiResponse<T> = T & Res;
+
+    export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T> {
+        return Object.assign(new Res(response), data);
+    }
 }
 
 export default {{config.name}};
