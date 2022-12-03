@@ -75,11 +75,14 @@ const newsletter: Cloudnode.Newsletter = await cloudnode.newsletter.get("newslet
    - [`cloudnode.tokens.refresh()`](#cloudnodetokensrefresh)
 
  - [Namespace: `Cloudnode`](#namespace-cloudnode)
+   - [Class: `Cloudnode.ApiResponse<T>`](#class-cloudnodeapiresponset)
+   - [Class: `Cloudnode.RawResponse`](#class-cloudnoderawresponse)
    - [Interface: `Cloudnode.DatedNewsletterSubscription`](#interface-cloudnodedatednewslettersubscription)
    - [Interface: `Cloudnode.Error`](#interface-cloudnodeerror)
    - [Interface: `Cloudnode.Newsletter`](#interface-cloudnodenewsletter)
    - [Interface: `Cloudnode.NewsletterData`](#interface-cloudnodenewsletterdata)
    - [Interface: `Cloudnode.NewsletterSubscription`](#interface-cloudnodenewslettersubscription)
+   - [Interface: `Cloudnode.PaginatedData<T>`](#interface-cloudnodepaginateddatat)
    - [Interface: `Cloudnode.PartialToken`](#interface-cloudnodepartialtoken)
    - [Interface: `Cloudnode.Token`](#interface-cloudnodetoken)
    - [Interface: `Cloudnode.TokenMetadata`](#interface-cloudnodetokenmetadata)
@@ -264,6 +267,27 @@ Refresh current token. The token that was used to authenticate the request will 
 
 A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
 
+<a name="class-cloudnodeapiresponset"></a>
+
+### Class: `Cloudnode.ApiResponse<T>`
+
+An API response. This class implements the interface provided as `T`.
+
+ - `_response` `RawResponse` Raw API response
+
+<a name="class-cloudnoderawresponse"></a>
+
+### Class: `Cloudnode.RawResponse`
+
+Raw API response
+
+ - `headers` `Record<string, string>` The headers returned by the server. Read-only.
+ - `ok` `boolean` A boolean indicating whether the response was successful (status in the range `200` – `299`) or not. Read-only.
+ - `redirected` `boolean` Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry). Read-only.
+ - `status` `number` The status code of the response. Read-only.
+ - `statusText` `string` The status message corresponding to the status code. (e.g., `OK` for `200`). Read-only.
+ - `url` `string` The URL of the response. Read-only.
+
 <a name="interface-cloudnodedatednewslettersubscription"></a>
 
 ### Interface: `Cloudnode.DatedNewsletterSubscription`
@@ -315,6 +339,17 @@ Your subscription to a newsletter
  - `id` `string` The ID of the subscription. Can be used to unsubscribe.
  - `email` `string` The email address of the subscriber
  - `newsletter` `string` The ID of the newsletter that was subscribed to
+
+<a name="interface-cloudnodepaginateddatat"></a>
+
+### Interface: `Cloudnode.PaginatedData<T>`
+
+Paginated response
+
+ - `items` `T[]` The page items
+ - `total` `number` The total number of items
+ - `limit` `number` The number of items per page
+ - `page` `number` The current page number
 
 <a name="interface-cloudnodepartialtoken"></a>
 

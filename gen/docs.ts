@@ -20,6 +20,23 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
     const mainNamespace = new DocSchema.Group(config.name, "Namespace", pkg.description, []);
     for (const model of schema.models)
         mainNamespace.properties.push(new DocSchema.Group(config.name + "." + model.name, "Interface", model.description, model.fields.map(property => new DocSchema.Property(property.name, property.type, property.description))));
+    mainNamespace.properties.push(new DocSchema.Group(config.name + ".PaginatedData<T>", "Interface", "Paginated response", [
+        new DocSchema.Property("items", "T[]", "The page items"),
+        new DocSchema.Property("total", "number", "The total number of items"),
+        new DocSchema.Property("limit", "number", "The number of items per page"),
+        new DocSchema.Property("page", "number", "The current page number")
+    ]));
+    mainNamespace.properties.push(new DocSchema.Group(config.name + ".ApiResponse<T>", "Class", "An API response. This class implements the interface provided as `T`.", [
+        new DocSchema.Property("_response", "RawResponse", "Raw API response"),
+    ]));
+    mainNamespace.properties.push(new DocSchema.Group(config.name + ".RawResponse", "Class", "Raw API response", [
+        new DocSchema.Property("headers", "Record<string, string>", "The headers returned by the server. Read-only."),
+        new DocSchema.Property("ok", "boolean", "A boolean indicating whether the response was successful (status in the range `200` – `299`) or not. Read-only."),
+        new DocSchema.Property("redirected", "boolean", "Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry). Read-only."),
+        new DocSchema.Property("status", "number", "The status code of the response. Read-only."),
+        new DocSchema.Property("statusText", "string", "The status message corresponding to the status code. (e.g., `OK` for `200`). Read-only."),
+        new DocSchema.Property("url", "string", "The URL of the response. Read-only."),
+    ]));
     const operations: (Schema.Operation & {name: string})[] = [];
     for (const [name, operation] of Object.entries(schema.operations)) {
         if (operation.type === "operation") operations.push({name, ...operation});

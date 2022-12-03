@@ -298,6 +298,9 @@ declare namespace Cloudnode {
          */
         note: string | undefined;
     }
+    /**
+     * Paginated response
+     */
     export interface PaginatedData<T> {
         /**
          * The page items

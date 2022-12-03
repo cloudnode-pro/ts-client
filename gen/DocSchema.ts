@@ -109,7 +109,7 @@ namespace DocSchema {
         }
 
         override get content(): string {
-            return `${this.description}${this.type === "Interface" ? `\n\n${this.properties.map(p => " - " + p.inlineContent).join("\n")}` : ""}`;
+            return `${this.description}${["Interface", "Class"].includes(this.type) ? `\n\n${this.properties.map(p => " - " + p.inlineContent).join("\n")}` : ""}`;
         }
 
         public get inlineContent(): string {
