@@ -197,6 +197,17 @@ namespace {{config.name}} {
             this.url = response.url;
         }
     }
+
+    class Res {
+        /**
+         * API response
+         */
+        readonly _response: RawResponse;
+
+        constructor(response: RawResponse) {
+            this._response = response;
+        }
+    }
 }
 
 export default {{config.name}};
