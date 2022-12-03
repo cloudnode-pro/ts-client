@@ -35,7 +35,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
         const queryParams = Object.entries(operation.parameters.query ?? {}).map(([name, parameter]) => new DocSchema.Parameter(name, parameter.type, parameter.description, parameter.required, parameter.default));
         const bodyParams = Object.entries(operation.parameters.body ?? {}).map(([name, parameter]) => new DocSchema.Parameter(name, parameter.type, parameter.description, parameter.required, parameter.default));
         const params: DocSchema.Parameter[] = [...pathParams, ...queryParams, ...bodyParams];
-        return new DocSchema.Method(config.instanceName + "." + operation.name, operation.description, params, returns, throws);
+        return new DocSchema.Method(config.instanceName + "." + operation.name, operation.description, params, returns, throws, undefined, config.name);
     });
     mainClass.properties.push(...operationMethods);
     mainClass.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));
