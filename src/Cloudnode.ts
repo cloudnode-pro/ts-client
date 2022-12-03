@@ -38,7 +38,7 @@ class Cloudnode {
      * @param body Body to use in the request
      * @private
      */
-    #sendRequest = async <T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<T> => {
+    async #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
         const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
@@ -75,8 +75,9 @@ class Cloudnode {
             });
         }
         else data = text as any;
-        if (response.ok) return data;
-        else throw data;
+        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response));
+        if (response.ok) return res;
+        else throw res;
     }
 
     public newsletter = {
@@ -89,7 +90,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         list: async (limit: number = 10, page: number = 1): Promise<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>> => {
+         list: async (limit: number = 10, page: number = 1): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>> => {
             return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>({"type":"operation","description":"List newsletters","method":"GET","path":"/newsletter","parameters":{"query":{"limit":{"description":"The number of newsletters to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"Newsletter[]"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {limit: `${limit}`, page: `${page}`}, {});
          },
         /**
@@ -101,7 +102,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         get: async (id: string): Promise<Cloudnode.Newsletter> => {
+         get: async (id: string): Promise<Cloudnode.ApiResponse<Cloudnode.Newsletter>> => {
             return await this.#sendRequest<Cloudnode.Newsletter>({"type":"operation","description":"Get newsletter","method":"GET","path":"/newsletter/:id","parameters":{"path":{"id":{"description":"A newsletter ID","type":"string","required":true}}},"returns":[{"status":200,"type":"Newsletter"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
          },
         /**
@@ -117,7 +118,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         subscribe: async (id: string, email: string, data?: Record<string, string | number | boolean>): Promise<Cloudnode.NewsletterSubscription> => {
+         subscribe: async (id: string, email: string, data?: Record<string, string | number | boolean>): Promise<Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>> => {
             return await this.#sendRequest<Cloudnode.NewsletterSubscription>({"type":"operation","description":"Subscribe to newsletter","method":"POST","path":"/newsletter/:id/subscribe","parameters":{"path":{"id":{"description":"A newsletter ID","type":"string","required":true}},"body":{"email":{"description":"Subscriber's email address","type":"string","required":true},"data":{"description":"Additional data that this newsletter requires","type":"Record<string, string | number | boolean>","required":false}}},"returns":[{"status":201,"type":"NewsletterSubscription"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {email, data});
          },
     } as const;
@@ -132,7 +133,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         unsubscribe: async (subscription: string): Promise<void> => {
+         unsubscribe: async (subscription: string): Promise<Cloudnode.ApiResponse<void>> => {
             return await this.#sendRequest<void>({"type":"operation","description":"Revoke a subscription (unsubscribe)","method":"POST","path":"/newsletters/unsubscribe","parameters":{"body":{"subscription":{"description":"The ID of the subscription to revoke","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {subscription});
          },
         /**
@@ -146,7 +147,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         listSubscriptions: async (limit: number = 10, page: number = 1): Promise<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>> => {
+         listSubscriptions: async (limit: number = 10, page: number = 1): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>> => {
             return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>({"type":"operation","description":"List subscriptions of the authenticated user","token":"newsletter.subscriptions.list.own","method":"GET","path":"/newsletters/subscriptions","parameters":{"query":{"limit":{"description":"The number of subscriptions to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"DatedNewsletterSubscription[]"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {limit: `${limit}`, page: `${page}`}, {});
          },
     } as const;
@@ -163,7 +164,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         list: async (limit: number = 10, page: number = 1, internal?: any): Promise<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>> => {
+         list: async (limit: number = 10, page: number = 1, internal?: any): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>> => {
             return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>({"type":"operation","description":"List tokens of user","token":"tokens.list.own","method":"GET","path":"/token","parameters":{"query":{"limit":{"description":"The number of tokens to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false},"internal":{"description":"Internal tokens are returned as well if this parameter is present.","type":"any","required":false}}},"returns":[{"status":200,"type":"PartialToken[]"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {limit: `${limit}`, page: `${page}`, internal: `${internal}`}, {});
          },
         /**
@@ -179,7 +180,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         create: async (permissions: string[], lifetime: number, note?: string): Promise<Cloudnode.Token> => {
+         create: async (permissions: string[], lifetime: number, note?: string): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
             return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Create token","token":"tokens.create.own","method":"POST","path":"/token","parameters":{"body":{"permissions":{"description":"List of permissions to grant to the token. You must already have each of these permissions with your current token.","type":"string[]","required":true},"lifetime":{"description":"Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).","type":"number","required":true},"note":{"description":"A user-specified note to label the token. Max length: 2⁸ (256) characters.","type":"string","required":false}}},"returns":[{"status":201,"type":"Token"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {permissions, lifetime, note});
          },
         /**
@@ -194,7 +195,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         get: async (id: string): Promise<Cloudnode.Token> => {
+         get: async (id: string): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
             return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Get token details","token":"tokens.get.own","method":"GET","path":"/token/:id","parameters":{"path":{"id":{"description":"The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.","type":"string","required":true}}},"returns":[{"status":200,"type":"Token"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
          },
         /**
@@ -210,7 +211,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         revoke: async (id: string): Promise<void> => {
+         revoke: async (id: string): Promise<Cloudnode.ApiResponse<void>> => {
             return await this.#sendRequest<void>({"type":"operation","description":"Revoke token","token":"tokens.revoke.own","method":"DELETE","path":"/token/:id","parameters":{"path":{"id":{"description":"The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":400,"type":"Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
          },
     } as const;
@@ -225,7 +226,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         refresh: async (): Promise<Cloudnode.Token> => {
+         refresh: async (): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
             return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.","token":"token.refresh","method":"POST","path":"/token/refresh","parameters":{},"returns":[{"status":201,"type":"Token"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {});
          },
     } as const;
@@ -407,6 +408,67 @@ namespace Cloudnode {
          * The current page number
          */
         page: number;
+    }
+
+    export class RawResponse {
+        /**
+         * The headers returned by the server.
+         * @readonly
+         */
+        readonly headers: Record<string, string>;
+
+        /**
+         * A boolean indicating whether the response was successful (status in the range `200` – `299`) or not.
+         */
+        readonly ok: boolean
+
+        /**
+         * Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry).
+         */
+        readonly redirected: boolean;
+
+        /**
+         * The status code of the response.
+         * @readonly
+         */
+        readonly status: number;
+
+        /**
+         * The status message corresponding to the status code. (e.g., `OK` for `200`).
+         * @readonly
+         */
+        readonly statusText: string;
+
+        /**
+         * The URL of the response.
+         */
+        readonly url: string;
+
+        constructor(response: import("node-fetch").Response) {
+            this.headers = Object.fromEntries(response.headers.entries());
+            this.ok = response.ok;
+            this.redirected = response.redirected;
+            this.status = response.status;
+            this.statusText = response.statusText;
+            this.url = response.url;
+        }
+    }
+
+    class Res {
+        /**
+         * API response
+         */
+        readonly _response: RawResponse;
+
+        constructor(response: RawResponse) {
+            this._response = response;
+        }
+    }
+
+    export type ApiResponse<T> = T & Res;
+
+    export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T> {
+        return Object.assign(new Res(response), data);
     }
 }
 
