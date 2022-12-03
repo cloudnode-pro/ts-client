@@ -27,7 +27,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
         new DocSchema.Property("page", "number", "The current page number")
     ]));
     mainNamespace.properties.push(new DocSchema.Group(config.name + ".ApiResponse<T>", "Class", "An API response. This class implements the interface provided as `T`.", [
-        new DocSchema.Property("_response", "RawResponse", "Raw API response"),
+        new DocSchema.Property("_response", config.name + ".RawResponse", "Raw API response"),
     ]));
     mainNamespace.properties.push(new DocSchema.Group(config.name + ".RawResponse", "Class", "Raw API response", [
         new DocSchema.Property("headers", "Record<string, string>", "The headers returned by the server. Read-only."),
