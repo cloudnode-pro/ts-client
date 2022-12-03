@@ -208,6 +208,8 @@ namespace {{config.name}} {
             this._response = response;
         }
     }
+
+    export type ApiResponse<T> = T & Res;
 }
 
 export default {{config.name}};
