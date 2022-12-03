@@ -9,7 +9,7 @@ import {Config} from "./Config";
  * @returns The combined return type
  */
 export function getReturnType(operation: Schema.Operation, schema: Schema, config: Config): string {
-    return config.name + ".ApiResponse<" + operation.returns.filter(r => r.status >= 200 && r.status < 300).map(r => r.type.endsWith("[]") ? `${config.name}.PaginatedData<${schema.models.find(m => m.name === r.type.slice(0, -2)) ? `${config.name}.${r.type}` : r.type}>` : schema.models.find(m => m.name === r.type) ? `${config.name}.${r.type}` : r.type).join(" | ") + ">";
+    return operation.returns.filter(r => r.status >= 200 && r.status < 300).map(r => r.type.endsWith("[]") ? `${config.name}.PaginatedData<${schema.models.find(m => m.name === r.type.slice(0, -2)) ? `${config.name}.${r.type}` : r.type}>` : schema.models.find(m => m.name === r.type) ? `${config.name}.${r.type}` : r.type).join(" | ");
 }
 
 /**
