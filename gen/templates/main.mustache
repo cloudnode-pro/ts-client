@@ -38,7 +38,7 @@ class {{config.name}} {
      * @param body Body to use in the request
      * @private
      */
-    #sendRequest = async <T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<T> => {
+    async #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
         const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
@@ -75,8 +75,9 @@ class {{config.name}} {
             });
         }
         else data = text as any;
-        if (response.ok) return data;
-        else throw data;
+        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response));
+        if (response.ok) return res;
+        else throw res;
     }
 
     {{#namespaces}}
