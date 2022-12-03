@@ -73,14 +73,16 @@ namespace DocSchema {
         public readonly returns?: {type: string, description?: string};
         public readonly throws: {type: string, description?: string}[];
         public readonly mainClassName?: string;
+        public readonly async?: true;
 
-        constructor(name: string, description: string, params: Parameter[], returns: {type: string, description?: string} | undefined, throws: {type: string, description?: string}[], isStatic?: true, mainClassName?: string) {
+        constructor(name: string, description: string, params: Parameter[], returns: {type: string, description?: string} | undefined, throws: {type: string, description?: string}[], isStatic?: true, mainClassName?: string, async?: true) {
             super(name, "Function", description, isStatic);
             this.params = params;
             this.returns = returns;
             this.throws = throws;
             this.name = `${this.name}(${this.paramsString})`;
             this.mainClassName = mainClassName;
+            this.async = async;
         }
 
         public get paramsString(): string {
@@ -88,7 +90,7 @@ namespace DocSchema {
         }
 
         public override get content(): string {
-            return `${this.description}\n\n${this.params.map(p => ` - \`${p.name}\` \`${p.type}\` ${p.description}${p.description.endsWith(".") ? "" : "."}${p.default ? ` Default: \`${p.default}\`` : ""}`).join("\n")}\n${this.returns ? ` - Returns: \`${this.mainClassName ? `${this.mainClassName}.ApiResponse<` : ""}${this.returns.type}${this.mainClassName ? ">" : ""}\`${this.returns.description ? ` ${this.returns.description}` : ""}` : ""}\n${this.throws.map(t => ` - Throws: \`${t.type}\`${t.description ? ` ${t.description}` : ""}`).join("\n")}`;
+            return `${this.description}\n\n${this.params.map(p => ` - \`${p.name}\` \`${p.type}\` ${p.description}${p.description.endsWith(".") ? "" : "."}${p.default ? ` Default: \`${p.default}\`` : ""}`).join("\n")}\n${this.returns ? ` - Returns: \`${this.async ? "Promise<" : ""}${this.mainClassName ? `${this.mainClassName}.ApiResponse<` : ""}${this.returns.type}${this.mainClassName ? ">" : ""}${this.async ? ">" : ""}\`${this.returns.description ? ` ${this.returns.description}` : ""}` : ""}\n${this.throws.map(t => ` - Throws: \`${t.type}\`${t.description ? ` ${t.description}` : ""}`).join("\n")}`;
         }
     }
 

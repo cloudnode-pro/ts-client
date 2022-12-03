@@ -110,7 +110,7 @@ Construct a new Cloudnode API client
 Get newsletter
 
  - `id` `string` A newsletter ID.
- - Returns: `Cloudnode.ApiResponse<Cloudnode.Newsletter>`
+ - Returns: `Promise<Cloudnode.ApiResponse<Cloudnode.Newsletter>>`
  - Throws: `Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
  - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
@@ -124,7 +124,7 @@ List newsletters
 
  - `limit` `number` The number of newsletters to return per page. No more than 50. Default: `10`
  - `page` `number` The page number. No more than 2³² (4294967296). Default: `1`
- - Returns: `Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>`
+ - Returns: `Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>>`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
  - Throws: `Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}`
  - Throws: `Cloudnode.Error & {code: "MAINTENANCE"}`
@@ -138,7 +138,7 @@ Subscribe to newsletter
  - `id` `string` A newsletter ID.
  - `email` `string` Subscriber's email address.
  - `data` `Record<string, string | number | boolean>` Additional data that this newsletter requires.
- - Returns: `Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>`
+ - Returns: `Promise<Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>>`
  - Throws: `Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}`
  - Throws: `Cloudnode.Error & {code: "INVALID_DATA"}`
  - Throws: `Cloudnode.Error & {code: "CONFLICT"}`
@@ -154,7 +154,7 @@ List subscriptions of the authenticated user
 
  - `limit` `number` The number of subscriptions to return per page. No more than 50. Default: `10`
  - `page` `number` The page number. No more than 2³² (4294967296). Default: `1`
- - Returns: `Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>`
+ - Returns: `Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>>`
  - Throws: `Cloudnode.Error & {code: "UNAUTHORIZED"}`
  - Throws: `Cloudnode.Error & {code: "NO_PERMISSION"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
@@ -168,7 +168,7 @@ List subscriptions of the authenticated user
 Revoke a subscription (unsubscribe)
 
  - `subscription` `string` The ID of the subscription to revoke.
- - Returns: `Cloudnode.ApiResponse<void>`
+ - Returns: `Promise<Cloudnode.ApiResponse<void>>`
  - Throws: `Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}`
  - Throws: `Cloudnode.Error & {code: "INVALID_DATA"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
@@ -184,7 +184,7 @@ Create token
  - `permissions` `string[]` List of permissions to grant to the token. You must already have each of these permissions with your current token.
  - `lifetime` `number` Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
  - `note` `string` A user-specified note to label the token. Max length: 2⁸ (256) characters.
- - Returns: `Cloudnode.ApiResponse<Cloudnode.Token>`
+ - Returns: `Promise<Cloudnode.ApiResponse<Cloudnode.Token>>`
  - Throws: `Cloudnode.Error & {code: "INVALID_DATA"}`
  - Throws: `Cloudnode.Error & {code: "UNAUTHORIZED"}`
  - Throws: `Cloudnode.Error & {code: "NO_PERMISSION"}`
@@ -199,7 +199,7 @@ Create token
 Get token details
 
  - `id` `string` The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.
- - Returns: `Cloudnode.ApiResponse<Cloudnode.Token>`
+ - Returns: `Promise<Cloudnode.ApiResponse<Cloudnode.Token>>`
  - Throws: `Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}`
  - Throws: `Cloudnode.Error & {code: "INVALID_DATA"}`
  - Throws: `Cloudnode.Error & {code: "UNAUTHORIZED"}`
@@ -217,7 +217,7 @@ List tokens of user
  - `limit` `number` The number of tokens to return per page. No more than 50. Default: `10`
  - `page` `number` The page number. No more than 2³² (4294967296). Default: `1`
  - `internal` `any` Internal tokens are returned as well if this parameter is present.
- - Returns: `Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>`
+ - Returns: `Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>>`
  - Throws: `Cloudnode.Error & {code: "UNAUTHORIZED"}`
  - Throws: `Cloudnode.Error & {code: "NO_PERMISSION"}`
  - Throws: `Cloudnode.Error & {code: "RATE_LIMITED"}`
@@ -231,7 +231,7 @@ List tokens of user
 Revoke token
 
  - `id` `string` The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.
- - Returns: `Cloudnode.ApiResponse<void>`
+ - Returns: `Promise<Cloudnode.ApiResponse<void>>`
  - Throws: `Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}`
  - Throws: `Cloudnode.Error & {code: "INVALID_DATA"}`
  - Throws: `Cloudnode.Error & {code: "MODIFICATION_NOT_ALLOWED"}`
@@ -248,7 +248,7 @@ Revoke token
 Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.
 
 
- - Returns: `Cloudnode.ApiResponse<Cloudnode.Token>`
+ - Returns: `Promise<Cloudnode.ApiResponse<Cloudnode.Token>>`
  - Throws: `Cloudnode.Error & {code: "INVALID_DATA"}`
  - Throws: `Cloudnode.Error & {code: "UNAUTHORIZED"}`
  - Throws: `Cloudnode.Error & {code: "NO_PERMISSION"}`
