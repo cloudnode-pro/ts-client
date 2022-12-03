@@ -95,7 +95,7 @@ class {{config.name}} {
          <%={{ }}=%>
          {{/throws}}
          */
-         {{name}}: async ({{{tsArgs}}}): Promise<{{config.name}}.ApiResponse<{{{returnType}}}>> => {
+         {{name}}: async ({{{tsArgs}}}): Promise<{{{returnType}}}> => {
             return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
          },
         {{/operations}}
@@ -115,7 +115,7 @@ class {{config.name}} {
      <%={{ }}=%>
      {{/throws}}
      */
-     public async {{name}}({{{tsArgs}}}): Promise<{{config.name}}.ApiResponse<{{{returnType}}}>> {
+     public async {{name}}({{{tsArgs}}}): Promise<{{{returnType}}}> {
         return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
      };
     {{/operations}}
