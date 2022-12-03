@@ -153,6 +153,50 @@ namespace {{config.name}} {
          */
         page: number;
     }
+
+    export class RawResponse {
+        /**
+         * The headers returned by the server.
+         * @readonly
+         */
+        readonly headers: Record<string, string>;
+
+        /**
+         * A boolean indicating whether the response was successful (status in the range `200` – `299`) or not.
+         */
+        readonly ok: boolean
+
+        /**
+         * Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry).
+         */
+        readonly redirected: boolean;
+
+        /**
+         * The status code of the response.
+         * @readonly
+         */
+        readonly status: number;
+
+        /**
+         * The status message corresponding to the status code. (e.g., `OK` for `200`).
+         * @readonly
+         */
+        readonly statusText: string;
+
+        /**
+         * The URL of the response.
+         */
+        readonly url: string;
+
+        constructor(response: import("node-fetch").Response) {
+            this.headers = Object.fromEntries(response.headers.entries());
+            this.ok = response.ok;
+            this.redirected = response.redirected;
+            this.status = response.status;
+            this.statusText = response.statusText;
+            this.url = response.url;
+        }
+    }
 }
 
 export default {{config.name}};
