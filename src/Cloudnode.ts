@@ -418,36 +418,36 @@ namespace Cloudnode {
          * The headers returned by the server.
          * @readonly
          */
-        readonly headers: Record<string, string>;
+        public readonly headers: Record<string, string>;
 
         /**
          * A boolean indicating whether the response was successful (status in the range `200` – `299`) or not.
          */
-        readonly ok: boolean
+        public readonly ok: boolean
 
         /**
          * Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry).
          */
-        readonly redirected: boolean;
+        public readonly redirected: boolean;
 
         /**
          * The status code of the response.
          * @readonly
          */
-        readonly status: number;
+        public readonly status: number;
 
         /**
          * The status message corresponding to the status code. (e.g., `OK` for `200`).
          * @readonly
          */
-        readonly statusText: string;
+        public readonly statusText: string;
 
         /**
          * The URL of the response.
          */
-        readonly url: string;
+        public readonly url: string;
 
-        constructor(response: import("node-fetch").Response) {
+        public constructor(response: import("node-fetch").Response) {
             this.headers = Object.fromEntries(response.headers.entries());
             this.ok = response.ok;
             this.redirected = response.redirected;
@@ -465,7 +465,7 @@ namespace Cloudnode {
          */
         readonly #response: RawResponse;
 
-        constructor(response: RawResponse) {
+        public constructor(response: RawResponse) {
             this.#response = response;
         }
 
@@ -473,7 +473,7 @@ namespace Cloudnode {
          * API response
          * @readonly
          */
-        get _response(): RawResponse {
+        public get _response(): RawResponse {
             return this.#response;
         }
     }
