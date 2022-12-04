@@ -84,7 +84,8 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
  */
 export function linkType (type: string, config: Config, schema: Schema): string {
     const link = (typeName: string) => {
-        const bareType = typeName.split(".").pop()?.replaceAll("[]", "") ?? typeName;
+        typeName = typeName.trim();
+        const bareType = typeName.split(".").pop()?.replaceAll("[]", "")?.trim() ?? typeName;
         const model = schema.models.find(model => model.name === bareType);
         if (model) {
             const modelGroup = new DocSchema.Group(config.name + "." + model.name, "Interface", "", []);
@@ -120,12 +121,14 @@ export function linkType (type: string, config: Config, schema: Schema): string 
     };
 
     const fullLink = (typeName: string): string => {
-        const parts = typeName.match(/<(.*)>/);
+        let parts = typeName.match(/<(.*)>/);
         if (parts) return `${link(typeName.slice(0, parts.index))}<${fullLink(parts[1])}>`;
-        const parts1 = typeName.split(" | ");
+        const parts1 = typeName.split("|");
         if (parts1.length > 1) return parts1.map(fullLink).join(" | ");
-        const parts2 = typeName.split(" & ");
+        const parts2 = typeName.split("&");
         if (parts2.length > 1) return parts2.map(fullLink).join(" & ");
+        const parts3 = typeName.split(",");
+        if (parts3.length > 1) return parts3.map(fullLink).join(", ");
         return link(typeName);
     };
 
