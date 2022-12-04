@@ -85,7 +85,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
 export function linkType (type: string, config: Config, schema: Schema): string {
     const link = (typeName: string) => {
         typeName = typeName.trim();
-        const bareType = typeName.split(".").pop()?.replaceAll("[]", "")?.trim() ?? typeName;
+        const bareType = typeName.split(".").pop()?.replace(/[^\w"'`]/g, "").trim() ?? typeName;
         const model = schema.models.find(model => model.name === bareType);
         if (model) {
             const modelGroup = new DocSchema.Group(config.name + "." + model.name, "Interface", "", []);
