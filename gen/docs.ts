@@ -18,7 +18,7 @@ export const globalTypes = {
         new DocSchema.Property("limit", "number", "The number of items per page"),
         new DocSchema.Property("page", "number", "The current page number")
     ]),
-    apiResponse: (config: Config) => new DocSchema.Group(config.name + ".ApiResponse<T>", "Class", "An API response. This class implements the interface provided as `T`.", [
+    apiResponse: (config: Config) => new DocSchema.Group(config.name + ".ApiResponse<T>", "Class", "An API response. This class implements the interface provided as `T` and includes all of its properties.", [
         new DocSchema.Property("_response", config.name + ".RawResponse", "Raw API response"),
     ]),
     rawResponse: (config: Config) => new DocSchema.Group(config.name + ".RawResponse", "Class", "Raw API response", [

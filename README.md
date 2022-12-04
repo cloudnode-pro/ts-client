@@ -271,7 +271,7 @@ A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https
 
 ### Class: `Cloudnode.ApiResponse<T>`
 
-An API response. This class implements the interface provided as `T`.
+An API response. This class implements the interface provided as `T` and includes all of its properties.
 
  - `_response` <code>[Cloudnode.RawResponse](#class-cloudnoderawresponse)</code> Raw API response
 
