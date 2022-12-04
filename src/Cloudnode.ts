@@ -460,11 +460,21 @@ namespace Cloudnode {
     class Res {
         /**
          * API response
+         * @readonly
+         * @private
          */
-        readonly _response: RawResponse;
+        readonly #response: RawResponse;
 
         constructor(response: RawResponse) {
-            this._response = response;
+            this.#response = response;
+        }
+
+        /**
+         * API response
+         * @readonly
+         */
+        get _response(): RawResponse {
+            return this.#response;
         }
     }
 

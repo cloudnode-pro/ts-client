@@ -271,10 +271,19 @@ class Cloudnode {
     class Res {
         /**
          * API response
+         * @readonly
+         * @private
          */
-        _response;
+        #response;
         constructor(response) {
-            this._response = response;
+            this.#response = response;
+        }
+        /**
+         * API response
+         * @readonly
+         */
+        get _response() {
+            return this.#response;
         }
     }
     function makeApiResponse(data, response) {
