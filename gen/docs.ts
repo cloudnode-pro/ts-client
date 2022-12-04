@@ -97,6 +97,8 @@ export function linkType (type: string, config: Config, schema: Schema): string 
             string: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String",
             number: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number",
             boolean: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+            true: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+            false: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
             object: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object",
             any: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object",
             void: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined",
