@@ -457,31 +457,33 @@ namespace Cloudnode {
         }
     }
 
-    class Res {
-        /**
-         * API response
-         * @readonly
-         * @private
-         */
-        readonly #response: RawResponse;
+    namespace R {
+        export class ApiResponse {
+            /**
+             * API response
+             * @readonly
+             * @private
+             */
+            readonly #response: RawResponse;
 
-        public constructor(response: RawResponse) {
-            this.#response = response;
-        }
+            public constructor(response: RawResponse) {
+                this.#response = response;
+            }
 
-        /**
-         * API response
-         * @readonly
-         */
-        public get _response(): RawResponse {
-            return this.#response;
+            /**
+             * API response
+             * @readonly
+             */
+            public get _response(): RawResponse {
+                return this.#response;
+            }
         }
     }
 
-    export type ApiResponse<T> = T & Res;
+    export type ApiResponse<T> = T & R.ApiResponse;
 
     export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T> {
-        return Object.assign(new Res(response), data);
+        return Object.assign(new R.ApiResponse(response), data);
     }
 }
 

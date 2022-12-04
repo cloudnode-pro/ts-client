@@ -268,26 +268,30 @@ class Cloudnode {
         }
     }
     Cloudnode.RawResponse = RawResponse;
-    class Res {
-        /**
-         * API response
-         * @readonly
-         * @private
-         */
-        #response;
-        constructor(response) {
-            this.#response = response;
+    let R;
+    (function (R) {
+        class ApiResponse {
+            /**
+             * API response
+             * @readonly
+             * @private
+             */
+            #response;
+            constructor(response) {
+                this.#response = response;
+            }
+            /**
+             * API response
+             * @readonly
+             */
+            get _response() {
+                return this.#response;
+            }
         }
-        /**
-         * API response
-         * @readonly
-         */
-        get _response() {
-            return this.#response;
-        }
-    }
+        R.ApiResponse = ApiResponse;
+    })(R || (R = {}));
     function makeApiResponse(data, response) {
-        return Object.assign(new Res(response), data);
+        return Object.assign(new R.ApiResponse(response), data);
     }
     Cloudnode.makeApiResponse = makeApiResponse;
 })(Cloudnode || (Cloudnode = {}));

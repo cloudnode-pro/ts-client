@@ -349,16 +349,18 @@ declare namespace Cloudnode {
         readonly url: string;
         constructor(response: import("node-fetch").Response);
     }
-    class Res {
-        #private;
-        constructor(response: RawResponse);
-        /**
-         * API response
-         * @readonly
-         */
-        get _response(): RawResponse;
+    namespace R {
+        class ApiResponse {
+            #private;
+            constructor(response: RawResponse);
+            /**
+             * API response
+             * @readonly
+             */
+            get _response(): RawResponse;
+        }
     }
-    export type ApiResponse<T> = T & Res;
+    export type ApiResponse<T> = T & R.ApiResponse;
     export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T>;
     export {};
 }
