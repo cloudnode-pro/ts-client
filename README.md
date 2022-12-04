@@ -346,7 +346,7 @@ Your subscription to a newsletter
 
 Paginated response
 
- - `items` <code>[T[]](#interface-cloudnodepaginateddatat)</code> The page items
+ - `items` <code>T[]</code> The page items
  - `total` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The total number of items
  - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of items per page
  - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The current page number

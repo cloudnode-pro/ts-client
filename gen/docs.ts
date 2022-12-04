@@ -91,7 +91,7 @@ export function linkType (type: string, config: Config, schema: Schema): string 
             const modelGroup = new DocSchema.Group(config.name + "." + model.name, "Interface", "", []);
             return `[${typeName}](#${modelGroup.anchorName})`;
         }
-        const globals = Object.values(globalTypes).map(group => group(config)).find(group => group.displayName.includes(bareType));
+        const globals = Object.values(globalTypes).map(group => group(config)).find(group => group.displayName.replace(/<(.*)>/g, "").split(/\W/g).includes(bareType));
         if (globals) return `[${typeName}](#${globals.anchorName})`;
         const primitives: Record<string, string> = {
             string: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String",
