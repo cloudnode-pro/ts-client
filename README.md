@@ -307,7 +307,7 @@ An API error response.
 
  - `message` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> A human-readable description of this error
  - `code` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Error code
- - `fields` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<string, string | Record<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>></code> Affected request fields. The key is the name of the input parameter (e.g. from the request body or query string) and the value is a human-readable error message for that field.
+ - `fields` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>></code> Affected request fields. The key is the name of the input parameter (e.g. from the request body or query string) and the value is a human-readable error message for that field.
 
 <a name="interface-cloudnodenewsletter"></a>
 
