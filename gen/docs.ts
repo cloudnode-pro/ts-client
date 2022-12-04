@@ -6,6 +6,7 @@ import fs from "node:fs/promises";
 import Package from "./Package";
 import Mustache from "mustache";
 import * as child_process from "child_process";
+import * as crypto from "crypto";
 
 /**
  * Global types
@@ -123,14 +124,24 @@ export function linkType (type: string, config: Config, schema: Schema): string 
     };
 
     const fullLink = (typeName: string): string => {
-        let parts = typeName.match(/<(.*)>/);
-        if (parts) return `${link(typeName.slice(0, parts.index))}<${fullLink(parts[1])}>`;
-        const parts1 = typeName.split("|");
-        if (parts1.length > 1) return parts1.map(fullLink).join(" | ");
-        const parts2 = typeName.split("&");
-        if (parts2.length > 1) return parts2.map(fullLink).join(" & ");
-        const parts3 = typeName.split(",");
-        if (parts3.length > 1) return parts3.map(fullLink).join(", ");
+        if (typeName.startsWith("string") && typeName.includes(",")) console.log(typeName);
+        const parts = typeName.match(/\b(?<!["`'])[a-zA-Z_$][\w_$.]+(<.*>)?/g) ?? [];
+        if (parts.length > 1) {
+            let result = typeName;
+            const links: Record<string, string> = {};
+            for (const part of parts) {
+                const partID = crypto.randomBytes(16).toString("hex");
+                result = result.replace(part, partID);
+                links[partID] = fullLink(part);
+            }
+            for (const [id, link] of Object.entries(links)) result = result.replace(id, link);
+            return result;
+        }
+        else {
+            // if it includes a generic, link the generic
+            const parts = typeName.match(/<(.*)>/);
+            if (parts) return `${link(typeName.slice(0, parts.index))}<${fullLink(parts[1])}>`;
+        }
         return link(typeName);
     };
 
