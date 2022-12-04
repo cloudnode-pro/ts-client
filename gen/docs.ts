@@ -119,13 +119,13 @@ export function linkType (type: string, config: Config, schema: Schema): string 
         return typeName;
     };
 
-    const fullLink = (typeName: string) => {
+    const fullLink = (typeName: string): string => {
         const parts = typeName.match(/<(.*)>/);
-        if (parts) return `${link(typeName.slice(0, parts.index))}<${linkType(parts[1], config, schema)}>`;
+        if (parts) return `${link(typeName.slice(0, parts.index))}<${fullLink(parts[1])}>`;
         const parts1 = typeName.split(" | ");
-        if (parts1.length > 1) return parts1.map(part => linkType(part, config, schema)).join(" | ");
+        if (parts1.length > 1) return parts1.map(fullLink).join(" | ");
         const parts2 = typeName.split(" & ");
-        if (parts2.length > 1) return parts2.map(part => linkType(part, config, schema)).join(" & ");
+        if (parts2.length > 1) return parts2.map(fullLink).join(" & ");
         return link(typeName);
     };
 

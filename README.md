@@ -113,11 +113,11 @@ Construct a new Cloudnode API client
 Get newsletter
 
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> A newsletter ID.
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[Cloudnode.Newsletter](#interface-cloudnodenewsletter)</code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RESOURCE_NOT_FOUND"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.Newsletter](#interface-cloudnodenewsletter)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodenewsletterlistlimit-page"></a>
 
@@ -127,10 +127,10 @@ List newsletters
 
  - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of newsletters to return per page. No more than 50. Default: `10`
  - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The page number. No more than 2³² (4294967296). Default: `1`
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<<code>[Cloudnode.Newsletter[]](#interface-cloudnodenewsletter)</code>></code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<[Cloudnode.Newsletter[]](#interface-cloudnodenewsletter)>>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodenewslettersubscribeid-email-data"></a>
 
@@ -140,14 +140,14 @@ Subscribe to newsletter
 
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> A newsletter ID.
  - `email` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Subscriber's email address.
- - `data` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<<code><code>string, string</code> | <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> | <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code></code>></code> Additional data that this newsletter requires.
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[Cloudnode.NewsletterSubscription](#interface-cloudnodenewslettersubscription)</code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RESOURCE_NOT_FOUND"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INVALID_DATA"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "CONFLICT"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - `data` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<string, string | [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number) | [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)></code> Additional data that this newsletter requires.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.NewsletterSubscription](#interface-cloudnodenewslettersubscription)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "CONFLICT"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodenewsletterslistsubscriptionslimit-page"></a>
 
@@ -157,12 +157,12 @@ List subscriptions of the authenticated user
 
  - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of subscriptions to return per page. No more than 50. Default: `10`
  - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The page number. No more than 2³² (4294967296). Default: `1`
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<<code>[Cloudnode.DatedNewsletterSubscription[]](#interface-cloudnodedatednewslettersubscription)</code>></code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "UNAUTHORIZED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "NO_PERMISSION"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<[Cloudnode.DatedNewsletterSubscription[]](#interface-cloudnodedatednewslettersubscription)>>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodenewslettersunsubscribesubscription"></a>
 
@@ -171,12 +171,12 @@ List subscriptions of the authenticated user
 Revoke a subscription (unsubscribe)
 
  - `subscription` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the subscription to revoke.
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RESOURCE_NOT_FOUND"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INVALID_DATA"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodetokencreatepermissions-lifetime-note"></a>
 
@@ -187,13 +187,13 @@ Create token
  - `permissions` <code>[string[]](undefined)</code> List of permissions to grant to the token. You must already have each of these permissions with your current token.
  - `lifetime` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
  - `note` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> A user-specified note to label the token. Max length: 2⁸ (256) characters.
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[Cloudnode.Token](#interface-cloudnodetoken)</code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INVALID_DATA"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "UNAUTHORIZED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "NO_PERMISSION"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.Token](#interface-cloudnodetoken)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodetokengetid"></a>
 
@@ -202,14 +202,14 @@ Create token
 Get token details
 
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[Cloudnode.Token](#interface-cloudnodetoken)</code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RESOURCE_NOT_FOUND"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INVALID_DATA"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "UNAUTHORIZED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "NO_PERMISSION"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.Token](#interface-cloudnodetoken)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodetokenlistlimit-page-internal"></a>
 
@@ -220,12 +220,12 @@ List tokens of user
  - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of tokens to return per page. No more than 50. Default: `10`
  - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The page number. No more than 2³² (4294967296). Default: `1`
  - `internal` <code>[any](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)</code> Internal tokens are returned as well if this parameter is present.
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<<code>[Cloudnode.PartialToken[]](#interface-cloudnodepartialtoken)</code>></code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "UNAUTHORIZED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "NO_PERMISSION"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<[Cloudnode.PartialToken[]](#interface-cloudnodepartialtoken)>>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodetokenrevokeid"></a>
 
@@ -234,15 +234,15 @@ List tokens of user
 Revoke token
 
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RESOURCE_NOT_FOUND"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INVALID_DATA"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MODIFICATION_NOT_ALLOWED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "UNAUTHORIZED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "NO_PERMISSION"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MODIFICATION_NOT_ALLOWED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodetokensrefresh"></a>
 
@@ -251,13 +251,13 @@ Revoke token
 Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.
 
 
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<<code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<<code>[Cloudnode.Token](#interface-cloudnodetoken)</code>></code>></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INVALID_DATA"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "UNAUTHORIZED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "NO_PERMISSION"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "RATE_LIMITED"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "INTERNAL_SERVER_ERROR"}</code></code>
- - Throws: <code><code>[Cloudnode.Error](#interface-cloudnodeerror)</code> & <code>{code: "MAINTENANCE"}</code></code>
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.Token](#interface-cloudnodetoken)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 
 
@@ -281,7 +281,7 @@ An API response. This class implements the interface provided as `T`.
 
 Raw API response
 
- - `headers` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<<code>string, string</code>></code> The headers returned by the server. (read-only)
+ - `headers` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<string, string></code> The headers returned by the server. (read-only)
  - `ok` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> A boolean indicating whether the response was successful (status in the range `200` – `299`) or not. (read-only)
  - `redirected` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry). (read-only)
  - `status` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The status code of the response. (read-only)
@@ -307,7 +307,7 @@ An API error response.
 
  - `message` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> A human-readable description of this error
  - `code` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Error code
- - `fields` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<<code>string, string | Record<<code>string, string</code>></code>></code> Affected request fields. The key is the name of the input parameter (e.g. from the request body or query string) and the value is a human-readable error message for that field.
+ - `fields` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<string, string | Record<string, string>></code> Affected request fields. The key is the name of the input parameter (e.g. from the request body or query string) and the value is a human-readable error message for that field.
 
 <a name="interface-cloudnodenewsletter"></a>
 
@@ -317,7 +317,7 @@ A newsletter that you can subscribe to
 
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The unique identifier for this newsletter
  - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The name of this newsletter
- - `data` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<<code>string, NewsletterData</code>></code> Additional data that is required to subscribe to this newsletter
+ - `data` <code>[Record](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type)<string, NewsletterData></code> Additional data that is required to subscribe to this newsletter
 
 <a name="interface-cloudnodenewsletterdata"></a>
 
@@ -326,8 +326,8 @@ A newsletter that you can subscribe to
 A data field that is required to subscribe to this newsletter
 
  - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The name of the field
- - `description` <code><code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> | <code>[undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code></code> Description of the field
- - `type` <code><code>"string"</code> | <code>"number"</code> | <code>"boolean"</code></code> The type of data
+ - `description` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code> Description of the field
+ - `type` <code>"string" | "number" | "boolean"</code> The type of data
  - `required` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether this field is required
 
 <a name="interface-cloudnodenewslettersubscription"></a>
@@ -359,8 +359,8 @@ A token, however, the `permissions` field is not included
 
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID or key of the token
  - `created` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> Date and time when this token was created
- - `expires` <code><code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> | <code>[null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code></code> Date and time when this token expires. Null if it never expires.
- - `internal` <code><code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> | <code>[undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code></code> Whether this token is for internal use only, e.g. to power a session. In other words, an internal token is one that was **not** created by the client.
+ - `expires` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Date and time when this token expires. Null if it never expires.
+ - `internal` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code> Whether this token is for internal use only, e.g. to power a session. In other words, an internal token is one that was **not** created by the client.
  - `metadata` <code>[Cloudnode.TokenMetadata](#interface-cloudnodetokenmetadata)</code> Additional metadata about this token
 
 <a name="interface-cloudnodetoken"></a>
@@ -371,9 +371,9 @@ An authentication token
 
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID or key of the token
  - `created` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> Date and time when this token was created
- - `expires` <code><code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> | <code>[null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code></code> Date and time when this token expires. Null if it never expires.
+ - `expires` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Date and time when this token expires. Null if it never expires.
  - `permissions` <code>[string[]](undefined)</code> Permission scopes that this token holds
- - `internal` <code><code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> | <code>[undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code></code> Whether this token is for internal use only, e.g. to power a session. In other words, an internal token is one that was **not** created by the client.
+ - `internal` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code> Whether this token is for internal use only, e.g. to power a session. In other words, an internal token is one that was **not** created by the client.
  - `metadata` <code>[Cloudnode.TokenMetadata](#interface-cloudnodetokenmetadata)</code> Additional metadata about this token
 
 <a name="interface-cloudnodetokenmetadata"></a>
@@ -382,7 +382,7 @@ An authentication token
 
 Token metadata
 
- - `note` <code><code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> | <code>[undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code></code> A user-supplied note for this token
+ - `note` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code> A user-supplied note for this token
 
 
 
