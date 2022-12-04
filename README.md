@@ -184,7 +184,7 @@ Revoke a subscription (unsubscribe)
 
 Create token
 
- - `permissions` <code>[string[]](undefined)</code> List of permissions to grant to the token. You must already have each of these permissions with your current token.
+ - `permissions` <code>[string[]](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> List of permissions to grant to the token. You must already have each of these permissions with your current token.
  - `lifetime` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
  - `note` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> A user-specified note to label the token. Max length: 2⁸ (256) characters.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.Token](#interface-cloudnodetoken)>></code>
@@ -372,7 +372,7 @@ An authentication token
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID or key of the token
  - `created` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> Date and time when this token was created
  - `expires` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Date and time when this token expires. Null if it never expires.
- - `permissions` <code>[string[]](undefined)</code> Permission scopes that this token holds
+ - `permissions` <code>[string[]](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Permission scopes that this token holds
  - `internal` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code> Whether this token is for internal use only, e.g. to power a session. In other words, an internal token is one that was **not** created by the client.
  - `metadata` <code>[Cloudnode.TokenMetadata](#interface-cloudnodetokenmetadata)</code> Additional metadata about this token
 

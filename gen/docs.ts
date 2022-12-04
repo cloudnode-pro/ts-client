@@ -116,7 +116,7 @@ export function linkType (type: string, config: Config, schema: Schema): string 
             URLSearchParams: "https://developer.mozilla.org/docs/Web/API/URLSearchParams",
             FormData: "https://developer.mozilla.org/docs/Web/API/FormData",
         };
-        if (bareType in primitives) return `[${typeName}](${primitives[typeName]})`;
+        if (bareType in primitives) return `[${typeName}](${primitives[bareType]})`;
         return typeName;
     };
 
