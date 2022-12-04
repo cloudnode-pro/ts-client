@@ -1,3 +1,7 @@
+import {Config} from "./Config";
+import Schema from "./Schema";
+import {linkType} from "./docs.js";
+
 interface DocSchema {
     groups: DocSchema.Group[];
 }
@@ -24,7 +28,7 @@ namespace DocSchema {
             return this.displayName.toLowerCase().replace(/[^a-z\d\s]/g, "").replace(/\s+/g, "-");
         }
 
-        public get content(): string {
+        public content(config: Config, schema: Schema): string {
             return "";
         }
     }
@@ -39,12 +43,12 @@ namespace DocSchema {
             this.readonly = readonly;
         }
 
-        public override get content(): string {
-            return `${this.description}\n\n - Type: \`${this.type}\`${this.readonly ? "\n - Read-only" : ""}`;
+        public override content(config: Config, schema: Schema): string {
+            return `${this.description}\n\n - Type: ${linkType(this.type, config, schema)}${this.readonly ? "\n - Read-only" : ""}`;
         }
 
-        public get inlineContent(): string {
-            return `\`${this.name}\` \`${this.type}\` ${this.description}${this.readonly ? " (read-only)" : ""}`;
+        public inlineContent(config: Config, schema: Schema): string {
+            return `\`${this.name}\` ${linkType(this.type, config, schema)} ${this.description}${this.readonly ? " (read-only)" : ""}`;
         }
     }
 
@@ -59,12 +63,12 @@ namespace DocSchema {
             this.required = required;
         }
 
-        public override get content(): string {
-            return `${this.description}\n\n - Type: \`${this.type}\`\n - Default: \`${this.default}\`\n - Required: \`${this.required}\``;
+        public override content(config: Config, schema: Schema): string {
+            return `${this.description}\n\n - Type: ${linkType(this.type, config, schema)}\n - Default: \`${this.default}\`\n - Required: \`${this.required}\``;
         }
 
-        public override get inlineContent(): string {
-            return `\`${this.name}\` \`${this.type}\` ${this.description} (default: \`${this.default}\`, required: \`${this.required}\`)`;
+        public override inlineContent(config: Config, schema: Schema): string {
+            return `\`${this.name}\` ${linkType(this.type, config, schema)} ${this.description} (default: \`${this.default}\`, required: \`${this.required}\`)`;
         }
     }
 
@@ -89,8 +93,8 @@ namespace DocSchema {
             return this.params.map(p => !p.required || p.default ? `[${p.name}]` : p.name).join(", ");
         }
 
-        public override get content(): string {
-            return `${this.description}\n\n${this.params.map(p => ` - \`${p.name}\` \`${p.type}\` ${p.description}${p.description.endsWith(".") ? "" : "."}${p.default ? ` Default: \`${p.default}\`` : ""}`).join("\n")}\n${this.returns ? ` - Returns: \`${this.async ? "Promise<" : ""}${this.mainClassName ? `${this.mainClassName}.ApiResponse<` : ""}${this.returns.type}${this.mainClassName ? ">" : ""}${this.async ? ">" : ""}\`${this.returns.description ? ` ${this.returns.description}` : ""}` : ""}\n${this.throws.map(t => ` - Throws: \`${t.type}\`${t.description ? ` ${t.description}` : ""}`).join("\n")}`;
+        public override content(config: Config, schema: Schema): string {
+            return `${this.description}\n\n${this.params.map(p => ` - \`${p.name}\` ${linkType(p.type, config, schema)} ${p.description}${p.description.endsWith(".") ? "" : "."}${p.default ? ` Default: \`${p.default}\`` : ""}`).join("\n")}\n${this.returns ? ` - Returns: ${linkType(`${this.async ? "Promise<" : ""}${this.mainClassName ? `${this.mainClassName}.ApiResponse<` : ""}${this.returns.type}${this.mainClassName ? ">" : ""}${this.async ? ">" : ""}`, config, schema)}${this.returns.description ? ` ${this.returns.description}` : ""}` : ""}\n${this.throws.map(t => ` - Throws: ${linkType(t.type, config, schema)}${t.description ? ` ${t.description}` : ""}`).join("\n")}`;
         }
     }
 
@@ -108,11 +112,11 @@ namespace DocSchema {
             return this.properties.map(p => `${" ".repeat(indent)}- [${p.displayName}](#${p.anchorName})`).join("\n");
         }
 
-        override get content(): string {
-            return `${this.description}${["Interface", "Class"].includes(this.type) ? `\n\n${this.properties.map(p => " - " + p.inlineContent).join("\n")}` : ""}`;
+        public override content(config: Config, schema: Schema): string {
+            return `${this.description}${["Interface", "Class"].includes(this.type) ? `\n\n${this.properties.map(p => " - " + p.inlineContent(config, schema)).join("\n")}` : ""}`;
         }
 
-        public get inlineContent(): string {
+        public inlineContent(): string {
             return `${this.description}\n\n${this.propertiesList(2)}`;
         }
     }
