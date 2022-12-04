@@ -20,7 +20,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly list: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>;
+        readonly list: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>>;
         /**
          * Get newsletter
          * @GET /newsletter/:id
@@ -30,7 +30,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly get: (id: string) => Promise<Cloudnode.Newsletter>;
+        readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Newsletter>>;
         /**
          * Subscribe to newsletter
          * @POST /newsletter/:id/subscribe
@@ -44,7 +44,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.NewsletterSubscription>;
+        readonly subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>>;
     };
     newsletters: {
         /**
@@ -57,7 +57,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly unsubscribe: (subscription: string) => Promise<void>;
+        readonly unsubscribe: (subscription: string) => Promise<Cloudnode.ApiResponse<void>>;
         /**
          * List subscriptions of the authenticated user
          * @GET /newsletters/subscriptions
@@ -69,7 +69,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>;
+        readonly listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>>;
     };
     token: {
         /**
@@ -84,7 +84,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly list: (limit?: number, page?: number, internal?: any) => Promise<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>;
+        readonly list: (limit?: number, page?: number, internal?: any) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>>;
         /**
          * Create token
          * @POST /token
@@ -98,7 +98,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly create: (permissions: string[], lifetime: number, note?: string) => Promise<Cloudnode.Token>;
+        readonly create: (permissions: string[], lifetime: number, note?: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
         /**
          * Get token details
          * @GET /token/:id
@@ -111,7 +111,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly get: (id: string) => Promise<Cloudnode.Token>;
+        readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
         /**
          * Revoke token
          * @DELETE /token/:id
@@ -125,7 +125,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly revoke: (id: string) => Promise<void>;
+        readonly revoke: (id: string) => Promise<Cloudnode.ApiResponse<void>>;
     };
     tokens: {
         /**
@@ -138,14 +138,14 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly refresh: () => Promise<Cloudnode.Token>;
+        readonly refresh: () => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
     };
 }
 declare namespace Cloudnode {
     /**
      * An API error response.
      */
-    interface Error {
+    export interface Error {
         /**
          * A human-readable description of this error
          */
@@ -162,7 +162,7 @@ declare namespace Cloudnode {
     /**
      * A data field that is required to subscribe to this newsletter
      */
-    interface NewsletterData {
+    export interface NewsletterData {
         /**
          * The name of the field
          */
@@ -183,7 +183,7 @@ declare namespace Cloudnode {
     /**
      * A newsletter that you can subscribe to
      */
-    interface Newsletter {
+    export interface Newsletter {
         /**
          * The unique identifier for this newsletter
          */
@@ -200,7 +200,7 @@ declare namespace Cloudnode {
     /**
      * Your subscription to a newsletter
      */
-    interface NewsletterSubscription {
+    export interface NewsletterSubscription {
         /**
          * The ID of the subscription. Can be used to unsubscribe.
          */
@@ -217,7 +217,7 @@ declare namespace Cloudnode {
     /**
      * A newsletter subscription with a creation date
      */
-    interface DatedNewsletterSubscription {
+    export interface DatedNewsletterSubscription {
         /**
          * The ID of the subscription. Can be used to unsubscribe.
          */
@@ -238,7 +238,7 @@ declare namespace Cloudnode {
     /**
      * A token, however, the `permissions` field is not included
      */
-    interface PartialToken {
+    export interface PartialToken {
         /**
          * The ID or key of the token
          */
@@ -263,7 +263,7 @@ declare namespace Cloudnode {
     /**
      * An authentication token
      */
-    interface Token {
+    export interface Token {
         /**
          * The ID or key of the token
          */
@@ -292,13 +292,16 @@ declare namespace Cloudnode {
     /**
      * Token metadata
      */
-    interface TokenMetadata {
+    export interface TokenMetadata {
         /**
          * A user-supplied note for this token
          */
         note: string | undefined;
     }
-    interface PaginatedData<T> {
+    /**
+     * Paginated response
+     */
+    export interface PaginatedData<T> {
         /**
          * The page items
          */
@@ -316,5 +319,49 @@ declare namespace Cloudnode {
          */
         page: number;
     }
+    export class RawResponse {
+        /**
+         * The headers returned by the server.
+         * @readonly
+         */
+        readonly headers: Record<string, string>;
+        /**
+         * A boolean indicating whether the response was successful (status in the range `200` – `299`) or not.
+         */
+        readonly ok: boolean;
+        /**
+         * Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry).
+         */
+        readonly redirected: boolean;
+        /**
+         * The status code of the response.
+         * @readonly
+         */
+        readonly status: number;
+        /**
+         * The status message corresponding to the status code. (e.g., `OK` for `200`).
+         * @readonly
+         */
+        readonly statusText: string;
+        /**
+         * The URL of the response.
+         */
+        readonly url: string;
+        constructor(response: import("node-fetch").Response);
+    }
+    namespace R {
+        class ApiResponse {
+            #private;
+            constructor(response: RawResponse);
+            /**
+             * API response
+             * @readonly
+             */
+            get _response(): RawResponse;
+        }
+    }
+    export type ApiResponse<T> = T & R.ApiResponse;
+    export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T>;
+    export {};
 }
 export default Cloudnode;

@@ -38,7 +38,7 @@ class {{config.name}} {
      * @param body Body to use in the request
      * @private
      */
-    #sendRequest = async <T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<T> => {
+    async #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
         const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
@@ -75,8 +75,9 @@ class {{config.name}} {
             });
         }
         else data = text as any;
-        if (response.ok) return data;
-        else throw data;
+        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response));
+        if (response.ok) return res;
+        else throw res;
     }
 
     {{#namespaces}}
@@ -94,7 +95,7 @@ class {{config.name}} {
          <%={{ }}=%>
          {{/throws}}
          */
-         {{name}}: async ({{{tsArgs}}}): Promise<{{{returnType}}}> => {
+         {{name}}: async ({{{tsArgs}}}): Promise<{{config.name}}.ApiResponse<{{{returnType}}}>> => {
             return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
          },
         {{/operations}}
@@ -114,7 +115,7 @@ class {{config.name}} {
      <%={{ }}=%>
      {{/throws}}
      */
-     public async {{name}}({{{tsArgs}}}): Promise<{{{returnType}}}> {
+     public async {{name}}({{{tsArgs}}}): Promise<{{config.name}}.ApiResponse<{{{returnType}}}>> {
         return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
      };
     {{/operations}}
@@ -135,6 +136,9 @@ namespace {{config.name}} {
     }
     {{/schema.models}}
 
+    /**
+     * Paginated response
+     */
     export interface PaginatedData<T> {
         /**
          * The page items
@@ -152,6 +156,79 @@ namespace {{config.name}} {
          * The current page number
          */
         page: number;
+    }
+
+    export class RawResponse {
+        /**
+         * The headers returned by the server.
+         * @readonly
+         */
+        public readonly headers: Record<string, string>;
+
+        /**
+         * A boolean indicating whether the response was successful (status in the range `200` – `299`) or not.
+         */
+        public readonly ok: boolean
+
+        /**
+         * Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry).
+         */
+        public readonly redirected: boolean;
+
+        /**
+         * The status code of the response.
+         * @readonly
+         */
+        public readonly status: number;
+
+        /**
+         * The status message corresponding to the status code. (e.g., `OK` for `200`).
+         * @readonly
+         */
+        public readonly statusText: string;
+
+        /**
+         * The URL of the response.
+         */
+        public readonly url: string;
+
+        public constructor(response: import("node-fetch").Response) {
+            this.headers = Object.fromEntries(response.headers.entries());
+            this.ok = response.ok;
+            this.redirected = response.redirected;
+            this.status = response.status;
+            this.statusText = response.statusText;
+            this.url = response.url;
+        }
+    }
+
+    namespace R {
+        export class ApiResponse {
+            /**
+             * API response
+             * @readonly
+             * @private
+             */
+            readonly #response: RawResponse;
+
+            public constructor(response: RawResponse) {
+                this.#response = response;
+            }
+
+            /**
+             * API response
+             * @readonly
+             */
+            public get _response(): RawResponse {
+                return this.#response;
+            }
+        }
+    }
+
+    export type ApiResponse<T> = T & R.ApiResponse;
+
+    export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T> {
+        return Object.assign(new R.ApiResponse(response), data);
     }
 }
 

@@ -6,6 +6,30 @@ import fs from "node:fs/promises";
 import Package from "./Package";
 import Mustache from "mustache";
 import * as child_process from "child_process";
+import * as crypto from "crypto";
+
+/**
+ * Global types
+ */
+export const globalTypes = {
+    paginatedData: (config: Config) => new DocSchema.Group(config.name + ".PaginatedData<T>", "Interface", "Paginated response", [
+        new DocSchema.Property("items", "T[]", "The page items"),
+        new DocSchema.Property("total", "number", "The total number of items"),
+        new DocSchema.Property("limit", "number", "The number of items per page"),
+        new DocSchema.Property("page", "number", "The current page number")
+    ]),
+    apiResponse: (config: Config) => new DocSchema.Group(config.name + ".ApiResponse<T>", "Class", "An API response. This class implements the interface provided as `T` and includes all of its properties.", [
+        new DocSchema.Property("_response", config.name + ".RawResponse", "Raw API response"),
+    ]),
+    rawResponse: (config: Config) => new DocSchema.Group(config.name + ".RawResponse", "Class", "Raw API response", [
+        new DocSchema.Property("headers", "Record<string, string>", "The headers returned by the server.", undefined, true),
+        new DocSchema.Property("ok", "boolean", "A boolean indicating whether the response was successful (status in the range `200` – `299`) or not.", undefined, true),
+        new DocSchema.Property("redirected", "boolean", "Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry).", undefined, true),
+        new DocSchema.Property("status", "number", "The status code of the response.", undefined, true),
+        new DocSchema.Property("statusText", "string", "The status message corresponding to the status code. (e.g., `OK` for `200`).", undefined, true),
+        new DocSchema.Property("url", "string", "The URL of the response.", undefined, true),
+    ])
+} as const;
 
 /**
  * Generate doc schema
@@ -20,6 +44,9 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
     const mainNamespace = new DocSchema.Group(config.name, "Namespace", pkg.description, []);
     for (const model of schema.models)
         mainNamespace.properties.push(new DocSchema.Group(config.name + "." + model.name, "Interface", model.description, model.fields.map(property => new DocSchema.Property(property.name, property.type, property.description))));
+    mainNamespace.properties.push(globalTypes.paginatedData(config));
+    mainNamespace.properties.push(globalTypes.apiResponse(config));
+    mainNamespace.properties.push(globalTypes.rawResponse(config));
     const operations: (Schema.Operation & {name: string})[] = [];
     for (const [name, operation] of Object.entries(schema.operations)) {
         if (operation.type === "operation") operations.push({name, ...operation});
@@ -35,7 +62,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
         const queryParams = Object.entries(operation.parameters.query ?? {}).map(([name, parameter]) => new DocSchema.Parameter(name, parameter.type, parameter.description, parameter.required, parameter.default));
         const bodyParams = Object.entries(operation.parameters.body ?? {}).map(([name, parameter]) => new DocSchema.Parameter(name, parameter.type, parameter.description, parameter.required, parameter.default));
         const params: DocSchema.Parameter[] = [...pathParams, ...queryParams, ...bodyParams];
-        return new DocSchema.Method(config.instanceName + "." + operation.name, operation.description, params, returns, throws);
+        return new DocSchema.Method(config.instanceName + "." + operation.name, operation.description, params, returns, throws, undefined, config.name, true);
     });
     mainClass.properties.push(...operationMethods);
     mainClass.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));
@@ -51,15 +78,87 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
 }
 
 /**
+ * Create a link to a type
+ * @param type The type
+ * @param config The config
+ * @param schema The schema
+ */
+export function linkType (type: string, config: Config, schema: Schema): string {
+    const link = (typeName: string) => {
+        typeName = typeName.trim();
+        const bareType = typeName.split(".").pop()?.replace(/[^\w"'`]/g, "").trim() ?? typeName;
+        const model = schema.models.find(model => model.name === bareType);
+        if (model) {
+            const modelGroup = new DocSchema.Group(config.name + "." + model.name, "Interface", "", []);
+            return `[${typeName}](#${modelGroup.anchorName})`;
+        }
+        const globals = Object.values(globalTypes).map(group => group(config)).find(group => group.displayName.replace(/<(.*)>/g, "").split(/\W/g).includes(bareType));
+        if (globals) return `[${typeName}](#${globals.anchorName})`;
+        const primitives: Record<string, string> = {
+            string: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String",
+            number: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number",
+            boolean: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+            true: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+            false: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+            object: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object",
+            any: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object",
+            void: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+            undefined: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+            null: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null",
+            Date: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date",
+            Record: "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+            Array: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array",
+            Promise: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+            Error: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error",
+            RegExp: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+            Function: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function",
+            Map: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map",
+            Set: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Set",
+            Buffer: "https://nodejs.org/api/buffer.html",
+            Blob: "https://developer.mozilla.org/docs/Web/API/Blob",
+            URLSearchParams: "https://developer.mozilla.org/docs/Web/API/URLSearchParams",
+            FormData: "https://developer.mozilla.org/docs/Web/API/FormData",
+        };
+        if (bareType in primitives) return `[${typeName}](${primitives[bareType]})`;
+        return typeName;
+    };
+
+    const fullLink = (typeName: string): string => {
+        const parts = typeName.match(/\b(?<!["`'])[a-zA-Z_$][\w_$.]+(<.*>)?/g) ?? [];
+        if (parts.length > 1) {
+            let result = typeName;
+            const links: Record<string, string> = {};
+            for (const part of parts) {
+                const partID = crypto.randomBytes(16).toString("hex");
+                result = result.replace(part, partID);
+                links[partID] = fullLink(part);
+            }
+            for (const [id, link] of Object.entries(links)) result = result.replace(id, link);
+            return result;
+        }
+        else {
+            // if it includes a generic, link the generic
+            const parts = typeName.match(/<(.*)>/);
+            if (parts) return `${link(typeName.slice(0, parts.index))}<${fullLink(parts[1])}>`;
+        }
+        return link(typeName);
+    };
+
+    return `<code>${fullLink(type)}</code>`;
+}
+
+/**
  * Generate docs in markdown format
+ * @param config
  * @param schema
+ * @param docSchema
  * @param [tableOfContents=true]
  */
-export function generateMarkdownDocs (schema: DocSchema, tableOfContents: boolean = true): string {
+export function generateMarkdownDocs (config: Config, schema: Schema, docSchema: DocSchema, tableOfContents: boolean = true): string {
     let output = "# Documentation\n\n";
     if (tableOfContents) {
         let toc = "";
-        for (const group of schema.groups) {
+        for (const group of docSchema.groups) {
             toc += ` - [${group.displayName}](#${group.anchorName})\n`;
             toc += group.propertiesList(3);
             toc += "\n\n";
@@ -69,7 +168,7 @@ export function generateMarkdownDocs (schema: DocSchema, tableOfContents: boolea
         output += toc;
         output += `</details>\n\n`;
     }
-    for (const group of schema.groups) {
+    for (const group of docSchema.groups) {
         output += `<a name="${group.anchorName}"></a>\n\n`;
         output += `## ${group.displayName}\n\n`;
         output += group.description;
@@ -77,7 +176,7 @@ export function generateMarkdownDocs (schema: DocSchema, tableOfContents: boolea
         for (const property of group.properties) {
             output += `<a name="${property.anchorName}"></a>\n\n`;
             output += `### ${property.displayName}\n\n`;
-            output += property.content;
+            output += property.content(config, schema);
             output += "\n\n";
         }
         output += "\n\n";

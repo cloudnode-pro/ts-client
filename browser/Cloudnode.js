@@ -33,7 +33,7 @@ class Cloudnode {
      * @param body Body to use in the request
      * @private
      */
-    #sendRequest = async (operation, pathParams, queryParams, body) => {
+    async #sendRequest(operation, pathParams, queryParams, body) {
         const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
@@ -72,11 +72,12 @@ class Cloudnode {
         }
         else
             data = text;
+        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response));
         if (response.ok)
-            return data;
+            return res;
         else
-            throw data;
-    };
+            throw res;
+    }
     newsletter = {
         /**
          * List newsletters
@@ -228,4 +229,70 @@ class Cloudnode {
         },
     };
 }
+(function (Cloudnode) {
+    class RawResponse {
+        /**
+         * The headers returned by the server.
+         * @readonly
+         */
+        headers;
+        /**
+         * A boolean indicating whether the response was successful (status in the range `200` – `299`) or not.
+         */
+        ok;
+        /**
+         * Indicates whether or not the response is the result of a redirect (that is, its URL list has more than one entry).
+         */
+        redirected;
+        /**
+         * The status code of the response.
+         * @readonly
+         */
+        status;
+        /**
+         * The status message corresponding to the status code. (e.g., `OK` for `200`).
+         * @readonly
+         */
+        statusText;
+        /**
+         * The URL of the response.
+         */
+        url;
+        constructor(response) {
+            this.headers = Object.fromEntries(response.headers.entries());
+            this.ok = response.ok;
+            this.redirected = response.redirected;
+            this.status = response.status;
+            this.statusText = response.statusText;
+            this.url = response.url;
+        }
+    }
+    Cloudnode.RawResponse = RawResponse;
+    let R;
+    (function (R) {
+        class ApiResponse {
+            /**
+             * API response
+             * @readonly
+             * @private
+             */
+            #response;
+            constructor(response) {
+                this.#response = response;
+            }
+            /**
+             * API response
+             * @readonly
+             */
+            get _response() {
+                return this.#response;
+            }
+        }
+        R.ApiResponse = ApiResponse;
+    })(R || (R = {}));
+    function makeApiResponse(data, response) {
+        return Object.assign(new R.ApiResponse(response), data);
+    }
+    Cloudnode.makeApiResponse = makeApiResponse;
+})(Cloudnode || (Cloudnode = {}));
 

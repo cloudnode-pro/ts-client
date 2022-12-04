@@ -40,5 +40,5 @@ await createBrowserSDK(config);
 // generate doc schema
 const docSchema = await generateDocSchema(schema, config, pkg);
 // generate readme
-const docMD = generateMarkdownDocs(docSchema, true);
+const docMD = generateMarkdownDocs(config, schema, docSchema, true);
 await generateReadme(docMD, config, pkg);
