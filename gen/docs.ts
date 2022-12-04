@@ -124,7 +124,6 @@ export function linkType (type: string, config: Config, schema: Schema): string 
     };
 
     const fullLink = (typeName: string): string => {
-        if (typeName.startsWith("string") && typeName.includes(",")) console.log(typeName);
         const parts = typeName.match(/\b(?<!["`'])[a-zA-Z_$][\w_$.]+(<.*>)?/g) ?? [];
         if (parts.length > 1) {
             let result = typeName;
