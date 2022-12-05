@@ -122,7 +122,7 @@ class {{config.name}} {
      * @param page Page to get
      * @returns The new page or null if the page is out of bounds
      */
-    async getPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>, page: number): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+    async getPage<T>(response: {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>, page: number): Promise<{{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>> | null> {
         if (page * response.limit > response.total || page < 1) return null;
         const query = Object.assign({}, response._response.request.queryParams);
         query.page = page.toString();
@@ -134,7 +134,7 @@ class {{config.name}} {
      * @param response Response to get the next page of
      * @returns The next page or null if this is the last page
      */
-    async getNextPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+    async getNextPage<T>(response: {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>): Promise<{{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>> | null> {
         return await this.getPage(response, response.page + 1);
     }
 
@@ -143,7 +143,7 @@ class {{config.name}} {
      * @param response Response to get the previous page of
      * @returns The previous page or null if this is the first page
      */
-    async getPreviousPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+    async getPreviousPage<T>(response: {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>): Promise<{{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>> | null> {
         return await this.getPage(response, response.page - 1);
     }
 
@@ -153,13 +153,13 @@ class {{config.name}} {
      * @param response Response to get all pages of
      * @returns All of the data in 1 page
      */
-    async getAllPages<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.PaginatedData<T>> {
+    async getAllPages<T>(response: {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>): Promise<{{config.name}}.PaginatedData<T>> {
         const pages: (true | null)[] = new Array(Math.ceil(response.total / response.limit)).fill(null);
         pages[response.page - 1] = true;
-        const promises: (Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> | true)[] = pages.map((page, i) => page === null ? this.getPage(response, i + 1) : true);
+        const promises: (Promise<{{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>> | null> | true)[] = pages.map((page, i) => page === null ? this.getPage(response, i + 1) : true);
         const newPages = await Promise.all(promises.filter(page => page !== true));
         newPages.splice(response.page - 1, 0, response);
-        const allPages = newPages.filter(p => p !== null) as Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>[];
+        const allPages = newPages.filter(p => p !== null) as {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>[];
         return {
             items: allPages.map(p => p.items).flat(),
             total: response.total,
