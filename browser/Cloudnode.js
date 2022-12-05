@@ -11,19 +11,19 @@ class Cloudnode {
      */
     #token;
     /**
-     * Base URL of the API
+     * API client options
      * @readonly
      * @private
      */
-    #baseUrl;
+    #options;
     /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
-     * @param [baseUrl="https://api.cloudnode.pro/v5/"] Base URL of the API
+     * @param [options] Options for the API client
      */
-    constructor(token, baseUrl = "https://api.cloudnode.pro/v5/") {
+    constructor(token, options = { baseUrl: "https://api.cloudnode.pro/v5/", autoRetry: true, maxRetryDelay: 5, maxRetries: 3 }) {
         this.#token = token;
-        this.#baseUrl = baseUrl;
+        this.#options = options;
     }
     /**
      * Send a request to the API
@@ -34,8 +34,8 @@ class Cloudnode {
      * @internal
      * @private
      */
-    async #sendRequest(operation, pathParams, queryParams, body) {
-        const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
+    async #sendRawRequest(operation, pathParams, queryParams, body) {
+        const url = new URL(operation.path.replace(/^\/+/, ""), this.#options.baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
         for (const [key, value] of Object.entries(queryParams))
@@ -78,6 +78,40 @@ class Cloudnode {
             return res;
         else
             throw res;
+    }
+    /**
+     * Send a request to the API with support for auto-retry
+     * @param operation The operation to call
+     * @param pathParams Path parameters to use in the request
+     * @param queryParams Query parameters to use in the request
+     * @param options API client options. Overrides the client's options
+     * @internal
+     * @private
+     */
+    #sendRequest(operation, pathParams, queryParams, body, options) {
+        return new Promise(async (resolve, reject) => {
+            const send = (i = 0) => {
+                this.#sendRawRequest(operation, pathParams, queryParams, body)
+                    .then(response => resolve(response))
+                    .catch(e => {
+                    options ??= this.#options;
+                    options.baseUrl ??= this.#options.baseUrl;
+                    options.autoRetry ??= this.#options.autoRetry;
+                    options.maxRetries ??= this.#options.maxRetries;
+                    options.maxRetryDelay ??= this.#options.maxRetryDelay;
+                    if (options.autoRetry && i < options.maxRetries && e instanceof Cloudnode.R.ApiResponse) {
+                        const res = e;
+                        const retryAfter = Number(res._response.status !== 429 ? res._response.headers["x-retry-after"] ?? res._response.headers["retry-after"] : res._response.headers["x-ratelimit-reset"] ?? res._response.headers["x-rate-limit-reset"] ?? res._response.headers["ratelimit-reset"] ?? res._response.headers["rate-limit-reset"] ?? res._response.headers["retry-after"] ?? res._response.headers["x-retry-after"]);
+                        if (Number.isNaN(retryAfter) || retryAfter > options.maxRetryDelay)
+                            return reject(e);
+                        setTimeout(send, Number(retryAfter) * 1000, ++i);
+                    }
+                    else
+                        reject(e);
+                });
+            };
+            send(0);
+        });
     }
     /**
      * Get another page of paginated results
@@ -314,7 +348,7 @@ class Cloudnode {
          */
         request;
         constructor(response, request) {
-            this.headers = Object.fromEntries(response.headers.entries());
+            this.headers = Object.fromEntries([...response.headers.entries()].map(([k, v]) => [k.toLowerCase(), v]));
             this.ok = response.ok;
             this.redirected = response.redirected;
             this.status = response.status;
@@ -345,7 +379,7 @@ class Cloudnode {
             }
         }
         R.ApiResponse = ApiResponse;
-    })(R || (R = {}));
+    })(R = Cloudnode.R || (Cloudnode.R = {}));
     function makeApiResponse(data, response) {
         return Object.assign(new R.ApiResponse(response), data);
     }

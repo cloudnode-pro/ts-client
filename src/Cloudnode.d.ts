@@ -8,9 +8,9 @@ declare class Cloudnode {
     /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
-     * @param [baseUrl="https://api.cloudnode.pro/v5/"] Base URL of the API
+     * @param [options] Options for the API client
      */
-    constructor(token?: string, baseUrl?: string);
+    constructor(token?: string, options?: Cloudnode.Options);
     /**
      * Get another page of paginated results
      * @param response Response to get a different page of
@@ -172,7 +172,7 @@ declare namespace Cloudnode {
     /**
      * An API error response.
      */
-    export interface Error {
+    interface Error {
         /**
          * A human-readable description of this error
          */
@@ -189,7 +189,7 @@ declare namespace Cloudnode {
     /**
      * A data field that is required to subscribe to this newsletter
      */
-    export interface NewsletterData {
+    interface NewsletterData {
         /**
          * The name of the field
          */
@@ -210,7 +210,7 @@ declare namespace Cloudnode {
     /**
      * A newsletter that you can subscribe to
      */
-    export interface Newsletter {
+    interface Newsletter {
         /**
          * The unique identifier for this newsletter
          */
@@ -227,7 +227,7 @@ declare namespace Cloudnode {
     /**
      * Your subscription to a newsletter
      */
-    export interface NewsletterSubscription {
+    interface NewsletterSubscription {
         /**
          * The ID of the subscription. Can be used to unsubscribe.
          */
@@ -244,7 +244,7 @@ declare namespace Cloudnode {
     /**
      * A newsletter subscription with a creation date
      */
-    export interface DatedNewsletterSubscription {
+    interface DatedNewsletterSubscription {
         /**
          * The ID of the subscription. Can be used to unsubscribe.
          */
@@ -265,7 +265,7 @@ declare namespace Cloudnode {
     /**
      * A token, however, the `permissions` field is not included
      */
-    export interface PartialToken {
+    interface PartialToken {
         /**
          * The ID or key of the token
          */
@@ -290,7 +290,7 @@ declare namespace Cloudnode {
     /**
      * An authentication token
      */
-    export interface Token {
+    interface Token {
         /**
          * The ID or key of the token
          */
@@ -319,7 +319,7 @@ declare namespace Cloudnode {
     /**
      * Token metadata
      */
-    export interface TokenMetadata {
+    interface TokenMetadata {
         /**
          * A user-supplied note for this token
          */
@@ -328,7 +328,7 @@ declare namespace Cloudnode {
     /**
      * Paginated response
      */
-    export interface PaginatedData<T> {
+    interface PaginatedData<T> {
         /**
          * The page items
          */
@@ -346,7 +346,7 @@ declare namespace Cloudnode {
          */
         page: number;
     }
-    export class RawResponse {
+    class RawResponse {
         /**
          * The headers returned by the server.
          * @readonly
@@ -402,8 +402,31 @@ declare namespace Cloudnode {
             get _response(): RawResponse;
         }
     }
-    export type ApiResponse<T> = T & R.ApiResponse;
-    export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T>;
-    export {};
+    type ApiResponse<T> = T & R.ApiResponse;
+    function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T>;
+    /**
+     * API client options
+     */
+    interface Options {
+        /**
+         * The base URL of the API
+         */
+        baseUrl: string;
+        /**
+         * Whether to automatically retry requests that fail temporarily.
+         * If enabled, when a request fails due to a temporary error, such as a rate limit, the request will be retried after the specified delay.
+         */
+        autoRetry: boolean;
+        /**
+         * The maximum number of seconds that is acceptable to wait before retrying a failed request.
+         * This requires {@link Options.autoRetry} to be enabled.
+         */
+        maxRetryDelay: number;
+        /**
+         * The maximum number of times to retry a failed request.
+         * This requires {@link Options.autoRetry} to be enabled.
+         */
+        maxRetries: number;
+    }
 }
 export default Cloudnode;
