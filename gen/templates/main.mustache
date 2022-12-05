@@ -102,6 +102,15 @@ class {{config.name}} {
     async getNextPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
         return await this.getPage(response, response.page + 1);
     }
+
+    /**
+     * Get previous page of paginated results
+     * @param response Response to get the previous page of
+     * @returns The previous page or null if this is the first page
+     */
+    async getPreviousPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+        return await this.getPage(response, response.page - 1);
+    }
     {{#namespaces}}
     public {{name}} = {
         {{#operations}}
