@@ -66,10 +66,37 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
     });
     mainClass.properties.push(...operationMethods);
     mainClass.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));
-    mainClass.properties.unshift(new DocSchema.Method(`new ${config.name}`, `Construct a new ${config.name} API client`, [
+    const always: DocSchema.Method[] = [];
+    always.push(new DocSchema.Method(`new ${config.name}`, `Construct a new ${config.name} API client`, [
         new DocSchema.Parameter("token", "string", "API token to use for requests", false),
         new DocSchema.Parameter("baseUrl", "string", "Base URL of the API", false, config.baseUrl)
     ], undefined, []));
+    always.push(new DocSchema.Method(`${config.name}.getPage<T>`, "Get another page of paginated results", [
+        new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get a different page of", true),
+        new DocSchema.Parameter("page", "number", "Page to get", true)
+    ], {
+        type: `Promise<${config.name}.ApiResponse<${config.name}.PaginatedData<T>> | null>`,
+        description: "The new page or null if the page is out of bounds"
+    }, []));
+    always.push(new DocSchema.Method(`${config.name}.getNextPage<T>`, "Get next page of paginated results", [
+        new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get the next page of", true)
+    ], {
+        type: `Promise<${config.name}.ApiResponse<${config.name}.PaginatedData<T>> | null>`,
+        description: "The next page or null if this is the last page"
+    }, []));
+    always.push(new DocSchema.Method(`${config.name}.getPreviousPage<T>`, "Get previous page of paginated results", [
+        new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get the previous page of", true)
+    ], {
+        type: `Promise<${config.name}.ApiResponse<${config.name}.PaginatedData<T>> | null>`,
+        description: "The previous page or null if this is the first page"
+    }, []));
+    always.push(new DocSchema.Method(`${config.name}.getAllPages<T>`, "Get all other pages of paginated results and return the complete data\n> **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.", [
+        new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get all pages of", true)
+    ], {
+        type: `Promise<${config.name}.PaginatedData<T>>`,
+        description: "All of the data in 1 page"
+    }, []));
+    mainClass.properties.unshift(...always);
     mainNamespace.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));
 
     doc.groups.push(mainClass);
