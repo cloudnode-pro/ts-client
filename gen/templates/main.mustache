@@ -40,8 +40,8 @@ class {{config.name}} {
      * @internal
      * @private
      */
-    async #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
-        const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
+    async #sendRawRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<{{config.name}}.ApiResponse<T>> {
+        const url = new URL(operation.path.replace(/^\/+/, ""), this.#options.baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
         for (const [key, value] of Object.entries(queryParams))
