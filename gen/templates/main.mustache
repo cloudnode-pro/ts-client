@@ -111,6 +111,28 @@ class {{config.name}} {
     async getPreviousPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
         return await this.getPage(response, response.page - 1);
     }
+
+    /**
+     * Get all other pages of paginated results and return the complete data
+     * > **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.
+     * @param response Response to get all pages of
+     * @returns All pages of data
+     */
+    async getAllPages<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.PaginatedData<T>> {
+        const pages: (true | null)[] = new Array(Math.ceil(response.total / response.limit)).fill(null);
+        pages[response.page - 1] = true;
+        const promises: (Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> | true)[] = pages.map((page, i) => page === null ? this.getPage(response, i + 1) : true);
+        const newPages = await Promise.all(promises.filter(page => page !== true));
+        newPages.splice(response.page - 1, 0, response);
+        const allPages = newPages.filter(p => p !== null) as Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>[];
+        return {
+            items: allPages.map(p => p.items).flat(),
+            total: response.total,
+            limit: response.limit,
+            page: 1
+        };
+    }
+
     {{#namespaces}}
     public {{name}} = {
         {{#operations}}
