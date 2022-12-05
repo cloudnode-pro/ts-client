@@ -26,6 +26,7 @@ class Cloudnode {
      * @readonly
      * @private
      * @static
+     * @internal
      */
     static readonly #defaultOptions: Cloudnode.Options = {
         baseUrl: "https://api.cloudnode.pro/v5/",

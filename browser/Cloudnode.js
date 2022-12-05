@@ -21,6 +21,7 @@ class Cloudnode {
      * @readonly
      * @private
      * @static
+     * @internal
      */
     static #defaultOptions = {
         baseUrl: "https://api.cloudnode.pro/v5/",
