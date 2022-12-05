@@ -112,7 +112,7 @@ class Cloudnode {
      * Get all other pages of paginated results and return the complete data
      * > **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.
      * @param response Response to get all pages of
-     * @returns All pages of data
+     * @returns All of the data in 1 page
      */
     async getAllPages(response) {
         const pages = new Array(Math.ceil(response.total / response.limit)).fill(null);
