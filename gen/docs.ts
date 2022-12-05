@@ -171,7 +171,7 @@ export function linkType (type: string, config: Config, schema: Schema): string 
         return link(typeName);
     };
 
-    return `<code>${fullLink(type)}</code>`;
+    return `<code>${fullLink(type).replaceAll("<", "&lt;")}</code>`;
 }
 
 /**
