@@ -36,6 +36,7 @@ class Cloudnode {
      * @param pathParams Path parameters to use in the request
      * @param queryParams Query parameters to use in the request
      * @param body Body to use in the request
+     * @internal
      * @private
      */
     async #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
@@ -75,9 +76,61 @@ class Cloudnode {
             });
         }
         else data = text as any;
-        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response));
+        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response, {operation, pathParams, queryParams, body} as const));
         if (response.ok) return res;
         else throw res;
+    }
+
+    /**
+     * Get another page of paginated results
+     * @param response Response to get a different page of
+     * @param page Page to get
+     * @returns The new page or null if the page is out of bounds
+     */
+    async getPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>, page: number): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+        if (page * response.limit > response.total || page < 1) return null;
+        const query = Object.assign({}, response._response.request.queryParams);
+        query.page = page.toString();
+        return await this.#sendRequest(response._response.request.operation, response._response.request.pathParams, query, response._response.request.body);
+    }
+
+    /**
+     * Get next page of paginated results
+     * @param response Response to get the next page of
+     * @returns The next page or null if this is the last page
+     */
+    async getNextPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+        return await this.getPage(response, response.page + 1);
+    }
+
+    /**
+     * Get previous page of paginated results
+     * @param response Response to get the previous page of
+     * @returns The previous page or null if this is the first page
+     */
+    async getPreviousPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+        return await this.getPage(response, response.page - 1);
+    }
+
+    /**
+     * Get all other pages of paginated results and return the complete data
+     * > **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.
+     * @param response Response to get all pages of
+     * @returns All pages of data
+     */
+    async getAllPages<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.PaginatedData<T>> {
+        const pages: (true | null)[] = new Array(Math.ceil(response.total / response.limit)).fill(null);
+        pages[response.page - 1] = true;
+        const promises: (Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> | true)[] = pages.map((page, i) => page === null ? this.getPage(response, i + 1) : true);
+        const newPages = await Promise.all(promises.filter(page => page !== true));
+        newPages.splice(response.page - 1, 0, response);
+        const allPages = newPages.filter(p => p !== null) as Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>[];
+        return {
+            items: allPages.map(p => p.items).flat(),
+            total: response.total,
+            limit: response.limit,
+            page: 1
+        };
     }
 
     public newsletter = {
@@ -398,7 +451,7 @@ namespace Cloudnode {
         /**
          * The page items
          */
-        items: T;
+        items: T[];
         /**
          * The total number of items
          */
@@ -445,15 +498,27 @@ namespace Cloudnode {
         /**
          * The URL of the response.
          */
-        public readonly url: string;
+        public readonly url: URL;
 
-        public constructor(response: import("node-fetch").Response) {
+        /**
+         * The request params
+         * @readonly
+         */
+        public readonly request: {
+            readonly operation: Schema.Operation;
+            readonly pathParams: Record<string, string>;
+            readonly queryParams: Record<string, string>;
+            readonly body: any;
+        };
+
+        public constructor(response: import("node-fetch").Response, request: {operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body: any}) {
             this.headers = Object.fromEntries(response.headers.entries());
             this.ok = response.ok;
             this.redirected = response.redirected;
             this.status = response.status;
             this.statusText = response.statusText;
-            this.url = response.url;
+            this.url = new URL(response.url);
+            this.request = request;
         }
     }
 

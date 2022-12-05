@@ -31,6 +31,7 @@ class Cloudnode {
      * @param pathParams Path parameters to use in the request
      * @param queryParams Query parameters to use in the request
      * @param body Body to use in the request
+     * @internal
      * @private
      */
     async #sendRequest(operation, pathParams, queryParams, body) {
@@ -72,11 +73,60 @@ class Cloudnode {
         }
         else
             data = text;
-        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response));
+        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response, { operation, pathParams, queryParams, body }));
         if (response.ok)
             return res;
         else
             throw res;
+    }
+    /**
+     * Get another page of paginated results
+     * @param response Response to get a different page of
+     * @param page Page to get
+     * @returns The new page or null if the page is out of bounds
+     */
+    async getPage(response, page) {
+        if (page * response.limit > response.total || page < 1)
+            return null;
+        const query = Object.assign({}, response._response.request.queryParams);
+        query.page = page.toString();
+        return await this.#sendRequest(response._response.request.operation, response._response.request.pathParams, query, response._response.request.body);
+    }
+    /**
+     * Get next page of paginated results
+     * @param response Response to get the next page of
+     * @returns The next page or null if this is the last page
+     */
+    async getNextPage(response) {
+        return await this.getPage(response, response.page + 1);
+    }
+    /**
+     * Get previous page of paginated results
+     * @param response Response to get the previous page of
+     * @returns The previous page or null if this is the first page
+     */
+    async getPreviousPage(response) {
+        return await this.getPage(response, response.page - 1);
+    }
+    /**
+     * Get all other pages of paginated results and return the complete data
+     * > **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.
+     * @param response Response to get all pages of
+     * @returns All pages of data
+     */
+    async getAllPages(response) {
+        const pages = new Array(Math.ceil(response.total / response.limit)).fill(null);
+        pages[response.page - 1] = true;
+        const promises = pages.map((page, i) => page === null ? this.getPage(response, i + 1) : true);
+        const newPages = await Promise.all(promises.filter(page => page !== true));
+        newPages.splice(response.page - 1, 0, response);
+        const allPages = newPages.filter(p => p !== null);
+        return {
+            items: allPages.map(p => p.items).flat(),
+            total: response.total,
+            limit: response.limit,
+            page: 1
+        };
     }
     newsletter = {
         /**
@@ -258,13 +308,19 @@ class Cloudnode {
          * The URL of the response.
          */
         url;
-        constructor(response) {
+        /**
+         * The request params
+         * @readonly
+         */
+        request;
+        constructor(response, request) {
             this.headers = Object.fromEntries(response.headers.entries());
             this.ok = response.ok;
             this.redirected = response.redirected;
             this.status = response.status;
             this.statusText = response.statusText;
-            this.url = response.url;
+            this.url = new URL(response.url);
+            this.request = request;
         }
     }
     Cloudnode.RawResponse = RawResponse;

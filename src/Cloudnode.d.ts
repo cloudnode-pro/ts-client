@@ -1,3 +1,4 @@
+import Schema from "../gen/Schema";
 /**
  * A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
  * @class
@@ -10,6 +11,32 @@ declare class Cloudnode {
      * @param [baseUrl="https://api.cloudnode.pro/v5/"] Base URL of the API
      */
     constructor(token?: string, baseUrl?: string);
+    /**
+     * Get another page of paginated results
+     * @param response Response to get a different page of
+     * @param page Page to get
+     * @returns The new page or null if the page is out of bounds
+     */
+    getPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>, page: number): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null>;
+    /**
+     * Get next page of paginated results
+     * @param response Response to get the next page of
+     * @returns The next page or null if this is the last page
+     */
+    getNextPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null>;
+    /**
+     * Get previous page of paginated results
+     * @param response Response to get the previous page of
+     * @returns The previous page or null if this is the first page
+     */
+    getPreviousPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null>;
+    /**
+     * Get all other pages of paginated results and return the complete data
+     * > **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.
+     * @param response Response to get all pages of
+     * @returns All pages of data
+     */
+    getAllPages<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.PaginatedData<T>>;
     newsletter: {
         /**
          * List newsletters
@@ -305,7 +332,7 @@ declare namespace Cloudnode {
         /**
          * The page items
          */
-        items: T;
+        items: T[];
         /**
          * The total number of items
          */
@@ -346,8 +373,23 @@ declare namespace Cloudnode {
         /**
          * The URL of the response.
          */
-        readonly url: string;
-        constructor(response: import("node-fetch").Response);
+        readonly url: URL;
+        /**
+         * The request params
+         * @readonly
+         */
+        readonly request: {
+            readonly operation: Schema.Operation;
+            readonly pathParams: Record<string, string>;
+            readonly queryParams: Record<string, string>;
+            readonly body: any;
+        };
+        constructor(response: import("node-fetch").Response, request: {
+            operation: Schema.Operation;
+            pathParams: Record<string, string>;
+            queryParams: Record<string, string>;
+            body: any;
+        });
     }
     namespace R {
         class ApiResponse {
