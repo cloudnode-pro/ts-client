@@ -86,6 +86,7 @@ class Cloudnode {
      * @param response Response to get a different page of
      * @param page Page to get
      * @returns The new page or null if the page is out of bounds
+     * @throws {Cloudnode.Error} Error returned by the API
      */
     async getPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>, page: number): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
         if (page * response.limit > response.total || page < 1) return null;
@@ -98,6 +99,7 @@ class Cloudnode {
      * Get next page of paginated results
      * @param response Response to get the next page of
      * @returns The next page or null if this is the last page
+     * @throws {Cloudnode.Error} Error returned by the API
      */
     async getNextPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
         return await this.getPage(response, response.page + 1);
@@ -107,6 +109,7 @@ class Cloudnode {
      * Get previous page of paginated results
      * @param response Response to get the previous page of
      * @returns The previous page or null if this is the first page
+     * @throws {Cloudnode.Error} Error returned by the API
      */
     async getPreviousPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
         return await this.getPage(response, response.page - 1);
@@ -117,6 +120,7 @@ class Cloudnode {
      * > **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.
      * @param response Response to get all pages of
      * @returns All of the data in 1 page
+     * @throws {Cloudnode.Error} Error returned by the API
      */
     async getAllPages<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.PaginatedData<T>> {
         const pages: (true | null)[] = new Array(Math.ceil(response.total / response.limit)).fill(null);
