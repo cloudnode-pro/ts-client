@@ -73,6 +73,10 @@ console.log(newsletter._response.status); // 200
 
  - [Class: `Cloudnode`](#class-cloudnode)
    - [`new Cloudnode([token], [baseUrl])`](#new-cloudnodetoken-baseurl)
+   - [`Cloudnode.getPage<T>(response, page)`](#cloudnodegetpagetresponse-page)
+   - [`Cloudnode.getNextPage<T>(response)`](#cloudnodegetnextpagetresponse)
+   - [`Cloudnode.getPreviousPage<T>(response)`](#cloudnodegetpreviouspagetresponse)
+   - [`Cloudnode.getAllPages<T>(response)`](#cloudnodegetallpagestresponse)
    - [`cloudnode.newsletter.get(id)`](#cloudnodenewslettergetid)
    - [`cloudnode.newsletter.list([limit], [page])`](#cloudnodenewsletterlistlimit-page)
    - [`cloudnode.newsletter.subscribe(id, email, [data])`](#cloudnodenewslettersubscribeid-email-data)
@@ -114,6 +118,48 @@ Construct a new Cloudnode API client
  - `token` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> API token to use for requests.
  - `baseUrl` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Base URL of the API. Default: `https://api.cloudnode.pro/v5/`
 
+
+
+<a name="cloudnodegetpagetresponse-page"></a>
+
+### `Cloudnode.getPage<T>(response, page)`
+
+Get another page of paginated results
+
+ - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<T>></code> Response to get a different page of.
+ - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> Page to get.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The new page or null if the page is out of bounds
+
+
+<a name="cloudnodegetnextpagetresponse"></a>
+
+### `Cloudnode.getNextPage<T>(response)`
+
+Get next page of paginated results
+
+ - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<T>></code> Response to get the next page of.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The next page or null if this is the last page
+
+
+<a name="cloudnodegetpreviouspagetresponse"></a>
+
+### `Cloudnode.getPreviousPage<T>(response)`
+
+Get previous page of paginated results
+
+ - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<T>></code> Response to get the previous page of.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The previous page or null if this is the first page
+
+
+<a name="cloudnodegetallpagestresponse"></a>
+
+### `Cloudnode.getAllPages<T>(response)`
+
+Get all other pages of paginated results and return the complete data
+> **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.
+
+ - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<T>></code> Response to get all pages of.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)<T>></code> All of the data in 1 page
 
 
 <a name="cloudnodenewslettergetid"></a>
