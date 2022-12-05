@@ -191,7 +191,7 @@ namespace {{config.name}} {
         /**
          * The URL of the response.
          */
-        public readonly url: string;
+        public readonly url: URL;
 
         public constructor(response: import("node-fetch").Response) {
             this.headers = Object.fromEntries(response.headers.entries());
