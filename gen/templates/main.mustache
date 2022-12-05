@@ -77,7 +77,7 @@ class {{config.name}} {
             });
         }
         else data = text as any;
-        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response, {operation, pathParams, queryParams, body} as const));
+        const res = {{config.name}}.makeApiResponse(data, new {{config.name}}.RawResponse(response, {operation, pathParams, queryParams, body} as const));
         if (response.ok) return res;
         else throw res;
     }
