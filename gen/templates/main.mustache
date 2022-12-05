@@ -83,6 +83,40 @@ class {{config.name}} {
     }
 
     /**
+     * Send a request to the API with support for auto-retry
+     * @param operation The operation to call
+     * @param pathParams Path parameters to use in the request
+     * @param queryParams Query parameters to use in the request
+     * @param options API client options. Overrides the client's options
+     * @internal
+     * @private
+     */
+    #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any, options?: Cloudnode.Options): Promise<Cloudnode.ApiResponse<T>> {
+        return new Promise(async (resolve, reject) => {
+            const send = (i: number = 0) => {
+                this.#sendRawRequest<T>(operation, pathParams, queryParams, body)
+                    .then(response => resolve(response))
+                    .catch(e => {
+                        options ??= this.#options;
+                        options.baseUrl ??= this.#options.baseUrl;
+                        options.autoRetry ??= this.#options.autoRetry;
+                        options.maxRetries ??= this.#options.maxRetries;
+                        options.maxRetryDelay ??= this.#options.maxRetryDelay;
+
+                        if (options.autoRetry && i < options.maxRetries && e instanceof Cloudnode.R.ApiResponse) {
+                            const res: Cloudnode.R.ApiResponse = e;
+                            const retryAfter: number = Number(res._response.status !== 429 ? res._response.headers["x-retry-after"] ?? res._response.headers["retry-after"] : res._response.headers["x-ratelimit-reset"] ?? res._response.headers["x-rate-limit-reset"] ?? res._response.headers["ratelimit-reset"] ?? res._response.headers["rate-limit-reset"] ?? res._response.headers["retry-after"] ?? res._response.headers["x-retry-after"]);
+                            if (Number.isNaN(retryAfter) || retryAfter > options.maxRetryDelay) return reject(e);
+                            setTimeout(send, Number(retryAfter) * 1000, ++i);
+                        }
+                        else reject(e);
+                    });
+            }
+            send(0);
+        });
+    }
+
+    /**
      * Get another page of paginated results
      * @param response Response to get a different page of
      * @param page Page to get
