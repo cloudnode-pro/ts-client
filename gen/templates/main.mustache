@@ -13,21 +13,22 @@ class {{config.name}} {
      */
     readonly #token?: string;
 
+
     /**
-     * Base URL of the API
+     * API client options
      * @readonly
      * @private
      */
-    readonly #baseUrl: string;
+    readonly #options: {{config.name}}.Options;
 
     /**
      * Construct a new {{config.name}} API client
      * @param token API token to use for requests
-     * @param [baseUrl="{{{config.baseUrl}}}"] Base URL of the API
+     * @param [options] Options for the API client
      */
-    public constructor(token?: string, baseUrl = "{{{config.baseUrl}}}") {
+    public constructor(token?: string, options: {{config.name}}.Options = {baseUrl: "{{{config.baseUrl}}}", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}) {
         this.#token = token;
-        this.#baseUrl = baseUrl;
+        this.#options = options;
     }
 
     /**
