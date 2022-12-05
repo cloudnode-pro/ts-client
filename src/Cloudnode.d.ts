@@ -10,7 +10,7 @@ declare class Cloudnode {
      * @param token API token to use for requests
      * @param [options] Options for the API client
      */
-    constructor(token?: string, options?: Cloudnode.Options);
+    constructor(token?: string, options?: Partial<Cloudnode.Options>);
     /**
      * Get another page of paginated results
      * @param response Response to get a different page of

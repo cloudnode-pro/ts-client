@@ -22,13 +22,32 @@ class {{config.name}} {
     readonly #options: {{config.name}}.Options;
 
     /**
+     * Default options
+     * @readonly
+     * @private
+     * @static
+     */
+    static readonly #defaultOptions: {{config.name}}.Options = {
+        baseUrl: "{{{config.baseUrl}}}",
+        autoRetry: true,
+        maxRetryDelay: 5,
+        maxRetries: 3
+    };
+
+    /**
      * Construct a new {{config.name}} API client
      * @param token API token to use for requests
      * @param [options] Options for the API client
      */
-    public constructor(token?: string, options: {{config.name}}.Options = {baseUrl: "{{{config.baseUrl}}}", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}) {
+    public constructor(token?: string, options: Partial<{{config.name}}.Options> = {{config.name}}.#defaultOptions) {
+        const fullOptions = {{config.name}}.#defaultOptions;
+        fullOptions.baseUrl = fullOptions.baseUrl ?? {{config.name}}.#defaultOptions.baseUrl;
+        fullOptions.autoRetry = fullOptions.autoRetry ?? {{config.name}}.#defaultOptions.autoRetry;
+        fullOptions.maxRetryDelay = fullOptions.maxRetryDelay ?? {{config.name}}.#defaultOptions.maxRetryDelay;
+        fullOptions.maxRetries = fullOptions.maxRetries ?? {{config.name}}.#defaultOptions.maxRetries;
+
         this.#token = token;
-        this.#options = options;
+        this.#options = fullOptions;
     }
 
     /**

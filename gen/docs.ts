@@ -76,7 +76,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
     const always: DocSchema.Method[] = [];
     always.push(new DocSchema.Method(`new ${config.name}`, `Construct a new ${config.name} API client`, [
         new DocSchema.Parameter("token", "string", "API token to use for requests", false),
-        new DocSchema.Parameter("options", "Cloudnode.Options", "API client options", false, `{baseUrl: "${config.baseUrl}", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}`)
+        new DocSchema.Parameter("options", `Partial<${config.name}.Options>`, "API client options", false, `{baseUrl: "${config.baseUrl}", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}`)
     ], undefined, []));
     always.push(new DocSchema.Method(`${config.name}.getPage<T>`, "Get another page of paginated results", [
         new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get a different page of", true),
@@ -141,6 +141,7 @@ export function linkType (type: string, config: Config, schema: Schema): string 
             null: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null",
             Date: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date",
             Record: "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+            Partial: "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype",
             Array: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array",
             Promise: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise",
             Error: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error",

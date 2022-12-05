@@ -17,13 +17,30 @@ class Cloudnode {
      */
     #options;
     /**
+     * Default options
+     * @readonly
+     * @private
+     * @static
+     */
+    static #defaultOptions = {
+        baseUrl: "https://api.cloudnode.pro/v5/",
+        autoRetry: true,
+        maxRetryDelay: 5,
+        maxRetries: 3
+    };
+    /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
      * @param [options] Options for the API client
      */
-    constructor(token, options = { baseUrl: "https://api.cloudnode.pro/v5/", autoRetry: true, maxRetryDelay: 5, maxRetries: 3 }) {
+    constructor(token, options = Cloudnode.#defaultOptions) {
+        const fullOptions = Cloudnode.#defaultOptions;
+        fullOptions.baseUrl = fullOptions.baseUrl ?? Cloudnode.#defaultOptions.baseUrl;
+        fullOptions.autoRetry = fullOptions.autoRetry ?? Cloudnode.#defaultOptions.autoRetry;
+        fullOptions.maxRetryDelay = fullOptions.maxRetryDelay ?? Cloudnode.#defaultOptions.maxRetryDelay;
+        fullOptions.maxRetries = fullOptions.maxRetries ?? Cloudnode.#defaultOptions.maxRetries;
         this.#token = token;
-        this.#options = options;
+        this.#options = fullOptions;
     }
     /**
      * Send a request to the API

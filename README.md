@@ -117,7 +117,7 @@ A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https
 Construct a new Cloudnode API client
 
  - `token` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> API token to use for requests.
- - `options` <code>[Cloudnode.Options](#interface-cloudnodeoptions)</code> API client options. Default: `{baseUrl: "https://api.cloudnode.pro/v5/", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}`
+ - `options` <code>[Partial](https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype)&lt;[Cloudnode.Options](#interface-cloudnodeoptions)></code> API client options. Default: `{baseUrl: "https://api.cloudnode.pro/v5/", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}`
 
 
 
