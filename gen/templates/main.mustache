@@ -36,6 +36,7 @@ class {{config.name}} {
      * @param pathParams Path parameters to use in the request
      * @param queryParams Query parameters to use in the request
      * @param body Body to use in the request
+     * @internal
      * @private
      */
     async #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
