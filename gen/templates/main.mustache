@@ -295,6 +295,34 @@ namespace {{config.name}} {
     export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T> {
         return Object.assign(new R.ApiResponse(response), data);
     }
+
+    /**
+     * API client options
+     */
+    export interface Options {
+        /**
+         * The base URL of the API
+         */
+        baseUrl: string;
+
+        /**
+         * Whether to automatically retry requests that fail temporarily.
+         * If enabled, when a request fails due to a temporary error, such as a rate limit, the request will be retried after the specified delay.
+         */
+        autoRetry: boolean;
+
+        /**
+         * The maximum number of seconds that is acceptable to wait before retrying a failed request.
+         * This requires {@link Options.autoRetry} to be enabled.
+         */
+        maxRetryDelay: number;
+
+        /**
+         * The maximum number of times to retry a failed request.
+         * This requires {@link Options.autoRetry} to be enabled.
+         */
+        maxRetries: number;
+    }
 }
 
 export default {{config.name}};
