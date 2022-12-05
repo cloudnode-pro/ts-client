@@ -81,6 +81,18 @@ class {{config.name}} {
         else throw res;
     }
 
+    /**
+     * Get another page of paginated results
+     * @param response Response to get a different page of
+     * @param page Page to get
+     * @returns The new page or null if the page is out of bounds
+     */
+    async getPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>, page: number): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+        if (page * response.limit > response.total || page < 1) return null;
+        const query = Object.assign({}, response._response.request.queryParams);
+        query.page = page.toString();
+        return await this.#sendRequest(response._response.request.operation, response._response.request.pathParams, query, response._response.request.body);
+    }
     {{#namespaces}}
     public {{name}} = {
         {{#operations}}
