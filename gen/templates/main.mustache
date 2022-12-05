@@ -193,13 +193,25 @@ namespace {{config.name}} {
          */
         public readonly url: URL;
 
-        public constructor(response: import("node-fetch").Response) {
+        /**
+         * The request params
+         * @readonly
+         */
+        public readonly request: {
+            readonly operation: Schema.Operation;
+            readonly pathParams: Record<string, string>;
+            readonly queryParams: Record<string, string>;
+            readonly body: any;
+        };
+
+        public constructor(response: import("node-fetch").Response, request: {operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body: any}) {
             this.headers = Object.fromEntries(response.headers.entries());
             this.ok = response.ok;
             this.redirected = response.redirected;
             this.status = response.status;
             this.statusText = response.statusText;
-            this.url = response.url;
+            this.url = new URL(response.url);
+            this.request = request;
         }
     }
 
