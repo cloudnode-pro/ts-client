@@ -73,10 +73,10 @@ console.log(newsletter._response.status); // 200
 
  - [Class: `Cloudnode`](#class-cloudnode)
    - [`new Cloudnode([token], [options])`](#new-cloudnodetoken-options)
-   - [`Cloudnode.getPage<T>(response, page)`](#cloudnodegetpagetresponse-page)
-   - [`Cloudnode.getNextPage<T>(response)`](#cloudnodegetnextpagetresponse)
-   - [`Cloudnode.getPreviousPage<T>(response)`](#cloudnodegetpreviouspagetresponse)
-   - [`Cloudnode.getAllPages<T>(response)`](#cloudnodegetallpagestresponse)
+   - [`cloudnode.getPage<T>(response, page)`](#cloudnodegetpagetresponse-page)
+   - [`cloudnode.getNextPage<T>(response)`](#cloudnodegetnextpagetresponse)
+   - [`cloudnode.getPreviousPage<T>(response)`](#cloudnodegetpreviouspagetresponse)
+   - [`cloudnode.getAllPages<T>(response)`](#cloudnodegetallpagestresponse)
    - [`cloudnode.auth.login(user, password)`](#cloudnodeauthloginuser-password)
    - [`cloudnode.auth.register(username, email, password)`](#cloudnodeauthregisterusername-email-password)
    - [`cloudnode.newsletter.get(id)`](#cloudnodenewslettergetid)
@@ -125,7 +125,7 @@ Construct a new Cloudnode API client
 
 <a name="cloudnodegetpagetresponse-page"></a>
 
-### `Cloudnode.getPage<T>(response, page)`
+### `cloudnode.getPage<T>(response, page)`
 
 Get another page of paginated results
 
@@ -136,7 +136,7 @@ Get another page of paginated results
 
 <a name="cloudnodegetnextpagetresponse"></a>
 
-### `Cloudnode.getNextPage<T>(response)`
+### `cloudnode.getNextPage<T>(response)`
 
 Get next page of paginated results
 
@@ -146,7 +146,7 @@ Get next page of paginated results
 
 <a name="cloudnodegetpreviouspagetresponse"></a>
 
-### `Cloudnode.getPreviousPage<T>(response)`
+### `cloudnode.getPreviousPage<T>(response)`
 
 Get previous page of paginated results
 
@@ -156,7 +156,7 @@ Get previous page of paginated results
 
 <a name="cloudnodegetallpagestresponse"></a>
 
-### `Cloudnode.getAllPages<T>(response)`
+### `cloudnode.getAllPages<T>(response)`
 
 Get all other pages of paginated results and return the complete data
 > **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.
