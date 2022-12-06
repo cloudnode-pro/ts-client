@@ -1,6 +1,6 @@
 # Cloudnode API SDK
 
-![Client Version: 1.7.3](https://img.shields.io/badge/Client%20Version-1.7.3-%2316a34a)
+![Client Version: 1.7.4](https://img.shields.io/badge/Client%20Version-1.7.4-%2316a34a)
 ![API Version: 5.8.0](https://img.shields.io/badge/API%20Version-5.8.0-%232563eb)
 ![build: passing](https://img.shields.io/badge/build-passing-%2316a34a)
 ![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)
@@ -72,7 +72,7 @@ console.log(newsletter._response.status); // 200
 <details open>  <summary>Table of contents</summary>
 
  - [Class: `Cloudnode`](#class-cloudnode)
-   - [`new Cloudnode([token], [baseUrl])`](#new-cloudnodetoken-baseurl)
+   - [`new Cloudnode([token], [options])`](#new-cloudnodetoken-options)
    - [`Cloudnode.getPage<T>(response, page)`](#cloudnodegetpagetresponse-page)
    - [`Cloudnode.getNextPage<T>(response)`](#cloudnodegetnextpagetresponse)
    - [`Cloudnode.getPreviousPage<T>(response)`](#cloudnodegetpreviouspagetresponse)
@@ -96,6 +96,7 @@ console.log(newsletter._response.status); // 200
    - [Interface: `Cloudnode.Newsletter`](#interface-cloudnodenewsletter)
    - [Interface: `Cloudnode.NewsletterData`](#interface-cloudnodenewsletterdata)
    - [Interface: `Cloudnode.NewsletterSubscription`](#interface-cloudnodenewslettersubscription)
+   - [Interface: `Cloudnode.Options`](#interface-cloudnodeoptions)
    - [Interface: `Cloudnode.PaginatedData<T>`](#interface-cloudnodepaginateddatat)
    - [Interface: `Cloudnode.PartialToken`](#interface-cloudnodepartialtoken)
    - [Interface: `Cloudnode.Token`](#interface-cloudnodetoken)
@@ -109,14 +110,14 @@ console.log(newsletter._response.status); // 200
 
 A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
 
-<a name="new-cloudnodetoken-baseurl"></a>
+<a name="new-cloudnodetoken-options"></a>
 
-### `new Cloudnode([token], [baseUrl])`
+### `new Cloudnode([token], [options])`
 
 Construct a new Cloudnode API client
 
  - `token` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> API token to use for requests.
- - `baseUrl` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Base URL of the API. Default: `https://api.cloudnode.pro/v5/`
+ - `options` <code>[Partial](https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype)&lt;[Cloudnode.Options](#interface-cloudnodeoptions)></code> API client options. Default: `{baseUrl: "https://api.cloudnode.pro/v5/", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}`
 
 
 
@@ -129,7 +130,7 @@ Get another page of paginated results
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get a different page of.
  - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> Page to get.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The new page or null if the page is out of bounds
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
+
 
 <a name="cloudnodegetnextpagetresponse"></a>
 
@@ -139,7 +140,7 @@ Get next page of paginated results
 
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get the next page of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The next page or null if this is the last page
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
+
 
 <a name="cloudnodegetpreviouspagetresponse"></a>
 
@@ -149,7 +150,7 @@ Get previous page of paginated results
 
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get the previous page of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The previous page or null if this is the first page
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
+
 
 <a name="cloudnodegetallpagestresponse"></a>
 
@@ -160,7 +161,7 @@ Get all other pages of paginated results and return the complete data
 
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get all pages of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> All of the data in 1 page
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
+
 
 <a name="cloudnodenewslettergetid"></a>
 
@@ -395,6 +396,20 @@ Your subscription to a newsletter
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the subscription. Can be used to unsubscribe.
  - `email` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The email address of the subscriber
  - `newsletter` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the newsletter that was subscribed to
+
+<a name="interface-cloudnodeoptions"></a>
+
+### Interface: `Cloudnode.Options`
+
+API client options
+
+ - `baseUrl` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The base URL of the API
+ - `autoRetry` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether to automatically retry requests that fail temporarily.
+If enabled, when a request fails due to a temporary error, such as a rate limit, the request will be retried after the specified delay.
+ - `maxRetryDelay` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The maximum number of seconds that is acceptable to wait before retrying a failed request.
+This requires `autoRetry` to be enabled.
+ - `maxRetries` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The maximum number of times to retry a failed request.
+This requires `autoRetry` to be enabled.
 
 <a name="interface-cloudnodepaginateddatat"></a>
 
