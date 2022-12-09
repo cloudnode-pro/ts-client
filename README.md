@@ -1,6 +1,6 @@
 # Cloudnode API SDK
 
-![Client Version: 1.7.4](https://img.shields.io/badge/Client%20Version-1.7.4-%2316a34a)
+![Client Version: 1.8.0](https://img.shields.io/badge/Client%20Version-1.8.0-%2316a34a)
 ![API Version: 5.8.0](https://img.shields.io/badge/API%20Version-5.8.0-%232563eb)
 ![build: passing](https://img.shields.io/badge/build-passing-%2316a34a)
 ![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)
@@ -130,7 +130,7 @@ Get another page of paginated results
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get a different page of.
  - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> Page to get.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The new page or null if the page is out of bounds
-
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
 
 <a name="cloudnodegetnextpagetresponse"></a>
 
@@ -140,7 +140,7 @@ Get next page of paginated results
 
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get the next page of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The next page or null if this is the last page
-
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
 
 <a name="cloudnodegetpreviouspagetresponse"></a>
 
@@ -150,7 +150,7 @@ Get previous page of paginated results
 
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get the previous page of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>> | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)></code> The previous page or null if this is the first page
-
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
 
 <a name="cloudnodegetallpagestresponse"></a>
 
@@ -161,7 +161,7 @@ Get all other pages of paginated results and return the complete data
 
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get all pages of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> All of the data in 1 page
-
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
 
 <a name="cloudnodenewslettergetid"></a>
 
