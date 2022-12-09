@@ -13,21 +13,42 @@ class {{config.name}} {
      */
     readonly #token?: string;
 
+
     /**
-     * Base URL of the API
+     * API client options
      * @readonly
      * @private
      */
-    readonly #baseUrl: string;
+    readonly #options: {{config.name}}.Options;
+
+    /**
+     * Default options
+     * @readonly
+     * @private
+     * @static
+     * @internal
+     */
+    static readonly #defaultOptions: {{config.name}}.Options = {
+        baseUrl: "{{{config.baseUrl}}}",
+        autoRetry: true,
+        maxRetryDelay: 5,
+        maxRetries: 3
+    };
 
     /**
      * Construct a new {{config.name}} API client
      * @param token API token to use for requests
-     * @param [baseUrl="{{{config.baseUrl}}}"] Base URL of the API
+     * @param [options] Options for the API client
      */
-    public constructor(token?: string, baseUrl = "{{{config.baseUrl}}}") {
+    public constructor(token?: string, options: Partial<{{config.name}}.Options> = {{config.name}}.#defaultOptions) {
+        const fullOptions = {{config.name}}.#defaultOptions;
+        fullOptions.baseUrl = fullOptions.baseUrl ?? {{config.name}}.#defaultOptions.baseUrl;
+        fullOptions.autoRetry = fullOptions.autoRetry ?? {{config.name}}.#defaultOptions.autoRetry;
+        fullOptions.maxRetryDelay = fullOptions.maxRetryDelay ?? {{config.name}}.#defaultOptions.maxRetryDelay;
+        fullOptions.maxRetries = fullOptions.maxRetries ?? {{config.name}}.#defaultOptions.maxRetries;
+
         this.#token = token;
-        this.#baseUrl = baseUrl;
+        this.#options = fullOptions;
     }
 
     /**
@@ -39,8 +60,8 @@ class {{config.name}} {
      * @internal
      * @private
      */
-    async #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
-        const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
+    async #sendRawRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<{{config.name}}.ApiResponse<T>> {
+        const url = new URL(operation.path.replace(/^\/+/, ""), this.#options.baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
         for (const [key, value] of Object.entries(queryParams))
@@ -76,9 +97,43 @@ class {{config.name}} {
             });
         }
         else data = text as any;
-        const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response, {operation, pathParams, queryParams, body} as const));
+        const res = {{config.name}}.makeApiResponse(data, new {{config.name}}.RawResponse(response, {operation, pathParams, queryParams, body} as const));
         if (response.ok) return res;
         else throw res;
+    }
+
+    /**
+     * Send a request to the API with support for auto-retry
+     * @param operation The operation to call
+     * @param pathParams Path parameters to use in the request
+     * @param queryParams Query parameters to use in the request
+     * @param options API client options. Overrides the client's options
+     * @internal
+     * @private
+     */
+    #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any, options?: {{config.name}}.Options): Promise<{{config.name}}.ApiResponse<T>> {
+        return new Promise(async (resolve, reject) => {
+            const send = (i: number = 0) => {
+                this.#sendRawRequest<T>(operation, pathParams, queryParams, body)
+                    .then(response => resolve(response))
+                    .catch(e => {
+                        options ??= this.#options;
+                        options.baseUrl ??= this.#options.baseUrl;
+                        options.autoRetry ??= this.#options.autoRetry;
+                        options.maxRetries ??= this.#options.maxRetries;
+                        options.maxRetryDelay ??= this.#options.maxRetryDelay;
+
+                        if (options.autoRetry && i < options.maxRetries && e instanceof {{config.name}}.R.ApiResponse) {
+                            const res: {{config.name}}.R.ApiResponse = e;
+                            const retryAfter: number = Number(res._response.status !== 429 ? res._response.headers["x-retry-after"] ?? res._response.headers["retry-after"] : res._response.headers["x-ratelimit-reset"] ?? res._response.headers["x-rate-limit-reset"] ?? res._response.headers["ratelimit-reset"] ?? res._response.headers["rate-limit-reset"] ?? res._response.headers["retry-after"] ?? res._response.headers["x-retry-after"]);
+                            if (Number.isNaN(retryAfter) || retryAfter > options.maxRetryDelay) return reject(e);
+                            setTimeout(send, Number(retryAfter) * 1000, ++i);
+                        }
+                        else reject(e);
+                    });
+            }
+            send(0);
+        });
     }
 
     /**
@@ -88,7 +143,7 @@ class {{config.name}} {
      * @returns The new page or null if the page is out of bounds
      * @throws {Cloudnode.Error} Error returned by the API
      */
-    async getPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>, page: number): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+    async getPage<T>(response: {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>, page: number): Promise<{{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>> | null> {
         if (page * response.limit > response.total || page < 1) return null;
         const query = Object.assign({}, response._response.request.queryParams);
         query.page = page.toString();
@@ -101,7 +156,7 @@ class {{config.name}} {
      * @returns The next page or null if this is the last page
      * @throws {Cloudnode.Error} Error returned by the API
      */
-    async getNextPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+    async getNextPage<T>(response: {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>): Promise<{{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>> | null> {
         return await this.getPage(response, response.page + 1);
     }
 
@@ -111,7 +166,7 @@ class {{config.name}} {
      * @returns The previous page or null if this is the first page
      * @throws {Cloudnode.Error} Error returned by the API
      */
-    async getPreviousPage<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> {
+    async getPreviousPage<T>(response: {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>): Promise<{{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>> | null> {
         return await this.getPage(response, response.page - 1);
     }
 
@@ -122,13 +177,13 @@ class {{config.name}} {
      * @returns All of the data in 1 page
      * @throws {Cloudnode.Error} Error returned by the API
      */
-    async getAllPages<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.PaginatedData<T>> {
+    async getAllPages<T>(response: {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>): Promise<{{config.name}}.PaginatedData<T>> {
         const pages: (true | null)[] = new Array(Math.ceil(response.total / response.limit)).fill(null);
         pages[response.page - 1] = true;
-        const promises: (Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>> | null> | true)[] = pages.map((page, i) => page === null ? this.getPage(response, i + 1) : true);
+        const promises: (Promise<{{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>> | null> | true)[] = pages.map((page, i) => page === null ? this.getPage(response, i + 1) : true);
         const newPages = await Promise.all(promises.filter(page => page !== true));
         newPages.splice(response.page - 1, 0, response);
-        const allPages = newPages.filter(p => p !== null) as Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>[];
+        const allPages = newPages.filter(p => p !== null) as {{config.name}}.ApiResponse<{{config.name}}.PaginatedData<T>>[];
         return {
             items: allPages.map(p => p.items).flat(),
             total: response.total,
@@ -261,7 +316,7 @@ namespace {{config.name}} {
         };
 
         public constructor(response: import("node-fetch").Response, request: {operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body: any}) {
-            this.headers = Object.fromEntries(response.headers.entries());
+            this.headers = Object.fromEntries([...response.headers.entries()].map(([k, v]) => [k.toLowerCase(), v]));
             this.ok = response.ok;
             this.redirected = response.redirected;
             this.status = response.status;
@@ -271,7 +326,7 @@ namespace {{config.name}} {
         }
     }
 
-    namespace R {
+    export namespace R {
         export class ApiResponse {
             /**
              * API response
@@ -298,6 +353,34 @@ namespace {{config.name}} {
 
     export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T> {
         return Object.assign(new R.ApiResponse(response), data);
+    }
+
+    /**
+     * API client options
+     */
+    export interface Options {
+        /**
+         * The base URL of the API
+         */
+        baseUrl: string;
+
+        /**
+         * Whether to automatically retry requests that fail temporarily.
+         * If enabled, when a request fails due to a temporary error, such as a rate limit, the request will be retried after the specified delay.
+         */
+        autoRetry: boolean;
+
+        /**
+         * The maximum number of seconds that is acceptable to wait before retrying a failed request.
+         * This requires {@link Options.autoRetry} to be enabled.
+         */
+        maxRetryDelay: number;
+
+        /**
+         * The maximum number of times to retry a failed request.
+         * This requires {@link Options.autoRetry} to be enabled.
+         */
+        maxRetries: number;
     }
 }
 

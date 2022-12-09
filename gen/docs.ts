@@ -28,7 +28,13 @@ export const globalTypes = {
         new DocSchema.Property("status", "number", "The status code of the response.", undefined, true),
         new DocSchema.Property("statusText", "string", "The status message corresponding to the status code. (e.g., `OK` for `200`).", undefined, true),
         new DocSchema.Property("url", "string", "The URL of the response.", undefined, true),
-    ])
+    ]),
+    options: (config: Config) => new DocSchema.Group(config.name + ".Options", "Interface", "API client options", [
+        new DocSchema.Property("baseUrl", "string", "The base URL of the API"),
+        new DocSchema.Property("autoRetry", "boolean", "Whether to automatically retry requests that fail temporarily.\nIf enabled, when a request fails due to a temporary error, such as a rate limit, the request will be retried after the specified delay."),
+        new DocSchema.Property("maxRetryDelay", "number", "The maximum number of seconds that is acceptable to wait before retrying a failed request.\nThis requires `autoRetry` to be enabled."),
+        new DocSchema.Property("maxRetries", "number", "The maximum number of times to retry a failed request.\nThis requires `autoRetry` to be enabled.")
+    ]),
 } as const;
 
 /**
@@ -47,6 +53,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
     mainNamespace.properties.push(globalTypes.paginatedData(config));
     mainNamespace.properties.push(globalTypes.apiResponse(config));
     mainNamespace.properties.push(globalTypes.rawResponse(config));
+    mainNamespace.properties.push(globalTypes.options(config));
     const operations: (Schema.Operation & {name: string})[] = [];
     for (const [name, operation] of Object.entries(schema.operations)) {
         if (operation.type === "operation") operations.push({name, ...operation});
@@ -69,7 +76,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
     const always: DocSchema.Method[] = [];
     always.push(new DocSchema.Method(`new ${config.name}`, `Construct a new ${config.name} API client`, [
         new DocSchema.Parameter("token", "string", "API token to use for requests", false),
-        new DocSchema.Parameter("baseUrl", "string", "Base URL of the API", false, config.baseUrl)
+        new DocSchema.Parameter("options", `Partial<${config.name}.Options>`, "API client options", false, `{baseUrl: "${config.baseUrl}", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}`)
     ], undefined, []));
     always.push(new DocSchema.Method(`${config.name}.getPage<T>`, "Get another page of paginated results", [
         new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get a different page of", true),
@@ -134,6 +141,7 @@ export function linkType (type: string, config: Config, schema: Schema): string 
             null: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null",
             Date: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date",
             Record: "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type",
+            Partial: "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype",
             Array: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array",
             Promise: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise",
             Error: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error",

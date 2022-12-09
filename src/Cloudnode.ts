@@ -13,21 +13,42 @@ class Cloudnode {
      */
     readonly #token?: string;
 
+
     /**
-     * Base URL of the API
+     * API client options
      * @readonly
      * @private
      */
-    readonly #baseUrl: string;
+    readonly #options: Cloudnode.Options;
+
+    /**
+     * Default options
+     * @readonly
+     * @private
+     * @static
+     * @internal
+     */
+    static readonly #defaultOptions: Cloudnode.Options = {
+        baseUrl: "https://api.cloudnode.pro/v5/",
+        autoRetry: true,
+        maxRetryDelay: 5,
+        maxRetries: 3
+    };
 
     /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
-     * @param [baseUrl="https://api.cloudnode.pro/v5/"] Base URL of the API
+     * @param [options] Options for the API client
      */
-    public constructor(token?: string, baseUrl = "https://api.cloudnode.pro/v5/") {
+    public constructor(token?: string, options: Partial<Cloudnode.Options> = Cloudnode.#defaultOptions) {
+        const fullOptions = Cloudnode.#defaultOptions;
+        fullOptions.baseUrl = fullOptions.baseUrl ?? Cloudnode.#defaultOptions.baseUrl;
+        fullOptions.autoRetry = fullOptions.autoRetry ?? Cloudnode.#defaultOptions.autoRetry;
+        fullOptions.maxRetryDelay = fullOptions.maxRetryDelay ?? Cloudnode.#defaultOptions.maxRetryDelay;
+        fullOptions.maxRetries = fullOptions.maxRetries ?? Cloudnode.#defaultOptions.maxRetries;
+
         this.#token = token;
-        this.#baseUrl = baseUrl;
+        this.#options = fullOptions;
     }
 
     /**
@@ -39,8 +60,8 @@ class Cloudnode {
      * @internal
      * @private
      */
-    async #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
-        const url = new URL(operation.path.replace(/^\/+/, ""), this.#baseUrl);
+    async #sendRawRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any): Promise<Cloudnode.ApiResponse<T>> {
+        const url = new URL(operation.path.replace(/^\/+/, ""), this.#options.baseUrl);
         for (const [key, value] of Object.entries(pathParams))
             url.pathname = url.pathname.replaceAll(`/:${key}`, `/${value}`);
         for (const [key, value] of Object.entries(queryParams))
@@ -79,6 +100,40 @@ class Cloudnode {
         const res = Cloudnode.makeApiResponse(data, new Cloudnode.RawResponse(response, {operation, pathParams, queryParams, body} as const));
         if (response.ok) return res;
         else throw res;
+    }
+
+    /**
+     * Send a request to the API with support for auto-retry
+     * @param operation The operation to call
+     * @param pathParams Path parameters to use in the request
+     * @param queryParams Query parameters to use in the request
+     * @param options API client options. Overrides the client's options
+     * @internal
+     * @private
+     */
+    #sendRequest<T>(operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body?: any, options?: Cloudnode.Options): Promise<Cloudnode.ApiResponse<T>> {
+        return new Promise(async (resolve, reject) => {
+            const send = (i: number = 0) => {
+                this.#sendRawRequest<T>(operation, pathParams, queryParams, body)
+                    .then(response => resolve(response))
+                    .catch(e => {
+                        options ??= this.#options;
+                        options.baseUrl ??= this.#options.baseUrl;
+                        options.autoRetry ??= this.#options.autoRetry;
+                        options.maxRetries ??= this.#options.maxRetries;
+                        options.maxRetryDelay ??= this.#options.maxRetryDelay;
+
+                        if (options.autoRetry && i < options.maxRetries && e instanceof Cloudnode.R.ApiResponse) {
+                            const res: Cloudnode.R.ApiResponse = e;
+                            const retryAfter: number = Number(res._response.status !== 429 ? res._response.headers["x-retry-after"] ?? res._response.headers["retry-after"] : res._response.headers["x-ratelimit-reset"] ?? res._response.headers["x-rate-limit-reset"] ?? res._response.headers["ratelimit-reset"] ?? res._response.headers["rate-limit-reset"] ?? res._response.headers["retry-after"] ?? res._response.headers["x-retry-after"]);
+                            if (Number.isNaN(retryAfter) || retryAfter > options.maxRetryDelay) return reject(e);
+                            setTimeout(send, Number(retryAfter) * 1000, ++i);
+                        }
+                        else reject(e);
+                    });
+            }
+            send(0);
+        });
     }
 
     /**
@@ -516,7 +571,7 @@ namespace Cloudnode {
         };
 
         public constructor(response: import("node-fetch").Response, request: {operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body: any}) {
-            this.headers = Object.fromEntries(response.headers.entries());
+            this.headers = Object.fromEntries([...response.headers.entries()].map(([k, v]) => [k.toLowerCase(), v]));
             this.ok = response.ok;
             this.redirected = response.redirected;
             this.status = response.status;
@@ -526,7 +581,7 @@ namespace Cloudnode {
         }
     }
 
-    namespace R {
+    export namespace R {
         export class ApiResponse {
             /**
              * API response
@@ -553,6 +608,34 @@ namespace Cloudnode {
 
     export function makeApiResponse<T>(data: T, response: RawResponse): ApiResponse<T> {
         return Object.assign(new R.ApiResponse(response), data);
+    }
+
+    /**
+     * API client options
+     */
+    export interface Options {
+        /**
+         * The base URL of the API
+         */
+        baseUrl: string;
+
+        /**
+         * Whether to automatically retry requests that fail temporarily.
+         * If enabled, when a request fails due to a temporary error, such as a rate limit, the request will be retried after the specified delay.
+         */
+        autoRetry: boolean;
+
+        /**
+         * The maximum number of seconds that is acceptable to wait before retrying a failed request.
+         * This requires {@link Options.autoRetry} to be enabled.
+         */
+        maxRetryDelay: number;
+
+        /**
+         * The maximum number of times to retry a failed request.
+         * This requires {@link Options.autoRetry} to be enabled.
+         */
+        maxRetries: number;
     }
 }
 
