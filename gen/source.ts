@@ -3,12 +3,13 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import Mustache from "mustache";
 import {Config} from "./Config";
-import {getReturnType, getThrows, replaceModelTypes} from "./util.js";
+import {getReturnDescription, getReturnType, getThrows, replaceModelTypes} from "./util.js";
 import Package from "./Package";
 
 interface FlatOperation {
     name: string;
     returnType: string;
+    returnDescription?: string;
     params: {
         path: string;
         query: string;
@@ -43,6 +44,7 @@ export default async (schema: Schema, config: Config, pkg: Package) => {
         const operations: FlatOperation[] = [];
         for (const [name, operation] of input) {
             const returnType = getReturnType(operation, schema, config);
+            const returnDescription = getReturnDescription(operation, schema, config);
             const toFlatParam = ([name, parameter]: [string, Schema.Operation.Parameter]): NamedParameter => {
                 const ts = `${name}${!parameter.required && !parameter.default ? "?: " : ": "}${parameter.type}${parameter.default ? ` = ${parameter.default}` : ""}`;
                 return {name, ts, ...parameter};
@@ -68,6 +70,7 @@ export default async (schema: Schema, config: Config, pkg: Package) => {
             operations.push({
                 name,
                 returnType,
+                returnDescription,
                 params,
                 allParams,
                 tsArgs,

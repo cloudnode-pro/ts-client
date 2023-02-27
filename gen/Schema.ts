@@ -31,6 +31,7 @@ namespace Schema {
         export interface Response {
             status: number;
             type: Schema.Type;
+            description?: string;
         }
 
         export interface Namespace {
