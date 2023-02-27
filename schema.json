@@ -565,6 +565,41 @@
               "type": "Error & {code: \"IP_REJECTED\"}"
             }
           ]
+        },
+        "login": {
+          "type": "operation",
+          "description": "Create a session using user ID/username/e-mail and password.\n\n> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.",
+          "method": "POST",
+          "path": "/auth/login",
+          "parameters": {
+            "body": {
+              "user": {
+                "description": "User ID (starts with `user_`), username or e-mail address.",
+                "type": "string",
+                "required": true
+              },
+              "password": {
+                "description": "The password of the account.",
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 201,
+              "type": "{session: string}",
+              "description": "Session token. Also returned in `Set-Cookie` header."
+            },
+            {
+              "status": 401,
+              "type": "Error & {code: \"UNAUTHORIZED\"}"
+            },
+            {
+              "status": 403,
+              "type": "Error & {code: \"IP_REJECTED\"}"
+            }
+          ]
         }
       }
     }

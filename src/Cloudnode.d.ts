@@ -190,6 +190,23 @@ declare class Cloudnode {
         readonly register: (username: string, email: string, password: string) => Promise<Cloudnode.ApiResponse<{
             session: string;
         }>>;
+        /**
+         * Create a session using user ID/username/e-mail and password.
+
+> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.
+         * @POST /auth/login
+         * @param user User ID (starts with `user_`), username or e-mail address.
+         * @param password The password of the account.
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "IP_REJECTED"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns Session token. Also returned in `Set-Cookie` header.
+         */
+        readonly login: (user: string, password: string) => Promise<Cloudnode.ApiResponse<{
+            session: string;
+        }>>;
     };
 }
 declare namespace Cloudnode {
