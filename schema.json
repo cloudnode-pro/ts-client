@@ -534,7 +534,7 @@
           "parameters": {
             "body": {
               "username": {
-                "description": "The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. Must be unique.",
+                "description": "The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.",
                 "type": "string",
                 "required": true
               },

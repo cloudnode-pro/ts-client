@@ -177,7 +177,7 @@ declare class Cloudnode {
 
 > **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.
          * @POST /auth/register
-         * @param username The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. Must be unique.
+         * @param username The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
          * @param email The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.
          * @param password The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}

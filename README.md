@@ -172,7 +172,7 @@ Create an account and session. After signing up, a welcome e-mail is sent to con
 
 > **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.
 
- - `username` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. Must be unique.
+ - `username` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
  - `email` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.
  - `password` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;{session: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)}>></code> Session token. Also returned in `Set-Cookie` header.
