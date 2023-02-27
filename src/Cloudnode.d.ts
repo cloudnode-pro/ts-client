@@ -171,6 +171,26 @@ declare class Cloudnode {
          */
         readonly refresh: () => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
     };
+    auth: {
+        /**
+         * Create an account and session. After signing up, a welcome e-mail is sent to confirm your e-mail address.
+
+> **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.
+         * @POST /auth/register
+         * @param username The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. Must be unique.
+         * @param email The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.
+         * @param password The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "IP_REJECTED"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns Session token. Also returned in `Set-Cookie` header.
+         */
+        readonly register: (username: string, email: string, password: string) => Promise<Cloudnode.ApiResponse<{
+            session: string;
+        }>>;
+    };
 }
 declare namespace Cloudnode {
     /**
