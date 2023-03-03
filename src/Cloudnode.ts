@@ -342,6 +342,43 @@ class Cloudnode {
             return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.","token":"token.refresh","method":"POST","path":"/token/refresh","parameters":{},"returns":[{"status":201,"type":"Token"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {});
          },
     } as const;
+    public auth = {
+        /**
+         * Create an account and session. After signing up, a welcome e-mail is sent to confirm your e-mail address.
+
+> **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.
+         * @POST /auth/register
+         * @param username The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
+         * @param email The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.
+         * @param password The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "IP_REJECTED"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns Session token. Also returned in `Set-Cookie` header.
+         */
+         register: async (username: string, email: string, password: string): Promise<Cloudnode.ApiResponse<{session: string}>> => {
+            return await this.#sendRequest<{session: string}>({"type":"operation","description":"Create an account and session. After signing up, a welcome e-mail is sent to confirm your e-mail address.\n\n> **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.","method":"POST","path":"/auth/register","parameters":{"body":{"username":{"description":"The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.","type":"string","required":true},"email":{"description":"The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.","type":"string","required":true},"password":{"description":"The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.","type":"string","required":true}}},"returns":[{"status":201,"type":"{session: string}","description":"Session token. Also returned in `Set-Cookie` header."},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":403,"type":"Error & {code: \"IP_REJECTED\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {username, email, password});
+         },
+        /**
+         * Create a session using user ID/username/e-mail and password.
+
+> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.
+         * @POST /auth/login
+         * @param user User ID (starts with `user_`), username or e-mail address.
+         * @param password The password of the account.
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "IP_REJECTED"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns Session token. Also returned in `Set-Cookie` header.
+         */
+         login: async (user: string, password: string): Promise<Cloudnode.ApiResponse<{session: string}>> => {
+            return await this.#sendRequest<{session: string}>({"type":"operation","description":"Create a session using user ID/username/e-mail and password.\n\n> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.","method":"POST","path":"/auth/login","parameters":{"body":{"user":{"description":"User ID (starts with `user_`), username or e-mail address.","type":"string","required":true},"password":{"description":"The password of the account.","type":"string","required":true}}},"returns":[{"status":201,"type":"{session: string}","description":"Session token. Also returned in `Set-Cookie` header."},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"IP_REJECTED\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {user, password});
+         },
+    } as const;
 
 }
 

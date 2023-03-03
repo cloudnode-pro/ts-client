@@ -171,6 +171,43 @@ declare class Cloudnode {
          */
         readonly refresh: () => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
     };
+    auth: {
+        /**
+         * Create an account and session. After signing up, a welcome e-mail is sent to confirm your e-mail address.
+
+> **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.
+         * @POST /auth/register
+         * @param username The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
+         * @param email The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.
+         * @param password The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "IP_REJECTED"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns Session token. Also returned in `Set-Cookie` header.
+         */
+        readonly register: (username: string, email: string, password: string) => Promise<Cloudnode.ApiResponse<{
+            session: string;
+        }>>;
+        /**
+         * Create a session using user ID/username/e-mail and password.
+
+> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.
+         * @POST /auth/login
+         * @param user User ID (starts with `user_`), username or e-mail address.
+         * @param password The password of the account.
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "IP_REJECTED"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns Session token. Also returned in `Set-Cookie` header.
+         */
+        readonly login: (user: string, password: string) => Promise<Cloudnode.ApiResponse<{
+            session: string;
+        }>>;
+    };
 }
 declare namespace Cloudnode {
     /**

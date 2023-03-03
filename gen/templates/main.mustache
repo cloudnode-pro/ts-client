@@ -206,6 +206,9 @@ class {{config.name}} {
          * @throws {<%& . %>}
          <%={{ }}=%>
          {{/throws}}
+         {{#returnDescription}}
+         * @returns {{{returnDescription}}}
+         {{/returnDescription}}
          */
          {{name}}: async ({{{tsArgs}}}): Promise<{{config.name}}.ApiResponse<{{{returnType}}}>> => {
             return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});
@@ -226,6 +229,9 @@ class {{config.name}} {
      * @throws {<%& . %>}
      <%={{ }}=%>
      {{/throws}}
+     {{#returnDescription}}
+     * @returns {{{returnDescription}}}
+     {{/returnDescription}}
      */
      public async {{name}}({{{tsArgs}}}): Promise<{{config.name}}.ApiResponse<{{{returnType}}}>> {
         return await this.#sendRequest<{{{returnType}}}>({{{operation}}}, {{{params.path}}}, {{{params.query}}}, {{{params.body}}});

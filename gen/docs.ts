@@ -1,6 +1,6 @@
 import Schema from "./Schema";
 import {Config} from "./Config";
-import {getReturnType, getThrows, replaceModelTypes} from "./util.js";
+import {getReturnDescription, getReturnType, getThrows, replaceModelTypes} from "./util.js";
 import DocSchema from "./DocSchema.js";
 import fs from "node:fs/promises";
 import Package from "./Package";
@@ -63,7 +63,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
     }
     // make operations into methods
     const operationMethods = operations.map(operation => {
-        const returns = {type: getReturnType(operation, schema, config)};
+        const returns = {type: getReturnType(operation, schema, config), description: getReturnDescription(operation, schema, config)};
         const throws = getThrows(operation, schema, config).map(type => ({type}));
         const pathParams = Object.entries(operation.parameters.path ?? {}).map(([name, parameter]) => new DocSchema.Parameter(name, parameter.type, parameter.description, parameter.required, parameter.default));
         const queryParams = Object.entries(operation.parameters.query ?? {}).map(([name, parameter]) => new DocSchema.Parameter(name, parameter.type, parameter.description, parameter.required, parameter.default));

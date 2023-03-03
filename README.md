@@ -1,7 +1,7 @@
 # Cloudnode API SDK
 
 ![Client Version: 1.8.1](https://img.shields.io/badge/Client%20Version-1.8.1-%2316a34a)
-![API Version: 5.8.0](https://img.shields.io/badge/API%20Version-5.8.0-%232563eb)
+![API Version: 5.10.0](https://img.shields.io/badge/API%20Version-5.10.0-%232563eb)
 ![build: passing](https://img.shields.io/badge/build-passing-%2316a34a)
 ![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)
 
@@ -77,6 +77,8 @@ console.log(newsletter._response.status); // 200
    - [`Cloudnode.getNextPage<T>(response)`](#cloudnodegetnextpagetresponse)
    - [`Cloudnode.getPreviousPage<T>(response)`](#cloudnodegetpreviouspagetresponse)
    - [`Cloudnode.getAllPages<T>(response)`](#cloudnodegetallpagestresponse)
+   - [`cloudnode.auth.login(user, password)`](#cloudnodeauthloginuser-password)
+   - [`cloudnode.auth.register(username, email, password)`](#cloudnodeauthregisterusername-email-password)
    - [`cloudnode.newsletter.get(id)`](#cloudnodenewslettergetid)
    - [`cloudnode.newsletter.list([limit], [page])`](#cloudnodenewsletterlistlimit-page)
    - [`cloudnode.newsletter.subscribe(id, email, [data])`](#cloudnodenewslettersubscribeid-email-data)
@@ -162,6 +164,41 @@ Get all other pages of paginated results and return the complete data
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get all pages of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> All of the data in 1 page
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
+
+<a name="cloudnodeauthloginuser-password"></a>
+
+### `cloudnode.auth.login(user, password)`
+
+Create a session using user ID/username/e-mail and password.
+
+> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.
+
+ - `user` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> User ID (starts with `user_`), username or e-mail address.
+ - `password` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The password of the account.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;{session: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)}>></code> Session token. Also returned in `Set-Cookie` header.
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "IP_REJECTED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeauthregisterusername-email-password"></a>
+
+### `cloudnode.auth.register(username, email, password)`
+
+Create an account and session. After signing up, a welcome e-mail is sent to confirm your e-mail address.
+
+> **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.
+
+ - `username` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
+ - `email` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.
+ - `password` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;{session: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)}>></code> Session token. Also returned in `Set-Cookie` header.
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "IP_REJECTED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodenewslettergetid"></a>
 
