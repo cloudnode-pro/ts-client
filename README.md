@@ -176,7 +176,7 @@ Create a session using user ID/username/e-mail and password.
  - `user` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> User ID (starts with `user_`), username or e-mail address.
  - `password` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The password of the account.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;{session: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)}>></code> Session token. Also returned in `Set-Cookie` header.
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "IP_REJECTED"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>

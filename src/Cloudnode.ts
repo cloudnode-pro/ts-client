@@ -368,7 +368,7 @@ class Cloudnode {
          * @POST /auth/login
          * @param user User ID (starts with `user_`), username or e-mail address.
          * @param password The password of the account.
-         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "IP_REJECTED"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
@@ -376,7 +376,7 @@ class Cloudnode {
          * @returns Session token. Also returned in `Set-Cookie` header.
          */
          login: async (user: string, password: string): Promise<Cloudnode.ApiResponse<{session: string}>> => {
-            return await this.#sendRequest<{session: string}>({"type":"operation","description":"Create a session using user ID/username/e-mail and password.\n\n> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.","method":"POST","path":"/auth/login","parameters":{"body":{"user":{"description":"User ID (starts with `user_`), username or e-mail address.","type":"string","required":true},"password":{"description":"The password of the account.","type":"string","required":true}}},"returns":[{"status":201,"type":"{session: string}","description":"Session token. Also returned in `Set-Cookie` header."},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"IP_REJECTED\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {user, password});
+            return await this.#sendRequest<{session: string}>({"type":"operation","description":"Create a session using user ID/username/e-mail and password.\n\n> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.","method":"POST","path":"/auth/login","parameters":{"body":{"user":{"description":"User ID (starts with `user_`), username or e-mail address.","type":"string","required":true},"password":{"description":"The password of the account.","type":"string","required":true}}},"returns":[{"status":201,"type":"{session: string}","description":"Session token. Also returned in `Set-Cookie` header."},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":403,"type":"Error & {code: \"IP_REJECTED\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {user, password});
          },
     } as const;
 
