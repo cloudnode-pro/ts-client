@@ -592,8 +592,8 @@
               "description": "Session token. Also returned in `Set-Cookie` header."
             },
             {
-              "status": 401,
-              "type": "Error & {code: \"UNAUTHORIZED\"}"
+              "status": 422,
+              "type": "Error & {code: \"INVALID_DATA\"}"
             },
             {
               "status": 403,
