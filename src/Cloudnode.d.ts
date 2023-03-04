@@ -197,7 +197,7 @@ declare class Cloudnode {
          * @POST /auth/login
          * @param user User ID (starts with `user_`), username or e-mail address.
          * @param password The password of the account.
-         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "IP_REJECTED"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
