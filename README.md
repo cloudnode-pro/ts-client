@@ -77,6 +77,15 @@ console.log(newsletter._response.status); // 200
    - [`cloudnode.getNextPage<T>(response)`](#cloudnodegetnextpagetresponse)
    - [`cloudnode.getPreviousPage<T>(response)`](#cloudnodegetpreviouspagetresponse)
    - [`cloudnode.getAllPages<T>(response)`](#cloudnodegetallpagestresponse)
+   - [`cloudnode.account.changePassword(currentPassword, newPassword)`](#cloudnodeaccountchangepasswordcurrentpassword-newpassword)
+   - [`cloudnode.account.get()`](#cloudnodeaccountget)
+   - [`cloudnode.account.getEmail()`](#cloudnodeaccountgetemail)
+   - [`cloudnode.account.getIdentity()`](#cloudnodeaccountgetidentity)
+   - [`cloudnode.account.listEmails()`](#cloudnodeaccountlistemails)
+   - [`cloudnode.account.listPermissions()`](#cloudnodeaccountlistpermissions)
+   - [`cloudnode.account.replaceIdentity(username, name)`](#cloudnodeaccountreplaceidentityusername-name)
+   - [`cloudnode.account.setEmail(email)`](#cloudnodeaccountsetemailemail)
+   - [`cloudnode.account.updateIdentity(username, [name])`](#cloudnodeaccountupdateidentityusername-name)
    - [`cloudnode.auth.login(user, password)`](#cloudnodeauthloginuser-password)
    - [`cloudnode.auth.register(username, email, password)`](#cloudnodeauthregisterusername-email-password)
    - [`cloudnode.newsletter.get(id)`](#cloudnodenewslettergetid)
@@ -93,7 +102,11 @@ console.log(newsletter._response.status); // 200
  - [Namespace: `Cloudnode`](#namespace-cloudnode)
    - [Class: `Cloudnode.ApiResponse<T>`](#class-cloudnodeapiresponset)
    - [Class: `Cloudnode.RawResponse`](#class-cloudnoderawresponse)
+   - [Interface: `Cloudnode.AccountDetails`](#interface-cloudnodeaccountdetails)
+   - [Interface: `Cloudnode.AccountEmail`](#interface-cloudnodeaccountemail)
+   - [Interface: `Cloudnode.AccountIdentity`](#interface-cloudnodeaccountidentity)
    - [Interface: `Cloudnode.DatedNewsletterSubscription`](#interface-cloudnodedatednewslettersubscription)
+   - [Interface: `Cloudnode.DatedPrimaryEmail`](#interface-cloudnodedatedprimaryemail)
    - [Interface: `Cloudnode.Error`](#interface-cloudnodeerror)
    - [Interface: `Cloudnode.Newsletter`](#interface-cloudnodenewsletter)
    - [Interface: `Cloudnode.NewsletterData`](#interface-cloudnodenewsletterdata)
@@ -101,6 +114,8 @@ console.log(newsletter._response.status); // 200
    - [Interface: `Cloudnode.Options`](#interface-cloudnodeoptions)
    - [Interface: `Cloudnode.PaginatedData<T>`](#interface-cloudnodepaginateddatat)
    - [Interface: `Cloudnode.PartialToken`](#interface-cloudnodepartialtoken)
+   - [Interface: `Cloudnode.Permission`](#interface-cloudnodepermission)
+   - [Interface: `Cloudnode.PrimaryEmail`](#interface-cloudnodeprimaryemail)
    - [Interface: `Cloudnode.Token`](#interface-cloudnodetoken)
    - [Interface: `Cloudnode.TokenMetadata`](#interface-cloudnodetokenmetadata)
 
@@ -164,6 +179,146 @@ Get all other pages of paginated results and return the complete data
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get all pages of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> All of the data in 1 page
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
+
+<a name="cloudnodeaccountchangepasswordcurrentpassword-newpassword"></a>
+
+### `cloudnode.account.changePassword(currentPassword, newPassword)`
+
+Change account password
+
+ - `currentPassword` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Your current password.
+ - `newPassword` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The new password. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeaccountget"></a>
+
+### `cloudnode.account.get()`
+
+Get account details
+
+
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.AccountDetails](#interface-cloudnodeaccountdetails)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeaccountgetemail"></a>
+
+### `cloudnode.account.getEmail()`
+
+Get your primary e-mail address
+
+
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.DatedPrimaryEmail](#interface-cloudnodedatedprimaryemail)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeaccountgetidentity"></a>
+
+### `cloudnode.account.getIdentity()`
+
+Get account identity
+
+
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.AccountIdentity](#interface-cloudnodeaccountidentity)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeaccountlistemails"></a>
+
+### `cloudnode.account.listEmails()`
+
+List account e-mail addresses
+
+
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;[Cloudnode.AccountEmail[]](#interface-cloudnodeaccountemail)>>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeaccountlistpermissions"></a>
+
+### `cloudnode.account.listPermissions()`
+
+List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description.
+
+
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;[Cloudnode.Permission[]](#interface-cloudnodepermission)>>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeaccountreplaceidentityusername-name"></a>
+
+### `cloudnode.account.replaceIdentity(username, name)`
+
+Replace account identity
+
+ - `username` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+ - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your full name. Set to `null` to remove.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.AccountIdentity](#interface-cloudnodeaccountidentity)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "CONFLICT"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeaccountsetemailemail"></a>
+
+### `cloudnode.account.setEmail(email)`
+
+Set your primary e-mail address
+
+ - `email` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> E-mail address to set as primary.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "CONFLICT"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeaccountupdateidentityusername-name"></a>
+
+### `cloudnode.account.updateIdentity(username, [name])`
+
+Update account identity
+
+ - `username` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+ - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your full name. Set to `null` to remove.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.AccountIdentity](#interface-cloudnodeaccountidentity)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "CONFLICT"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
 <a name="cloudnodeauthloginuser-password"></a>
 
@@ -382,6 +537,40 @@ Raw API response
  - `statusText` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The status message corresponding to the status code. (e.g., `OK` for `200`). (read-only)
  - `url` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The URL of the response. (read-only)
 
+<a name="interface-cloudnodeaccountdetails"></a>
+
+### Interface: `Cloudnode.AccountDetails`
+
+Details about your account
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Your user ID
+ - `password` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether you have a password set
+ - `group` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The name of your permission group
+ - `permissions` <code>[string[]](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> A list of all permission that you have access to
+ - `identity` <code>[AccountIdentity](#interface-cloudnodeaccountidentity) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Personal information associated with your account. Requires `account.details.identity` to see. Maybe be null if the account is anonymised or you don't have permission to access the account identity.
+ - `email` <code>[PrimaryEmail](#interface-cloudnodeprimaryemail) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your current primary account e-mail address. Requires `account.details.email` to see. Maybe be null if you don't have a primary e-mail address or you don't have permission to access the account's e-mail address.
+
+<a name="interface-cloudnodeaccountemail"></a>
+
+### Interface: `Cloudnode.AccountEmail`
+
+An e-mail address you have added to your account
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the e-mail address
+ - `address` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your e-mail address. May ben null if anonymised.
+ - `verified` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether this e-mail address has been verified
+ - `primary` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether this e-mail address is your primary e-mail address
+ - `added` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> The date and time when this e-mail address was added to your account
+
+<a name="interface-cloudnodeaccountidentity"></a>
+
+### Interface: `Cloudnode.AccountIdentity`
+
+Personal information associated with your account
+
+ - `username` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Your unique username
+ - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your name
+
 <a name="interface-cloudnodedatednewslettersubscription"></a>
 
 ### Interface: `Cloudnode.DatedNewsletterSubscription`
@@ -392,6 +581,17 @@ A newsletter subscription with a creation date
  - `email` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The email address of the subscriber
  - `newsletter` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the newsletter that was subscribed to
  - `date` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> The date the subscription was created
+
+<a name="interface-cloudnodedatedprimaryemail"></a>
+
+### Interface: `Cloudnode.DatedPrimaryEmail`
+
+Your current primary account e-mail address with a timestamp of when it was added to your account
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the e-mail address
+ - `address` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your e-mail address. May ben null if anonymised.
+ - `verified` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether this e-mail address has been verified
+ - `added` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> The date and time when this e-mail address was added to your account
 
 <a name="interface-cloudnodeerror"></a>
 
@@ -470,6 +670,27 @@ A token, however, the `permissions` field is not included
  - `expires` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Date and time when this token expires. Null if it never expires.
  - `internal` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)</code> Whether this token is for internal use only, e.g. to power a session. In other words, an internal token is one that was **not** created by the client.
  - `metadata` <code>[Cloudnode.TokenMetadata](#interface-cloudnodetokenmetadata)</code> Additional metadata about this token
+
+<a name="interface-cloudnodepermission"></a>
+
+### Interface: `Cloudnode.Permission`
+
+A permission node
+
+ - `permission` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The permission node string
+ - `description` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> User-friendly description of the permission node
+ - `note` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Additional user-friendly information about the permission node
+ - `group` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> A group/category title that can be used to group permissions together
+
+<a name="interface-cloudnodeprimaryemail"></a>
+
+### Interface: `Cloudnode.PrimaryEmail`
+
+Your current primary account e-mail address
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the e-mail address
+ - `address` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your primary e-mail address. May ben null if anonymised.
+ - `verified` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether this e-mail address has been verified
 
 <a name="interface-cloudnodetoken"></a>
 

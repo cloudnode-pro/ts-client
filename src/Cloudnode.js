@@ -371,6 +371,134 @@ class Cloudnode {
             return await this.#sendRequest({ "type": "operation", "description": "Create a session using user ID/username/e-mail and password.\n\n> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.", "method": "POST", "path": "/auth/login", "parameters": { "body": { "user": { "description": "User ID (starts with `user_`), username or e-mail address.", "type": "string", "required": true }, "password": { "description": "The password of the account.", "type": "string", "required": true } } }, "returns": [{ "status": 201, "type": "{session: string}", "description": "Session token. Also returned in `Set-Cookie` header." }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 403, "type": "Error & {code: \"IP_REJECTED\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { user, password });
         },
     };
+    account = {
+        /**
+         * Get account details
+         * @GET /account
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        get: async () => {
+            return await this.#sendRequest({ "type": "operation", "description": "Get account details", "token": "account.details", "method": "GET", "path": "/account", "parameters": {}, "returns": [{ "status": 200, "type": "AccountDetails" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, {});
+        },
+        /**
+         * Get account identity
+         * @GET /account/identity
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        getIdentity: async () => {
+            return await this.#sendRequest({ "type": "operation", "description": "Get account identity", "token": "account.details.identity", "method": "GET", "path": "/account/identity", "parameters": {}, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, {});
+        },
+        /**
+         * Update account identity
+         * @PATCH /account/identity
+         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        updateIdentity: async (username, name) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Update account identity", "token": "account.details.identity.update", "method": "PATCH", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove.", "type": "string | null", "required": false } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
+        },
+        /**
+         * Replace account identity
+         * @PUT /account/identity
+         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        replaceIdentity: async (username, name) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Replace account identity", "token": "account.details.identity.update", "method": "PUT", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove.", "type": "string | null", "required": true } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
+        },
+        /**
+         * List account e-mail addresses
+         * @GET /account/email
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        listEmails: async () => {
+            return await this.#sendRequest({ "type": "operation", "description": "List account e-mail addresses", "token": "account.details.email.list", "method": "GET", "path": "/account/email", "parameters": {}, "returns": [{ "status": 200, "type": "AccountEmail[]" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, {});
+        },
+        /**
+         * Get your primary e-mail address
+         * @GET /account/email/primary
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        getEmail: async () => {
+            return await this.#sendRequest({ "type": "operation", "description": "Get your primary e-mail address", "token": "account.details.email", "method": "GET", "path": "/account/email/primary", "parameters": {}, "returns": [{ "status": 200, "type": "DatedPrimaryEmail" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, {});
+        },
+        /**
+         * Set your primary e-mail address
+         * @PUT /account/email/primary
+         * @param email E-mail address to set as primary.
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        setEmail: async (email) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Set your primary e-mail address", "token": "account.details.email.update", "method": "PUT", "path": "/account/email/primary", "parameters": { "body": { "email": { "description": "E-mail address to set as primary.", "type": "string", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { email });
+        },
+        /**
+         * Change account password
+         * @PUT /account/password
+         * @param currentPassword Your current password.
+         * @param newPassword The new password. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        changePassword: async (currentPassword, newPassword) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Change account password", "token": "account.details.password.update", "method": "PUT", "path": "/account/password", "parameters": { "body": { "currentPassword": { "description": "Your current password.", "type": "string", "required": true }, "newPassword": { "description": "The new password. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.", "type": "string", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { currentPassword, newPassword });
+        },
+        /**
+         * List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description.
+         * @GET /account/permissions
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        listPermissions: async () => {
+            return await this.#sendRequest({ "type": "operation", "description": "List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description.", "token": "account.details", "method": "GET", "path": "/account/permissions", "parameters": {}, "returns": [{ "status": 200, "type": "Permission[]" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, {});
+        },
+    };
 }
 (function (Cloudnode) {
     class RawResponse {
