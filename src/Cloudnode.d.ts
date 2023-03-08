@@ -142,7 +142,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
+        readonly get: (id: string | "current") => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
         /**
          * Revoke token
          * @DELETE /token/:id
@@ -156,7 +156,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly revoke: (id: string) => Promise<Cloudnode.ApiResponse<void>>;
+        readonly revoke: (id: string | "current") => Promise<Cloudnode.ApiResponse<void>>;
         /**
          * Get list of recent requests made with the token
          * @GET /token/:id/requests
@@ -171,7 +171,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly listRequests: (id: string, limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>>;
+        readonly listRequests: (id: string | "current", limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>>;
     };
     tokens: {
         /**

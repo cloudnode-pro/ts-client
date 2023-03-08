@@ -656,7 +656,7 @@
             "path": {
               "id": {
                 "description": "The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.",
-                "type": "string",
+                "type": "string | \"current\"",
                 "required": true
               }
             }
@@ -686,7 +686,7 @@
             "path": {
               "id": {
                 "description": "The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.",
-                "type": "string",
+                "type": "string | \"current\"",
                 "required": true
               }
             }
@@ -720,7 +720,7 @@
             "path": {
               "id": {
                 "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.",
-                "type": "string",
+                "type": "string | \"current\"",
                 "required": true
               }
             },
