@@ -42,10 +42,10 @@ class {{config.name}} {
      */
     public constructor(token?: string, options: Partial<{{config.name}}.Options> = {{config.name}}.#defaultOptions) {
         const fullOptions = {{config.name}}.#defaultOptions;
-        fullOptions.baseUrl = fullOptions.baseUrl ?? {{config.name}}.#defaultOptions.baseUrl;
-        fullOptions.autoRetry = fullOptions.autoRetry ?? {{config.name}}.#defaultOptions.autoRetry;
-        fullOptions.maxRetryDelay = fullOptions.maxRetryDelay ?? {{config.name}}.#defaultOptions.maxRetryDelay;
-        fullOptions.maxRetries = fullOptions.maxRetries ?? {{config.name}}.#defaultOptions.maxRetries;
+        fullOptions.baseUrl = options.baseUrl ?? {{config.name}}.#defaultOptions.baseUrl;
+        fullOptions.autoRetry = options.autoRetry ?? {{config.name}}.#defaultOptions.autoRetry;
+        fullOptions.maxRetryDelay = options.maxRetryDelay ?? {{config.name}}.#defaultOptions.maxRetryDelay;
+        fullOptions.maxRetries = options.maxRetries ?? {{config.name}}.#defaultOptions.maxRetries;
 
         this.#token = token;
         this.#options = fullOptions;

@@ -42,10 +42,10 @@ class Cloudnode {
      */
     public constructor(token?: string, options: Partial<Cloudnode.Options> = Cloudnode.#defaultOptions) {
         const fullOptions = Cloudnode.#defaultOptions;
-        fullOptions.baseUrl = fullOptions.baseUrl ?? Cloudnode.#defaultOptions.baseUrl;
-        fullOptions.autoRetry = fullOptions.autoRetry ?? Cloudnode.#defaultOptions.autoRetry;
-        fullOptions.maxRetryDelay = fullOptions.maxRetryDelay ?? Cloudnode.#defaultOptions.maxRetryDelay;
-        fullOptions.maxRetries = fullOptions.maxRetries ?? Cloudnode.#defaultOptions.maxRetries;
+        fullOptions.baseUrl = options.baseUrl ?? Cloudnode.#defaultOptions.baseUrl;
+        fullOptions.autoRetry = options.autoRetry ?? Cloudnode.#defaultOptions.autoRetry;
+        fullOptions.maxRetryDelay = options.maxRetryDelay ?? Cloudnode.#defaultOptions.maxRetryDelay;
+        fullOptions.maxRetries = options.maxRetries ?? Cloudnode.#defaultOptions.maxRetries;
 
         this.#token = token;
         this.#options = fullOptions;
