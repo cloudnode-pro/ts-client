@@ -336,6 +336,22 @@ class Cloudnode {
         listRequests: async (id, limit = 10, page = 1) => {
             return await this.#sendRequest({ "type": "operation", "description": "Get list of recent requests made with the token", "token": "tokens.get.own.requests", "method": "GET", "path": "/token/:id/requests", "parameters": { "path": { "id": { "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true } }, "query": { "limit": { "description": "The number of requests to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "ShortRequest[]" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, { limit: `${limit}`, page: `${page}` }, {});
         },
+        /**
+         * Get a recent request by ID
+         * @GET /token/:id/requests/:request
+         * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
+         * @param request The ID of the request.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        getRequest: async (id, request) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Get a recent request by ID", "token": "tokens.get.own.requests", "method": "GET", "path": "/token/:id/requests/:request", "parameters": { "path": { "id": { "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true }, "request": { "description": "The ID of the request.", "type": "string", "required": true } } }, "returns": [{ "status": 200, "type": "Request" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}`, request: `${request}` }, {}, {});
+        },
     };
     tokens = {
         /**

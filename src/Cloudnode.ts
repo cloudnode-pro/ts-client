@@ -346,6 +346,22 @@ class Cloudnode {
          listRequests: async (id: string | "current", limit: number = 10, page: number = 1): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>> => {
             return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>({"type":"operation","description":"Get list of recent requests made with the token","token":"tokens.get.own.requests","method":"GET","path":"/token/:id/requests","parameters":{"path":{"id":{"description":"The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true}},"query":{"limit":{"description":"The number of requests to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"ShortRequest[]"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {limit: `${limit}`, page: `${page}`}, {});
          },
+        /**
+         * Get a recent request by ID
+         * @GET /token/:id/requests/:request
+         * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
+         * @param request The ID of the request.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         getRequest: async (id: string | "current", request: string): Promise<Cloudnode.ApiResponse<Cloudnode.Request>> => {
+            return await this.#sendRequest<Cloudnode.Request>({"type":"operation","description":"Get a recent request by ID","token":"tokens.get.own.requests","method":"GET","path":"/token/:id/requests/:request","parameters":{"path":{"id":{"description":"The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true},"request":{"description":"The ID of the request.","type":"string","required":true}}},"returns":[{"status":200,"type":"Request"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`, request: `${request}`}, {}, {});
+         },
     } as const;
     public tokens = {
         /**
@@ -857,6 +873,67 @@ namespace Cloudnode {
          * Whether any server-side error events occurred while processing this request
          */
         hasEvents: boolean;
+    }
+    /**
+     * A request
+     */
+    export interface Request {
+        /**
+         * The ID of the request
+         */
+        id: string;
+        /**
+         * The request method (e.g. GET, POST, HEAD, etc.
+         */
+        method: string;
+        /**
+         * The URL scheme
+         */
+        scheme: "http" | "https";
+        /**
+         * The requested host name
+         */
+        host: string;
+        /**
+         * The request URL path
+         */
+        url: string;
+        /**
+         * The HTTP status code that was returned to this request
+         */
+        status: number;
+        /**
+         * The IP address of the client that made the request (can be both IPv4 and IPv6)
+         */
+        ip: string;
+        /**
+         * The time when the request was received
+         */
+        date: Date;
+        /**
+         * The time in milliseconds that the request took to process
+         */
+        responseTime: number;
+        /**
+         * Whether any server-side error events occurred while processing this request
+         */
+        hasEvents: boolean;
+        /**
+         * The request headers that were received
+         */
+        requestHeaders: Record<string, string> | null;
+        /**
+         * The request body that was received (likely parsed and formatted as JSON)
+         */
+        requestBody: string | null;
+        /**
+         * The headers that were returned by the server
+         */
+        responseHeaders: Record<string, string> | null;
+        /**
+         * The response body that was returned by the server in response to this request
+         */
+        responseBody: {type: "Buffer", data: number[]} | null;
     }
 
     /**
