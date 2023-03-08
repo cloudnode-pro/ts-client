@@ -80,6 +80,9 @@ class Cloudnode {
                 options.headers["Content-Type"] = "text/plain";
             }
         }
+
+        options.headers["User-Agent"] = `cloudnode/1.9.1`;
+
         if (this.#token && operation.token !== undefined)
             options.headers["Authorization"] = `Bearer ${this.#token}`;
         if (operation.token !== undefined)

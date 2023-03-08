@@ -80,6 +80,9 @@ class {{config.name}} {
                 options.headers["Content-Type"] = "text/plain";
             }
         }
+
+        options.headers["User-Agent"] = `{{config.instanceName}}/{{pkg.version}}`;
+
         if (this.#token && operation.token !== undefined)
             options.headers["Authorization"] = `Bearer ${this.#token}`;
         if (operation.token !== undefined)
