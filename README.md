@@ -96,6 +96,7 @@ console.log(newsletter._response.status); // 200
    - [`cloudnode.token.create(permissions, lifetime, [note])`](#cloudnodetokencreatepermissions-lifetime-note)
    - [`cloudnode.token.get(id)`](#cloudnodetokengetid)
    - [`cloudnode.token.list([limit], [page], [internal])`](#cloudnodetokenlistlimit-page-internal)
+   - [`cloudnode.token.listRequests(id, [limit], [page])`](#cloudnodetokenlistrequestsid-limit-page)
    - [`cloudnode.token.revoke(id)`](#cloudnodetokenrevokeid)
    - [`cloudnode.tokens.refresh()`](#cloudnodetokensrefresh)
 
@@ -116,6 +117,7 @@ console.log(newsletter._response.status); // 200
    - [Interface: `Cloudnode.PartialToken`](#interface-cloudnodepartialtoken)
    - [Interface: `Cloudnode.Permission`](#interface-cloudnodepermission)
    - [Interface: `Cloudnode.PrimaryEmail`](#interface-cloudnodeprimaryemail)
+   - [Interface: `Cloudnode.ShortRequest`](#interface-cloudnodeshortrequest)
    - [Interface: `Cloudnode.Token`](#interface-cloudnodetoken)
    - [Interface: `Cloudnode.TokenMetadata`](#interface-cloudnodetokenmetadata)
 
@@ -476,6 +478,24 @@ List tokens of user
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
+<a name="cloudnodetokenlistrequestsid-limit-page"></a>
+
+### `cloudnode.token.listRequests(id, [limit], [page])`
+
+Get list of recent requests made with the token
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
+ - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of requests to return per page. No more than 50. Default: `10`
+ - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The page number. No more than 2³² (4294967296). Default: `1`
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;[Cloudnode.ShortRequest[]](#interface-cloudnodeshortrequest)>>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
 <a name="cloudnodetokenrevokeid"></a>
 
 ### `cloudnode.token.revoke(id)`
@@ -691,6 +711,23 @@ Your current primary account e-mail address
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the e-mail address
  - `address` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your primary e-mail address. May ben null if anonymised.
  - `verified` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether this e-mail address has been verified
+
+<a name="interface-cloudnodeshortrequest"></a>
+
+### Interface: `Cloudnode.ShortRequest`
+
+Overview of a request
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the request
+ - `method` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The request method (e.g. GET, POST, HEAD, etc.
+ - `scheme` <code>"http" | "https"</code> The URL scheme
+ - `host` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The requested host name
+ - `url` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The request URL path
+ - `status` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The HTTP status code that was returned to this request
+ - `ip` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The IP address of the client that made the request (can be both IPv4 and IPv6)
+ - `date` <code>[Date](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date)</code> The time when the request was received
+ - `responseTime` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The time in milliseconds that the request took to process
+ - `hasEvents` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether any server-side error events occurred while processing this request
 
 <a name="interface-cloudnodetoken"></a>
 

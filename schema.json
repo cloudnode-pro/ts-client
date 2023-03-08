@@ -348,6 +348,62 @@
           "type": "string | null"
         }
       ]
+    },
+    {
+      "name": "ShortRequest",
+      "description": "Overview of a request",
+      "fields": [
+        {
+          "name": "id",
+          "description": "The ID of the request",
+          "type": "string"
+        },
+        {
+          "name": "method",
+          "description": "The request method (e.g. GET, POST, HEAD, etc.",
+          "type": "string"
+        },
+        {
+          "name": "scheme",
+          "description": "The URL scheme",
+          "type": "\"http\" | \"https\""
+        },
+        {
+          "name": "host",
+          "description": "The requested host name",
+          "type": "string"
+        },
+        {
+          "name": "url",
+          "description": "The request URL path",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "description": "The HTTP status code that was returned to this request",
+          "type": "number"
+        },
+        {
+          "name": "ip",
+          "description": "The IP address of the client that made the request (can be both IPv4 and IPv6)",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "description": "The time when the request was received",
+          "type": "Date"
+        },
+        {
+          "name": "responseTime",
+          "description": "The time in milliseconds that the request took to process",
+          "type": "number"
+        },
+        {
+          "name": "hasEvents",
+          "description": "Whether any server-side error events occurred while processing this request",
+          "type": "boolean"
+        }
+      ]
     }
   ],
   "operations": {
@@ -651,6 +707,50 @@
             {
               "status": 400,
               "type": "Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"
+            }
+          ]
+        },
+        "listRequests": {
+          "type": "operation",
+          "description": "Get list of recent requests made with the token",
+          "token": "tokens.get.own.requests",
+          "method": "GET",
+          "path": "/token/:id/requests",
+          "parameters": {
+            "path": {
+              "id": {
+                "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.",
+                "type": "string",
+                "required": true
+              }
+            },
+            "query": {
+              "limit": {
+                "description": "The number of requests to return per page. No more than 50.",
+                "default": "10",
+                "type": "number",
+                "required": false
+              },
+              "page": {
+                "description": "The page number. No more than 2³² (4294967296).",
+                "default": "1",
+                "type": "number",
+                "required": false
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "ShortRequest[]"
+            },
+            {
+              "status": 404,
+              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
+            },
+            {
+              "status": 422,
+              "type": "Error & {code: \"INVALID_DATA\"}"
             }
           ]
         }

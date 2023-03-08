@@ -319,6 +319,23 @@ class Cloudnode {
         revoke: async (id) => {
             return await this.#sendRequest({ "type": "operation", "description": "Revoke token", "token": "tokens.revoke.own", "method": "DELETE", "path": "/token/:id", "parameters": { "path": { "id": { "description": "The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.", "type": "string", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 400, "type": "Error & {code: \"MODIFICATION_NOT_ALLOWED\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
         },
+        /**
+         * Get list of recent requests made with the token
+         * @GET /token/:id/requests
+         * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
+         * @param limit The number of requests to return per page. No more than 50.
+         * @param page The page number. No more than 2³² (4294967296).
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        listRequests: async (id, limit = 10, page = 1) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Get list of recent requests made with the token", "token": "tokens.get.own.requests", "method": "GET", "path": "/token/:id/requests", "parameters": { "path": { "id": { "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string", "required": true } }, "query": { "limit": { "description": "The number of requests to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "ShortRequest[]" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, { limit: `${limit}`, page: `${page}` }, {});
+        },
     };
     tokens = {
         /**
