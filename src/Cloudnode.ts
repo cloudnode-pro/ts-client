@@ -36,6 +36,16 @@ class Cloudnode {
     };
 
     /**
+     * API version
+     */
+    readonly #apiVersion = `5.11.2`;
+
+    /**
+     * Client user agent
+     */
+    readonly #userAgent = `cloudnode/1.9.1`;
+
+    /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
      * @param [options] Options for the API client
@@ -81,7 +91,7 @@ class Cloudnode {
             }
         }
 
-        options.headers["User-Agent"] = `cloudnode/1.9.1`;
+        options.headers["User-Agent"] = this.#userAgent;
 
         if (this.#token && operation.token !== undefined)
             options.headers["Authorization"] = `Bearer ${this.#token}`;
@@ -137,6 +147,35 @@ class Cloudnode {
             }
             send(0);
         });
+    }
+
+    /**
+     * Compare versions to determine compatibility
+     * @param a First version
+     * @param b Second version
+     */
+    #compareVersions(a: string, b: string): boolean {
+        const partsA = a.split(".");
+        const partsB = b.split(".");
+
+        const verA = [partsA[0] || "0", partsA[1] || "0"];
+        const verB = [partsB[0] || "0", partsB[1] || "0"];
+
+        return verA[0] === verB[0] && verA[1] === verB[1];
+    }
+
+    /**
+     * Check compatibility with the API
+     * @returns True if this client is compatible with the API server
+     */
+    public async checkCompatibility(): Promise<boolean> {
+        const data: any = await (await fetch(new URL("../", this.#options.baseUrl).toString(), {
+            method: "GET",
+            headers: {
+                "User-Agent": this.#userAgent
+            }
+        })).json();
+        return this.#compareVersions(data.version, this.#apiVersion);
     }
 
     /**

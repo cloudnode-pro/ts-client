@@ -12,6 +12,11 @@ declare class Cloudnode {
      */
     constructor(token?: string, options?: Partial<Cloudnode.Options>);
     /**
+     * Check compatibility with the API
+     * @returns True if this client is compatible with the API server
+     */
+    checkCompatibility(): Promise<boolean>;
+    /**
      * Get another page of paginated results
      * @param response Response to get a different page of
      * @param page Page to get

@@ -77,6 +77,7 @@ console.log(newsletter._response.status); // 200
    - [`cloudnode.getNextPage<T>(response)`](#cloudnodegetnextpagetresponse)
    - [`cloudnode.getPreviousPage<T>(response)`](#cloudnodegetpreviouspagetresponse)
    - [`cloudnode.getAllPages<T>(response)`](#cloudnodegetallpagestresponse)
+   - [`cloudnode.checkCompatibility()`](#cloudnodecheckcompatibility)
    - [`cloudnode.account.changePassword(currentPassword, newPassword)`](#cloudnodeaccountchangepasswordcurrentpassword-newpassword)
    - [`cloudnode.account.get()`](#cloudnodeaccountget)
    - [`cloudnode.account.getEmail()`](#cloudnodeaccountgetemail)
@@ -183,6 +184,16 @@ Get all other pages of paginated results and return the complete data
  - `response` <code>[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> Response to get all pages of.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;T>></code> All of the data in 1 page
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror)</code> Error returned by the API
+
+<a name="cloudnodecheckcompatibility"></a>
+
+### `cloudnode.checkCompatibility()`
+
+Check compatibility with the API
+
+
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)></code> True if this client is compatible with the API server
+
 
 <a name="cloudnodeaccountchangepasswordcurrentpassword-newpassword"></a>
 

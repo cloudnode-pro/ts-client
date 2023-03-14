@@ -103,6 +103,10 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
         type: `Promise<${config.name}.PaginatedData<T>>`,
         description: "All of the data in 1 page"
     }, [{type: `${config.name}.Error`, description: "Error returned by the API"}]));
+    always.push(new DocSchema.Method(`${config.instanceName}.checkCompatibility`, "Check compatibility with the API", [], {
+        type: `Promise<boolean>`,
+        description: "True if this client is compatible with the API server"
+    }, []));
     mainClass.properties.unshift(...always);
     mainNamespace.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));
 
