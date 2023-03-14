@@ -78,31 +78,35 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
         new DocSchema.Parameter("token", "string", "API token to use for requests", false),
         new DocSchema.Parameter("options", `Partial<${config.name}.Options>`, "API client options", false, `{baseUrl: "${config.baseUrl}", autoRetry: true, maxRetryDelay: 5, maxRetries: 3}`)
     ], undefined, []));
-    always.push(new DocSchema.Method(`${config.name}.getPage<T>`, "Get another page of paginated results", [
+    always.push(new DocSchema.Method(`${config.instanceName}.getPage<T>`, "Get another page of paginated results", [
         new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get a different page of", true),
         new DocSchema.Parameter("page", "number", "Page to get", true)
     ], {
         type: `Promise<${config.name}.ApiResponse<${config.name}.PaginatedData<T>> | null>`,
         description: "The new page or null if the page is out of bounds"
     }, [{type: `${config.name}.Error`, description: "Error returned by the API"}]));
-    always.push(new DocSchema.Method(`${config.name}.getNextPage<T>`, "Get next page of paginated results", [
+    always.push(new DocSchema.Method(`${config.instanceName}.getNextPage<T>`, "Get next page of paginated results", [
         new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get the next page of", true)
     ], {
         type: `Promise<${config.name}.ApiResponse<${config.name}.PaginatedData<T>> | null>`,
         description: "The next page or null if this is the last page"
     }, [{type: `${config.name}.Error`, description: "Error returned by the API"}]));
-    always.push(new DocSchema.Method(`${config.name}.getPreviousPage<T>`, "Get previous page of paginated results", [
+    always.push(new DocSchema.Method(`${config.instanceName}.getPreviousPage<T>`, "Get previous page of paginated results", [
         new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get the previous page of", true)
     ], {
         type: `Promise<${config.name}.ApiResponse<${config.name}.PaginatedData<T>> | null>`,
         description: "The previous page or null if this is the first page"
     }, [{type: `${config.name}.Error`, description: "Error returned by the API"}]));
-    always.push(new DocSchema.Method(`${config.name}.getAllPages<T>`, "Get all other pages of paginated results and return the complete data\n> **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.", [
+    always.push(new DocSchema.Method(`${config.instanceName}.getAllPages<T>`, "Get all other pages of paginated results and return the complete data\n> **Warning:** Depending on the amount of data, this can take a long time and use a lot of memory.", [
         new DocSchema.Parameter("response", `${config.name}.ApiResponse<${config.name}.PaginatedData<T>>`, "Response to get all pages of", true)
     ], {
         type: `Promise<${config.name}.PaginatedData<T>>`,
         description: "All of the data in 1 page"
     }, [{type: `${config.name}.Error`, description: "Error returned by the API"}]));
+    always.push(new DocSchema.Method(`${config.instanceName}.checkCompatibility`, "Check compatibility with the API", [], {
+        type: `Promise<"compatible" | "outdated" | "incompatible">`,
+        description: "`compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)"
+    }, []));
     mainClass.properties.unshift(...always);
     mainNamespace.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));
 

@@ -12,6 +12,11 @@ declare class Cloudnode {
      */
     constructor(token?: string, options?: Partial<Cloudnode.Options>);
     /**
+     * Check compatibility with the API
+     * @returns `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
+     */
+    checkCompatibility(): Promise<"compatible" | "outdated" | "incompatible">;
+    /**
      * Get another page of paginated results
      * @param response Response to get a different page of
      * @param page Page to get
@@ -142,7 +147,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
+        readonly get: (id: string | "current") => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
         /**
          * Revoke token
          * @DELETE /token/:id
@@ -156,7 +161,36 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly revoke: (id: string) => Promise<Cloudnode.ApiResponse<void>>;
+        readonly revoke: (id: string | "current") => Promise<Cloudnode.ApiResponse<void>>;
+        /**
+         * Get list of recent requests made with the token
+         * @GET /token/:id/requests
+         * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
+         * @param limit The number of requests to return per page. No more than 50.
+         * @param page The page number. No more than 2³² (4294967296).
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly listRequests: (id: string | "current", limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>>;
+        /**
+         * Get a recent request by ID
+         * @GET /token/:id/requests/:request
+         * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
+         * @param request The ID of the request.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly getRequest: (id: string | "current", request: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Request>>;
     };
     tokens: {
         /**
@@ -207,6 +241,116 @@ declare class Cloudnode {
         readonly login: (user: string, password: string) => Promise<Cloudnode.ApiResponse<{
             session: string;
         }>>;
+    };
+    account: {
+        /**
+         * Get account details
+         * @GET /account
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly get: () => Promise<Cloudnode.ApiResponse<Cloudnode.AccountDetails>>;
+        /**
+         * Get account identity
+         * @GET /account/identity
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly getIdentity: () => Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity>>;
+        /**
+         * Update account identity
+         * @PATCH /account/identity
+         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly updateIdentity: (username: string, name?: string | null) => Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity>>;
+        /**
+         * Replace account identity
+         * @PUT /account/identity
+         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly replaceIdentity: (username: string, name: string | null) => Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity>>;
+        /**
+         * List account e-mail addresses
+         * @GET /account/email
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly listEmails: () => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.AccountEmail[]>>>;
+        /**
+         * Get your primary e-mail address
+         * @GET /account/email/primary
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly getEmail: () => Promise<Cloudnode.ApiResponse<Cloudnode.DatedPrimaryEmail>>;
+        /**
+         * Set your primary e-mail address
+         * @PUT /account/email/primary
+         * @param email E-mail address to set as primary.
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly setEmail: (email: string) => Promise<Cloudnode.ApiResponse<void>>;
+        /**
+         * Change account password
+         * @PUT /account/password
+         * @param currentPassword Your current password.
+         * @param newPassword The new password. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly changePassword: (currentPassword: string, newPassword: string) => Promise<Cloudnode.ApiResponse<void>>;
+        /**
+         * List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description.
+         * @GET /account/permissions
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly listPermissions: () => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Permission[]>>>;
     };
 }
 declare namespace Cloudnode {
@@ -365,6 +509,241 @@ declare namespace Cloudnode {
          * A user-supplied note for this token
          */
         note: string | undefined;
+    }
+    /**
+     * Personal information associated with your account
+     */
+    interface AccountIdentity {
+        /**
+         * Your unique username
+         */
+        username: string;
+        /**
+         * Your name
+         */
+        name: string | null;
+    }
+    /**
+     * Your current primary account e-mail address
+     */
+    interface PrimaryEmail {
+        /**
+         * The ID of the e-mail address
+         */
+        id: string;
+        /**
+         * Your primary e-mail address. May ben null if anonymised.
+         */
+        address: string | null;
+        /**
+         * Whether this e-mail address has been verified
+         */
+        verified: boolean;
+    }
+    /**
+     * Your current primary account e-mail address with a timestamp of when it was added to your account
+     */
+    interface DatedPrimaryEmail {
+        /**
+         * The ID of the e-mail address
+         */
+        id: string;
+        /**
+         * Your e-mail address. May ben null if anonymised.
+         */
+        address: string | null;
+        /**
+         * Whether this e-mail address has been verified
+         */
+        verified: boolean;
+        /**
+         * The date and time when this e-mail address was added to your account
+         */
+        added: Date;
+    }
+    /**
+     * An e-mail address you have added to your account
+     */
+    interface AccountEmail {
+        /**
+         * The ID of the e-mail address
+         */
+        id: string;
+        /**
+         * Your e-mail address. May ben null if anonymised.
+         */
+        address: string | null;
+        /**
+         * Whether this e-mail address has been verified
+         */
+        verified: boolean;
+        /**
+         * Whether this e-mail address is your primary e-mail address
+         */
+        primary: boolean;
+        /**
+         * The date and time when this e-mail address was added to your account
+         */
+        added: Date;
+    }
+    /**
+     * Details about your account
+     */
+    interface AccountDetails {
+        /**
+         * Your user ID
+         */
+        id: string;
+        /**
+         * Whether you have a password set
+         */
+        password: boolean;
+        /**
+         * The name of your permission group
+         */
+        group: string;
+        /**
+         * A list of all permission that you have access to
+         */
+        permissions: string[];
+        /**
+         * Personal information associated with your account. Requires `account.details.identity` to see. Maybe be null if the account is anonymised or you don't have permission to access the account identity.
+         */
+        identity: AccountIdentity | null;
+        /**
+         * Your current primary account e-mail address. Requires `account.details.email` to see. Maybe be null if you don't have a primary e-mail address or you don't have permission to access the account's e-mail address.
+         */
+        email: PrimaryEmail | null;
+    }
+    /**
+     * A permission node
+     */
+    interface Permission {
+        /**
+         * The permission node string
+         */
+        permission: string;
+        /**
+         * User-friendly description of the permission node
+         */
+        description: string;
+        /**
+         * Additional user-friendly information about the permission node
+         */
+        note: string | null;
+        /**
+         * A group/category title that can be used to group permissions together
+         */
+        group: string | null;
+    }
+    /**
+     * Overview of a request
+     */
+    interface ShortRequest {
+        /**
+         * The ID of the request
+         */
+        id: string;
+        /**
+         * The request method (e.g. GET, POST, HEAD, etc.
+         */
+        method: string;
+        /**
+         * The URL scheme
+         */
+        scheme: "http" | "https";
+        /**
+         * The requested host name
+         */
+        host: string;
+        /**
+         * The request URL path
+         */
+        url: string;
+        /**
+         * The HTTP status code that was returned to this request
+         */
+        status: number;
+        /**
+         * The IP address of the client that made the request (can be both IPv4 and IPv6)
+         */
+        ip: string;
+        /**
+         * The time when the request was received
+         */
+        date: Date;
+        /**
+         * The time in milliseconds that the request took to process
+         */
+        responseTime: number;
+        /**
+         * Whether any server-side error events occurred while processing this request
+         */
+        hasEvents: boolean;
+    }
+    /**
+     * A request
+     */
+    interface Request {
+        /**
+         * The ID of the request
+         */
+        id: string;
+        /**
+         * The request method (e.g. GET, POST, HEAD, etc.
+         */
+        method: string;
+        /**
+         * The URL scheme
+         */
+        scheme: "http" | "https";
+        /**
+         * The requested host name
+         */
+        host: string;
+        /**
+         * The request URL path
+         */
+        url: string;
+        /**
+         * The HTTP status code that was returned to this request
+         */
+        status: number;
+        /**
+         * The IP address of the client that made the request (can be both IPv4 and IPv6)
+         */
+        ip: string;
+        /**
+         * The time when the request was received
+         */
+        date: Date;
+        /**
+         * The time in milliseconds that the request took to process
+         */
+        responseTime: number;
+        /**
+         * Whether any server-side error events occurred while processing this request
+         */
+        hasEvents: boolean;
+        /**
+         * The request headers that were received
+         */
+        requestHeaders: Record<string, string> | null;
+        /**
+         * The request body that was received (likely parsed and formatted as JSON)
+         */
+        requestBody: string | null;
+        /**
+         * The headers that were returned by the server
+         */
+        responseHeaders: Record<string, string> | null;
+        /**
+         * The response body that was returned by the server in response to this request
+         */
+        responseBody: {
+            type: "Buffer";
+            data: number[];
+        } | null;
     }
     /**
      * Paginated response

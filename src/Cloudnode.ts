@@ -36,16 +36,26 @@ class Cloudnode {
     };
 
     /**
+     * API version
+     */
+    readonly #apiVersion = `5.11.2`;
+
+    /**
+     * Client user agent
+     */
+    readonly #userAgent = `cloudnode/1.9.1`;
+
+    /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
      * @param [options] Options for the API client
      */
     public constructor(token?: string, options: Partial<Cloudnode.Options> = Cloudnode.#defaultOptions) {
         const fullOptions = Cloudnode.#defaultOptions;
-        fullOptions.baseUrl = fullOptions.baseUrl ?? Cloudnode.#defaultOptions.baseUrl;
-        fullOptions.autoRetry = fullOptions.autoRetry ?? Cloudnode.#defaultOptions.autoRetry;
-        fullOptions.maxRetryDelay = fullOptions.maxRetryDelay ?? Cloudnode.#defaultOptions.maxRetryDelay;
-        fullOptions.maxRetries = fullOptions.maxRetries ?? Cloudnode.#defaultOptions.maxRetries;
+        fullOptions.baseUrl = options.baseUrl ?? Cloudnode.#defaultOptions.baseUrl;
+        fullOptions.autoRetry = options.autoRetry ?? Cloudnode.#defaultOptions.autoRetry;
+        fullOptions.maxRetryDelay = options.maxRetryDelay ?? Cloudnode.#defaultOptions.maxRetryDelay;
+        fullOptions.maxRetries = options.maxRetries ?? Cloudnode.#defaultOptions.maxRetries;
 
         this.#token = token;
         this.#options = fullOptions;
@@ -80,6 +90,9 @@ class Cloudnode {
                 options.headers["Content-Type"] = "text/plain";
             }
         }
+
+        options.headers["User-Agent"] = this.#userAgent;
+
         if (this.#token && operation.token !== undefined)
             options.headers["Authorization"] = `Bearer ${this.#token}`;
         if (operation.token !== undefined)
@@ -134,6 +147,37 @@ class Cloudnode {
             }
             send(0);
         });
+    }
+
+    /**
+     * Compare versions to determine compatibility
+     * @param a First version
+     * @param b Second version
+     */
+    #compareVersions(a: string, b: string): "compatible" | "outdated" | "incompatible" {
+        const partsA = a.split(".");
+        const partsB = b.split(".");
+
+        const verA = [partsA[0] || "0", partsA[1] || "0"];
+        const verB = [partsB[0] || "0", partsB[1] || "0"];
+
+        if (verA[0] !== verB[0]) return "incompatible";
+        if (verA[1] !== verB[1]) return "outdated";
+        return "compatible";
+    }
+
+    /**
+     * Check compatibility with the API
+     * @returns `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
+     */
+    public async checkCompatibility() {
+        const data: any = await (await fetch(new URL("../", this.#options.baseUrl).toString(), {
+            method: "GET",
+            headers: {
+                "User-Agent": this.#userAgent
+            }
+        })).json();
+        return this.#compareVersions(data.version, this.#apiVersion);
     }
 
     /**
@@ -307,8 +351,8 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         get: async (id: string): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
-            return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Get token details","token":"tokens.get.own","method":"GET","path":"/token/:id","parameters":{"path":{"id":{"description":"The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.","type":"string","required":true}}},"returns":[{"status":200,"type":"Token"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
+         get: async (id: string | "current"): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
+            return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Get token details","token":"tokens.get.own","method":"GET","path":"/token/:id","parameters":{"path":{"id":{"description":"The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true}}},"returns":[{"status":200,"type":"Token"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
          },
         /**
          * Revoke token
@@ -323,8 +367,41 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         revoke: async (id: string): Promise<Cloudnode.ApiResponse<void>> => {
-            return await this.#sendRequest<void>({"type":"operation","description":"Revoke token","token":"tokens.revoke.own","method":"DELETE","path":"/token/:id","parameters":{"path":{"id":{"description":"The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":400,"type":"Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
+         revoke: async (id: string | "current"): Promise<Cloudnode.ApiResponse<void>> => {
+            return await this.#sendRequest<void>({"type":"operation","description":"Revoke token","token":"tokens.revoke.own","method":"DELETE","path":"/token/:id","parameters":{"path":{"id":{"description":"The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.","type":"string | \"current\"","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":400,"type":"Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
+         },
+        /**
+         * Get list of recent requests made with the token
+         * @GET /token/:id/requests
+         * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
+         * @param limit The number of requests to return per page. No more than 50.
+         * @param page The page number. No more than 2³² (4294967296).
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         listRequests: async (id: string | "current", limit: number = 10, page: number = 1): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>> => {
+            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>({"type":"operation","description":"Get list of recent requests made with the token","token":"tokens.get.own.requests","method":"GET","path":"/token/:id/requests","parameters":{"path":{"id":{"description":"The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true}},"query":{"limit":{"description":"The number of requests to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"ShortRequest[]"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {limit: `${limit}`, page: `${page}`}, {});
+         },
+        /**
+         * Get a recent request by ID
+         * @GET /token/:id/requests/:request
+         * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
+         * @param request The ID of the request.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         getRequest: async (id: string | "current", request: string): Promise<Cloudnode.ApiResponse<Cloudnode.Request>> => {
+            return await this.#sendRequest<Cloudnode.Request>({"type":"operation","description":"Get a recent request by ID","token":"tokens.get.own.requests","method":"GET","path":"/token/:id/requests/:request","parameters":{"path":{"id":{"description":"The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true},"request":{"description":"The ID of the request.","type":"string","required":true}}},"returns":[{"status":200,"type":"Request"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`, request: `${request}`}, {}, {});
          },
     } as const;
     public tokens = {
@@ -377,6 +454,134 @@ class Cloudnode {
          */
          login: async (user: string, password: string): Promise<Cloudnode.ApiResponse<{session: string}>> => {
             return await this.#sendRequest<{session: string}>({"type":"operation","description":"Create a session using user ID/username/e-mail and password.\n\n> **Note**: Logging in can only be performed from residential IP. Proxying this endpoint will likely not work. It is normally not recommended to use this endpoint to gain API access. Instead, create a token from your account to use with the API.","method":"POST","path":"/auth/login","parameters":{"body":{"user":{"description":"User ID (starts with `user_`), username or e-mail address.","type":"string","required":true},"password":{"description":"The password of the account.","type":"string","required":true}}},"returns":[{"status":201,"type":"{session: string}","description":"Session token. Also returned in `Set-Cookie` header."},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":403,"type":"Error & {code: \"IP_REJECTED\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {user, password});
+         },
+    } as const;
+    public account = {
+        /**
+         * Get account details
+         * @GET /account
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         get: async (): Promise<Cloudnode.ApiResponse<Cloudnode.AccountDetails>> => {
+            return await this.#sendRequest<Cloudnode.AccountDetails>({"type":"operation","description":"Get account details","token":"account.details","method":"GET","path":"/account","parameters":{},"returns":[{"status":200,"type":"AccountDetails"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {});
+         },
+        /**
+         * Get account identity
+         * @GET /account/identity
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         getIdentity: async (): Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity>> => {
+            return await this.#sendRequest<Cloudnode.AccountIdentity>({"type":"operation","description":"Get account identity","token":"account.details.identity","method":"GET","path":"/account/identity","parameters":{},"returns":[{"status":200,"type":"AccountIdentity"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {});
+         },
+        /**
+         * Update account identity
+         * @PATCH /account/identity
+         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         updateIdentity: async (username: string, name?: string | null): Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity>> => {
+            return await this.#sendRequest<Cloudnode.AccountIdentity>({"type":"operation","description":"Update account identity","token":"account.details.identity.update","method":"PATCH","path":"/account/identity","parameters":{"body":{"username":{"description":"Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.","type":"string","required":true},"name":{"description":"Your full name. Set to `null` to remove.","type":"string | null","required":false}}},"returns":[{"status":200,"type":"AccountIdentity"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {username, name});
+         },
+        /**
+         * Replace account identity
+         * @PUT /account/identity
+         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         replaceIdentity: async (username: string, name: string | null): Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity>> => {
+            return await this.#sendRequest<Cloudnode.AccountIdentity>({"type":"operation","description":"Replace account identity","token":"account.details.identity.update","method":"PUT","path":"/account/identity","parameters":{"body":{"username":{"description":"Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.","type":"string","required":true},"name":{"description":"Your full name. Set to `null` to remove.","type":"string | null","required":true}}},"returns":[{"status":200,"type":"AccountIdentity"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {username, name});
+         },
+        /**
+         * List account e-mail addresses
+         * @GET /account/email
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         listEmails: async (): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.AccountEmail[]>>> => {
+            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.AccountEmail[]>>({"type":"operation","description":"List account e-mail addresses","token":"account.details.email.list","method":"GET","path":"/account/email","parameters":{},"returns":[{"status":200,"type":"AccountEmail[]"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {});
+         },
+        /**
+         * Get your primary e-mail address
+         * @GET /account/email/primary
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         getEmail: async (): Promise<Cloudnode.ApiResponse<Cloudnode.DatedPrimaryEmail>> => {
+            return await this.#sendRequest<Cloudnode.DatedPrimaryEmail>({"type":"operation","description":"Get your primary e-mail address","token":"account.details.email","method":"GET","path":"/account/email/primary","parameters":{},"returns":[{"status":200,"type":"DatedPrimaryEmail"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {});
+         },
+        /**
+         * Set your primary e-mail address
+         * @PUT /account/email/primary
+         * @param email E-mail address to set as primary.
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         setEmail: async (email: string): Promise<Cloudnode.ApiResponse<void>> => {
+            return await this.#sendRequest<void>({"type":"operation","description":"Set your primary e-mail address","token":"account.details.email.update","method":"PUT","path":"/account/email/primary","parameters":{"body":{"email":{"description":"E-mail address to set as primary.","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {email});
+         },
+        /**
+         * Change account password
+         * @PUT /account/password
+         * @param currentPassword Your current password.
+         * @param newPassword The new password. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         changePassword: async (currentPassword: string, newPassword: string): Promise<Cloudnode.ApiResponse<void>> => {
+            return await this.#sendRequest<void>({"type":"operation","description":"Change account password","token":"account.details.password.update","method":"PUT","path":"/account/password","parameters":{"body":{"currentPassword":{"description":"Your current password.","type":"string","required":true},"newPassword":{"description":"The new password. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {currentPassword, newPassword});
+         },
+        /**
+         * List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description.
+         * @GET /account/permissions
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+         listPermissions: async (): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Permission[]>>> => {
+            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.Permission[]>>({"type":"operation","description":"List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description.","token":"account.details","method":"GET","path":"/account/permissions","parameters":{},"returns":[{"status":200,"type":"Permission[]"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {});
          },
     } as const;
 
@@ -538,6 +743,238 @@ namespace Cloudnode {
          * A user-supplied note for this token
          */
         note: string | undefined;
+    }
+    /**
+     * Personal information associated with your account
+     */
+    export interface AccountIdentity {
+        /**
+         * Your unique username
+         */
+        username: string;
+        /**
+         * Your name
+         */
+        name: string | null;
+    }
+    /**
+     * Your current primary account e-mail address
+     */
+    export interface PrimaryEmail {
+        /**
+         * The ID of the e-mail address
+         */
+        id: string;
+        /**
+         * Your primary e-mail address. May ben null if anonymised.
+         */
+        address: string | null;
+        /**
+         * Whether this e-mail address has been verified
+         */
+        verified: boolean;
+    }
+    /**
+     * Your current primary account e-mail address with a timestamp of when it was added to your account
+     */
+    export interface DatedPrimaryEmail {
+        /**
+         * The ID of the e-mail address
+         */
+        id: string;
+        /**
+         * Your e-mail address. May ben null if anonymised.
+         */
+        address: string | null;
+        /**
+         * Whether this e-mail address has been verified
+         */
+        verified: boolean;
+        /**
+         * The date and time when this e-mail address was added to your account
+         */
+        added: Date;
+    }
+    /**
+     * An e-mail address you have added to your account
+     */
+    export interface AccountEmail {
+        /**
+         * The ID of the e-mail address
+         */
+        id: string;
+        /**
+         * Your e-mail address. May ben null if anonymised.
+         */
+        address: string | null;
+        /**
+         * Whether this e-mail address has been verified
+         */
+        verified: boolean;
+        /**
+         * Whether this e-mail address is your primary e-mail address
+         */
+        primary: boolean;
+        /**
+         * The date and time when this e-mail address was added to your account
+         */
+        added: Date;
+    }
+    /**
+     * Details about your account
+     */
+    export interface AccountDetails {
+        /**
+         * Your user ID
+         */
+        id: string;
+        /**
+         * Whether you have a password set
+         */
+        password: boolean;
+        /**
+         * The name of your permission group
+         */
+        group: string;
+        /**
+         * A list of all permission that you have access to
+         */
+        permissions: string[];
+        /**
+         * Personal information associated with your account. Requires `account.details.identity` to see. Maybe be null if the account is anonymised or you don't have permission to access the account identity.
+         */
+        identity: AccountIdentity | null;
+        /**
+         * Your current primary account e-mail address. Requires `account.details.email` to see. Maybe be null if you don't have a primary e-mail address or you don't have permission to access the account's e-mail address.
+         */
+        email: PrimaryEmail | null;
+    }
+    /**
+     * A permission node
+     */
+    export interface Permission {
+        /**
+         * The permission node string
+         */
+        permission: string;
+        /**
+         * User-friendly description of the permission node
+         */
+        description: string;
+        /**
+         * Additional user-friendly information about the permission node
+         */
+        note: string | null;
+        /**
+         * A group/category title that can be used to group permissions together
+         */
+        group: string | null;
+    }
+    /**
+     * Overview of a request
+     */
+    export interface ShortRequest {
+        /**
+         * The ID of the request
+         */
+        id: string;
+        /**
+         * The request method (e.g. GET, POST, HEAD, etc.
+         */
+        method: string;
+        /**
+         * The URL scheme
+         */
+        scheme: "http" | "https";
+        /**
+         * The requested host name
+         */
+        host: string;
+        /**
+         * The request URL path
+         */
+        url: string;
+        /**
+         * The HTTP status code that was returned to this request
+         */
+        status: number;
+        /**
+         * The IP address of the client that made the request (can be both IPv4 and IPv6)
+         */
+        ip: string;
+        /**
+         * The time when the request was received
+         */
+        date: Date;
+        /**
+         * The time in milliseconds that the request took to process
+         */
+        responseTime: number;
+        /**
+         * Whether any server-side error events occurred while processing this request
+         */
+        hasEvents: boolean;
+    }
+    /**
+     * A request
+     */
+    export interface Request {
+        /**
+         * The ID of the request
+         */
+        id: string;
+        /**
+         * The request method (e.g. GET, POST, HEAD, etc.
+         */
+        method: string;
+        /**
+         * The URL scheme
+         */
+        scheme: "http" | "https";
+        /**
+         * The requested host name
+         */
+        host: string;
+        /**
+         * The request URL path
+         */
+        url: string;
+        /**
+         * The HTTP status code that was returned to this request
+         */
+        status: number;
+        /**
+         * The IP address of the client that made the request (can be both IPv4 and IPv6)
+         */
+        ip: string;
+        /**
+         * The time when the request was received
+         */
+        date: Date;
+        /**
+         * The time in milliseconds that the request took to process
+         */
+        responseTime: number;
+        /**
+         * Whether any server-side error events occurred while processing this request
+         */
+        hasEvents: boolean;
+        /**
+         * The request headers that were received
+         */
+        requestHeaders: Record<string, string> | null;
+        /**
+         * The request body that was received (likely parsed and formatted as JSON)
+         */
+        requestBody: string | null;
+        /**
+         * The headers that were returned by the server
+         */
+        responseHeaders: Record<string, string> | null;
+        /**
+         * The response body that was returned by the server in response to this request
+         */
+        responseBody: {type: "Buffer", data: number[]} | null;
     }
 
     /**
