@@ -150,11 +150,15 @@ class Cloudnode {
         const partsB = b.split(".");
         const verA = [partsA[0] || "0", partsA[1] || "0"];
         const verB = [partsB[0] || "0", partsB[1] || "0"];
-        return verA[0] === verB[0] && verA[1] === verB[1];
+        if (verA[0] !== verB[0])
+            return "incompatible";
+        if (verA[1] !== verB[1])
+            return "outdated";
+        return "compatible";
     }
     /**
      * Check compatibility with the API
-     * @returns True if this client is compatible with the API server
+     * @returns `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
      */
     async checkCompatibility() {
         const data = await (await fetch(new URL("../", this.#options.baseUrl).toString(), {

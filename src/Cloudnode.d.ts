@@ -13,9 +13,9 @@ declare class Cloudnode {
     constructor(token?: string, options?: Partial<Cloudnode.Options>);
     /**
      * Check compatibility with the API
-     * @returns True if this client is compatible with the API server
+     * @returns `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
      */
-    checkCompatibility(): Promise<boolean>;
+    checkCompatibility(): Promise<"compatible" | "outdated" | "incompatible">;
     /**
      * Get another page of paginated results
      * @param response Response to get a different page of

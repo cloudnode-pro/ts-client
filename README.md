@@ -192,7 +192,7 @@ Get all other pages of paginated results and return the complete data
 Check compatibility with the API
 
 
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)></code> True if this client is compatible with the API server
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;"compatible" | "outdated" | "incompatible"></code> `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
 
 
 <a name="cloudnodeaccountchangepasswordcurrentpassword-newpassword"></a>

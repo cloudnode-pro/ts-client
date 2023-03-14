@@ -104,8 +104,8 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
         description: "All of the data in 1 page"
     }, [{type: `${config.name}.Error`, description: "Error returned by the API"}]));
     always.push(new DocSchema.Method(`${config.instanceName}.checkCompatibility`, "Check compatibility with the API", [], {
-        type: `Promise<boolean>`,
-        description: "True if this client is compatible with the API server"
+        type: `Promise<"compatible" | "outdated" | "incompatible">`,
+        description: "`compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)"
     }, []));
     mainClass.properties.unshift(...always);
     mainNamespace.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));
