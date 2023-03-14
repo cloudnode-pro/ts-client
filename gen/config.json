@@ -2,6 +2,6 @@
   "name": "Cloudnode",
   "instanceName": "cloudnode",
   "baseUrl": "https://api.cloudnode.pro/v5/",
-  "apiVersion": "5.11.0",
+  "apiVersion": "5.11.2",
   "browserSdkUrl": "https://cdn.jsdelivr.net/npm/cloudnode-ts@latest/browser/Cloudnode.min.js"
 }
