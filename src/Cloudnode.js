@@ -32,11 +32,11 @@ class Cloudnode {
     /**
      * API version
      */
-    #apiVersion = `5.11.2`;
+    #apiVersion = `5.11.3`;
     /**
      * Client user agent
      */
-    #userAgent = `cloudnode/1.9.1`;
+    #userAgent = `cloudnode/1.10.1`;
     /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
