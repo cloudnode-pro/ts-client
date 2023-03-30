@@ -86,12 +86,12 @@ export default async (schema: Schema, config: Config, pkg: Package) => {
 
     // get operation namespaces
     const namespaces: FlatNamespace[] = [];
-    for (const [name, namespace] of Object.entries(schema.operations).filter(([name, operation]) => operation.type === "namespace") as [string, Schema.Operation.Namespace][]) {
+    for (const [name, namespace] of Object.entries(schema.operations).filter(([_name, operation]) => operation.type === "namespace") as [string, Schema.Operation.Namespace][]) {
         namespaces.push({name, operations: flatOperations(Object.entries(namespace.operations))});
     }
 
     // get operations without namespace
-    const operations = flatOperations(Object.entries(schema.operations).filter(([name, operation]) => operation.type !== "namespace") as [string, Schema.Operation][]);
+    const operations = flatOperations(Object.entries(schema.operations).filter(([_name, operation]) => operation.type !== "namespace") as [string, Schema.Operation][]);
 
     // load render main class from `/gen/templates/main.mustache`
     const mainTemplate = await fs.readFile(path.join("gen", "templates", "main.mustache"), "utf8");
