@@ -43,7 +43,7 @@ class Cloudnode {
     /**
      * Client user agent
      */
-    readonly #userAgent = `cloudnode/1.10.1`;
+    readonly #userAgent = `cloudnode/1.10.2`;
 
     /**
      * Construct a new Cloudnode API client
