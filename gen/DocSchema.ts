@@ -7,13 +7,13 @@ interface DocSchema {
 }
 
 namespace DocSchema {
-    export class Entry {
+    export abstract class Entry {
         public name: string;
         public readonly type: string;
         public readonly typeName?: string;
         public readonly isStatic?: true;
 
-        constructor(name: string, type: string, isStatic?: true, alwaysTypeName?: true) {
+        protected constructor(name: string, type: string, isStatic?: true, alwaysTypeName?: true) {
             this.name = name;
             this.type = type;
             this.isStatic = isStatic;
@@ -28,9 +28,7 @@ namespace DocSchema {
             return this.displayName.toLowerCase().replace(/[^a-z\d\s]/g, "").replace(/\s+/g, "-");
         }
 
-        public content(config: Config, schema: Schema): string {
-            return "";
-        }
+        public abstract content(config: Config, schema: Schema): string;
     }
 
     export class Property extends Entry {
