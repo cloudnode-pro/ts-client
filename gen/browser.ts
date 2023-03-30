@@ -10,7 +10,6 @@ export async function createBrowserSDK(config: Config): Promise<void> {
     // remove imports at beginning of file and export default at end of file
     const browserJs = mainJs.replace(/^import.*$/gm, "").replace(/^export default \w+;$/gm, "");
     // evaluate the code to verify it works
-    const fetch = () => {};
     eval(browserJs);
     // create folder `/browser` if it doesn't exist
     try {
