@@ -178,7 +178,7 @@ export function linkType (type: string, config: Config, schema: Schema): string 
         else {
             // if it includes a generic, link the generic
             const parts = typeName.match(/<(.*)>/);
-            if (parts) return `${link(typeName.slice(0, parts.index))}<${fullLink(parts[1])}>`;
+            if (parts && parts[1]) return `${link(typeName.slice(0, parts.index))}<${fullLink(parts[1])}>`;
         }
         return link(typeName);
     };
