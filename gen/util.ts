@@ -19,7 +19,7 @@ export function getReturnType(operation: Schema.Operation, schema: Schema, confi
  * @param config
  * @returns The combined return description
  */
-export function getReturnDescription(operation: Schema.Operation, schema: Schema, config: Config): string {
+export function getReturnDescription(operation: Schema.Operation): string {
     return operation.returns.filter(r => r.status >= 200 && r.status < 300 && r.description).map(r => r.description).join(" ");
 }
 
