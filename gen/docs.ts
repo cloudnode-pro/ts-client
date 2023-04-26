@@ -69,7 +69,8 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
         const queryParams = Object.entries(operation.parameters.query ?? {}).map(([name, parameter]) => new DocSchema.Parameter(name, parameter.type, parameter.description, parameter.required, parameter.default));
         const bodyParams = Object.entries(operation.parameters.body ?? {}).map(([name, parameter]) => new DocSchema.Parameter(name, parameter.type, parameter.description, parameter.required, parameter.default));
         const params: DocSchema.Parameter[] = [...pathParams, ...queryParams, ...bodyParams];
-        return new DocSchema.Method(config.instanceName + "." + operation.name, operation.description, params, returns, throws, undefined, config.name, true);
+        const description = typeof operation.token === "string" ? `${operation.description}${[".", "?", "!"].includes(operation.description.slice(-1)) ? "" : "."} Requires token with scope \`${operation.token}\`.` : operation.description;
+        return new DocSchema.Method(config.instanceName + "." + operation.name, description, params, returns, throws, undefined, config.name, true);
     });
     mainClass.properties.push(...operationMethods);
     mainClass.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));
