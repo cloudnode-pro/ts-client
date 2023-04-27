@@ -199,7 +199,7 @@ Check compatibility with the API
 
 ### `cloudnode.account.changePassword(currentPassword, newPassword)`
 
-Change account password
+Change account password. Requires token with scope `account.details.password.update`.
 
  - `currentPassword` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Your current password.
  - `newPassword` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The new password. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
@@ -215,7 +215,7 @@ Change account password
 
 ### `cloudnode.account.get()`
 
-Get account details
+Get account details. Requires token with scope `account.details`.
 
 
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.AccountDetails](#interface-cloudnodeaccountdetails)>></code>
@@ -229,7 +229,7 @@ Get account details
 
 ### `cloudnode.account.getEmail()`
 
-Get your primary e-mail address
+Get your primary e-mail address. Requires token with scope `account.details.email`.
 
 
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.DatedPrimaryEmail](#interface-cloudnodedatedprimaryemail)>></code>
@@ -244,7 +244,7 @@ Get your primary e-mail address
 
 ### `cloudnode.account.getIdentity()`
 
-Get account identity
+Get account identity. Requires token with scope `account.details.identity`.
 
 
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.AccountIdentity](#interface-cloudnodeaccountidentity)>></code>
@@ -259,7 +259,7 @@ Get account identity
 
 ### `cloudnode.account.listEmails()`
 
-List account e-mail addresses
+List account e-mail addresses. Requires token with scope `account.details.email.list`.
 
 
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;[Cloudnode.AccountEmail[]](#interface-cloudnodeaccountemail)>>></code>
@@ -273,7 +273,7 @@ List account e-mail addresses
 
 ### `cloudnode.account.listPermissions()`
 
-List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description.
+List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description. Requires token with scope `account.details`.
 
 
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;[Cloudnode.Permission[]](#interface-cloudnodepermission)>>></code>
@@ -287,7 +287,7 @@ List account permissions with user-friendly descriptions. Some permissions (such
 
 ### `cloudnode.account.replaceIdentity(username, name)`
 
-Replace account identity
+Replace account identity. Requires token with scope `account.details.identity.update`.
 
  - `username` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
  - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your full name. Set to `null` to remove.
@@ -305,7 +305,7 @@ Replace account identity
 
 ### `cloudnode.account.setEmail(email)`
 
-Set your primary e-mail address
+Set your primary e-mail address. Requires token with scope `account.details.email.update`.
 
  - `email` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> E-mail address to set as primary.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)>></code>
@@ -321,7 +321,7 @@ Set your primary e-mail address
 
 ### `cloudnode.account.updateIdentity(username, [name])`
 
-Update account identity
+Update account identity. Requires token with scope `account.details.identity.update`.
 
  - `username` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
  - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your full name. Set to `null` to remove.
@@ -417,7 +417,7 @@ Subscribe to newsletter
 
 ### `cloudnode.newsletters.listSubscriptions([limit], [page])`
 
-List subscriptions of the authenticated user
+List subscriptions of the authenticated user. Requires token with scope `newsletter.subscriptions.list.own`.
 
  - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of subscriptions to return per page. No more than 50. Default: `10`
  - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The page number. No more than 2³² (4294967296). Default: `1`
@@ -446,7 +446,7 @@ Revoke a subscription (unsubscribe)
 
 ### `cloudnode.token.create(permissions, lifetime, [note])`
 
-Create token
+Create token. Requires token with scope `tokens.create.own`.
 
  - `permissions` <code>[string[]](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> List of permissions to grant to the token. You must already have each of these permissions with your current token.
  - `lifetime` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
@@ -463,7 +463,7 @@ Create token
 
 ### `cloudnode.token.get(id)`
 
-Get token details
+Get token details. Requires token with scope `tokens.get.own`.
 
  - `id` <code>string | "current"</code> The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.Token](#interface-cloudnodetoken)>></code>
@@ -479,7 +479,7 @@ Get token details
 
 ### `cloudnode.token.getRequest(id, request)`
 
-Get a recent request by ID
+Get a recent request by ID. Requires token with scope `tokens.get.own.requests`.
 
  - `id` <code>string | "current"</code> The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
  - `request` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the request.
@@ -496,7 +496,7 @@ Get a recent request by ID
 
 ### `cloudnode.token.list([limit], [page], [internal])`
 
-List tokens of user
+List tokens of user. Requires token with scope `tokens.list.own`.
 
  - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of tokens to return per page. No more than 50. Default: `10`
  - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The page number. No more than 2³² (4294967296). Default: `1`
@@ -512,7 +512,7 @@ List tokens of user
 
 ### `cloudnode.token.listRequests(id, [limit], [page])`
 
-Get list of recent requests made with the token
+Get list of recent requests made with the token. Requires token with scope `tokens.get.own.requests`.
 
  - `id` <code>string | "current"</code> The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
  - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of requests to return per page. No more than 50. Default: `10`
@@ -530,7 +530,7 @@ Get list of recent requests made with the token
 
 ### `cloudnode.token.revoke(id)`
 
-Revoke token
+Revoke token. Requires token with scope `tokens.revoke.own`.
 
  - `id` <code>string | "current"</code> The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)>></code>
@@ -547,7 +547,7 @@ Revoke token
 
 ### `cloudnode.tokens.refresh()`
 
-Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.
+Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely. Requires token with scope `token.refresh`.
 
 
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.Token](#interface-cloudnodetoken)>></code>

@@ -56,7 +56,7 @@ export function addExtraReturns(schema: Schema): Schema {
  * @returns The modified operation
  */
 function addExtraReturnsToOperation(operation: Schema.Operation): Schema.Operation {
-    if (operation.token !== undefined)
+    if (typeof operation.token === "string")
         operation.returns.push({
             status: 401,
             type: 'Error & {code: "UNAUTHORIZED"}'
