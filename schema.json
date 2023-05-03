@@ -480,6 +480,27 @@
           "type": "{type: \"Buffer\", data: number[]} | null"
         }
       ]
+    },
+    {
+      "name": "Project",
+      "description": "An isolated group of servers",
+      "fields": [
+        {
+          "name": "id",
+          "description": "The ID of the project",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "description": "Project name",
+          "type": "string"
+        },
+        {
+          "name": "user",
+          "description": "ID of the user that owns this project",
+          "type": "string"
+        }
+      ]
     }
   ],
   "operations": {
