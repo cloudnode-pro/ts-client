@@ -38,7 +38,7 @@ class Cloudnode {
     /**
      * API version
      */
-    readonly #apiVersion = `5.11.4`;
+    readonly #apiVersion = `5.12.0`;
 
     /**
      * Client user agent
