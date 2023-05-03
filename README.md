@@ -94,6 +94,11 @@ console.log(newsletter._response.status); // 200
    - [`cloudnode.newsletter.subscribe(id, email, [data])`](#cloudnodenewslettersubscribeid-email-data)
    - [`cloudnode.newsletters.listSubscriptions([limit], [page])`](#cloudnodenewsletterslistsubscriptionslimit-page)
    - [`cloudnode.newsletters.unsubscribe(subscription)`](#cloudnodenewslettersunsubscribesubscription)
+   - [`cloudnode.projects.create(name)`](#cloudnodeprojectscreatename)
+   - [`cloudnode.projects.delete(id)`](#cloudnodeprojectsdeleteid)
+   - [`cloudnode.projects.get(id)`](#cloudnodeprojectsgetid)
+   - [`cloudnode.projects.list([limit], [page])`](#cloudnodeprojectslistlimit-page)
+   - [`cloudnode.projects.update(id, name)`](#cloudnodeprojectsupdateid-name)
    - [`cloudnode.token.create(permissions, lifetime, [note])`](#cloudnodetokencreatepermissions-lifetime-note)
    - [`cloudnode.token.get(id)`](#cloudnodetokengetid)
    - [`cloudnode.token.getRequest(id, request)`](#cloudnodetokengetrequestid-request)
@@ -119,6 +124,7 @@ console.log(newsletter._response.status); // 200
    - [Interface: `Cloudnode.PartialToken`](#interface-cloudnodepartialtoken)
    - [Interface: `Cloudnode.Permission`](#interface-cloudnodepermission)
    - [Interface: `Cloudnode.PrimaryEmail`](#interface-cloudnodeprimaryemail)
+   - [Interface: `Cloudnode.Project`](#interface-cloudnodeproject)
    - [Interface: `Cloudnode.Request`](#interface-cloudnoderequest)
    - [Interface: `Cloudnode.ShortRequest`](#interface-cloudnodeshortrequest)
    - [Interface: `Cloudnode.Token`](#interface-cloudnodetoken)
@@ -442,6 +448,83 @@ Revoke a subscription (unsubscribe)
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
+<a name="cloudnodeprojectscreatename"></a>
+
+### `cloudnode.projects.create(name)`
+
+Create a project. Requires token with scope `projects.create.own`.
+
+ - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Project name. Max 255 characters.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.Project](#interface-cloudnodeproject)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeprojectsdeleteid"></a>
+
+### `cloudnode.projects.delete(id)`
+
+Delete a project. Requires token with scope `projects.delete.own`.
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Project ID.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[void](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeprojectsgetid"></a>
+
+### `cloudnode.projects.get(id)`
+
+Get a project. Requires token with scope `projects.get.own`.
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Project ID.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.Project](#interface-cloudnodeproject)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeprojectslistlimit-page"></a>
+
+### `cloudnode.projects.list([limit], [page])`
+
+List projects. Requires token with scope `projects.get.own`.
+
+ - `limit` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The number of projects to return per page. No more than 100. Default: `20`
+ - `page` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The page number. No more than 2³² (4294967296). Default: `1`
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.PaginatedData](#interface-cloudnodepaginateddatat)&lt;[Cloudnode.Project[]](#interface-cloudnodeproject)>>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodeprojectsupdateid-name"></a>
+
+### `cloudnode.projects.update(id, name)`
+
+Update a project. Requires token with scope `projects.update.own`.
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Project ID.
+ - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Project name. Max 255 characters.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.Project](#interface-cloudnodeproject)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
 <a name="cloudnodetokencreatepermissions-lifetime-note"></a>
 
 ### `cloudnode.token.create(permissions, lifetime, [note])`
@@ -741,6 +824,16 @@ Your current primary account e-mail address
  - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the e-mail address
  - `address` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | [null](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/null)</code> Your primary e-mail address. May ben null if anonymised.
  - `verified` <code>[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)</code> Whether this e-mail address has been verified
+
+<a name="interface-cloudnodeproject"></a>
+
+### Interface: `Cloudnode.Project`
+
+An isolated group of servers
+
+ - `id` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The ID of the project
+ - `name` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> Project name
+ - `user` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> ID of the user that owns this project
 
 <a name="interface-cloudnoderequest"></a>
 
