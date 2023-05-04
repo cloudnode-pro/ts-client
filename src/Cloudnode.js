@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 /**
  * A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
  * @class
