@@ -1,5 +1,4 @@
 import Schema from "../gen/Schema";
-import fetch from "node-fetch";
 
 /**
  * A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
@@ -1044,7 +1043,7 @@ namespace Cloudnode {
             readonly body: any;
         };
 
-        public constructor(response: import("node-fetch").Response, request: {operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body: any}) {
+        public constructor(response: Response, request: {operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body: any}) {
             this.headers = Object.fromEntries([...response.headers.entries()].map(([k, v]) => [k.toLowerCase(), v]));
             this.ok = response.ok;
             this.redirected = response.redirected;
