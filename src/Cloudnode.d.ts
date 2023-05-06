@@ -885,7 +885,7 @@ declare namespace Cloudnode {
             readonly queryParams: Record<string, string>;
             readonly body: any;
         };
-        constructor(response: import("node-fetch").Response, request: {
+        constructor(response: Response, request: {
             operation: Schema.Operation;
             pathParams: Record<string, string>;
             queryParams: Record<string, string>;

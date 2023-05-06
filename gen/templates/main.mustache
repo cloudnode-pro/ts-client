@@ -1,5 +1,4 @@
 import Schema from "../gen/Schema";
-import fetch from "node-fetch";
 
 /**
  * {{{pkg.description}}}
@@ -365,7 +364,7 @@ namespace {{config.name}} {
             readonly body: any;
         };
 
-        public constructor(response: import("node-fetch").Response, request: {operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body: any}) {
+        public constructor(response: Response, request: {operation: Schema.Operation, pathParams: Record<string, string>, queryParams: Record<string, string>, body: any}) {
             this.headers = Object.fromEntries([...response.headers.entries()].map(([k, v]) => [k.toLowerCase(), v]));
             this.ok = response.ok;
             this.redirected = response.redirected;

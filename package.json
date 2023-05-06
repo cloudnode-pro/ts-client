@@ -1,6 +1,6 @@
 {
   "name": "cloudnode-ts",
-  "version": "1.10.3",
+  "version": "2.0.0",
   "description": "A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)",
   "main": "src/Cloudnode.js",
   "type": "module",
@@ -31,12 +31,15 @@
     "@types/node": "^18.11.8",
     "listr-inquirer": "^0.1.0",
     "listr2": "^6.0.4",
-    "mustache": "^4.2.0",
-    "node-fetch": "^3.2.10"
+    "mustache": "^4.2.0"
   },
   "devDependencies": {
     "@types/mustache": "^4.2.1",
     "terser": "^5.15.1",
     "typescript": "^5.0.2"
+  },
+  "engines": {
+    "node": ">=18.15.0",
+    "npm": ">=9.6.4"
   }
 }

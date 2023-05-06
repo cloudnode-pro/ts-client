@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 /**
  * A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
  * @class
@@ -36,7 +35,7 @@ class Cloudnode {
     /**
      * Client user agent
      */
-    #userAgent = `cloudnode/1.10.3`;
+    #userAgent = `cloudnode/2.0.0`;
     /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
