@@ -277,8 +277,9 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns `void` if nothing was changed.
          */
-        readonly updateIdentity: (username: string, name?: string | null) => Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity>>;
+        readonly updateIdentity: (username: string, name?: string | null) => Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity | void>>;
         /**
          * Replace account identity
          * @PUT /account/identity

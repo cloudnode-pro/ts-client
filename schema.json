@@ -1054,6 +1054,11 @@
               "type": "AccountIdentity"
             },
             {
+              "status": 204,
+              "type": "void",
+              "description": "`void` if nothing was changed."
+            },
+            {
               "status": 404,
               "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
             },
