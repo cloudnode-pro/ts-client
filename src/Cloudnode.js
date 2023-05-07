@@ -31,7 +31,7 @@ class Cloudnode {
     /**
      * API version
      */
-    #apiVersion = `5.11.4`;
+    #apiVersion = `5.12.0`;
     /**
      * Client user agent
      */
@@ -480,9 +480,10 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns `void` if nothing was changed.
          */
         updateIdentity: async (username, name) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Update account identity", "token": "account.details.identity.update", "method": "PATCH", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove.", "type": "string | null", "required": false } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
+            return await this.#sendRequest({ "type": "operation", "description": "Update account identity", "token": "account.details.identity.update", "method": "PATCH", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove.", "type": "string | null", "required": false } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 204, "type": "void", "description": "`void` if nothing was changed." }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
         },
         /**
          * Replace account identity
@@ -567,6 +568,80 @@ class Cloudnode {
          */
         listPermissions: async () => {
             return await this.#sendRequest({ "type": "operation", "description": "List account permissions with user-friendly descriptions. Some permissions (such as wildcard ones) may be excluded in this list if they don't have a description.", "token": "account.details", "method": "GET", "path": "/account/permissions", "parameters": {}, "returns": [{ "status": 200, "type": "Permission[]" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, {});
+        },
+    };
+    projects = {
+        /**
+         * List projects
+         * @GET /projects
+         * @param limit The number of projects to return per page. No more than 100.
+         * @param page The page number. No more than 2³² (4294967296).
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        list: async (limit = 20, page = 1) => {
+            return await this.#sendRequest({ "type": "operation", "description": "List projects", "token": "projects.get.own", "method": "GET", "path": "/projects", "parameters": { "query": { "limit": { "description": "The number of projects to return per page. No more than 100.", "default": "20", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "Project[]" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, { limit: `${limit}`, page: `${page}` }, {});
+        },
+        /**
+         * Create a project
+         * @POST /projects
+         * @param name Project name. Max 255 characters.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        create: async (name) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Create a project", "token": "projects.create.own", "method": "POST", "path": "/projects", "parameters": { "body": { "name": { "description": "Project name. Max 255 characters.", "type": "string", "required": true } } }, "returns": [{ "status": 201, "type": "Project" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { name });
+        },
+        /**
+         * Get a project
+         * @GET /projects/:id
+         * @param id Project ID
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        get: async (id) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Get a project", "token": "projects.get.own", "method": "GET", "path": "/projects/:id", "parameters": { "path": { "id": { "description": "Project ID", "type": "string", "required": true } } }, "returns": [{ "status": 200, "type": "Project" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
+        },
+        /**
+         * Update a project
+         * @PATCH /projects/:id
+         * @param id Project ID
+         * @param name Project name. Max 255 characters.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        update: async (id, name) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Update a project", "token": "projects.update.own", "method": "PATCH", "path": "/projects/:id", "parameters": { "path": { "id": { "description": "Project ID", "type": "string", "required": true } }, "body": { "name": { "description": "Project name. Max 255 characters.", "type": "string", "required": true } } }, "returns": [{ "status": 200, "type": "Project" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, { name });
+        },
+        /**
+         * Delete a project
+         * @DELETE /projects/:id
+         * @param id Project ID
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        delete: async (id) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Delete a project", "token": "projects.delete.own", "method": "DELETE", "path": "/projects/:id", "parameters": { "path": { "id": { "description": "Project ID", "type": "string", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
         },
     };
 }

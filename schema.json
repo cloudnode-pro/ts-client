@@ -480,6 +480,27 @@
           "type": "{type: \"Buffer\", data: number[]} | null"
         }
       ]
+    },
+    {
+      "name": "Project",
+      "description": "An isolated group of servers",
+      "fields": [
+        {
+          "name": "id",
+          "description": "The ID of the project",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "description": "Project name",
+          "type": "string"
+        },
+        {
+          "name": "user",
+          "description": "ID of the user that owns this project",
+          "type": "string"
+        }
+      ]
     }
   ],
   "operations": {
@@ -1033,6 +1054,11 @@
               "type": "AccountIdentity"
             },
             {
+              "status": 204,
+              "type": "void",
+              "description": "`void` if nothing was changed."
+            },
+            {
               "status": 404,
               "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
             },
@@ -1189,6 +1215,155 @@
             {
               "status": 200,
               "type": "Permission[]"
+            }
+          ]
+        }
+      }
+    },
+    "projects": {
+      "type": "namespace",
+      "operations": {
+        "list": {
+          "type": "operation",
+          "description": "List projects",
+          "token": "projects.get.own",
+          "method": "GET",
+          "path": "/projects",
+          "parameters": {
+            "query": {
+              "limit": {
+                "description": "The number of projects to return per page. No more than 100.",
+                "default": "20",
+                "type": "number",
+                "required": false
+              },
+              "page": {
+                "description": "The page number. No more than 2³² (4294967296).",
+                "default": "1",
+                "type": "number",
+                "required": false
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "Project[]"
+            }
+          ]
+        },
+        "create": {
+          "type": "operation",
+          "description": "Create a project",
+          "token": "projects.create.own",
+          "method": "POST",
+          "path": "/projects",
+          "parameters": {
+            "body": {
+              "name": {
+                "description": "Project name. Max 255 characters.",
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 201,
+              "type": "Project"
+            },
+            {
+              "status": 422,
+              "type": "Error & {code: \"INVALID_DATA\"}"
+            }
+          ]
+        },
+        "get": {
+          "type": "operation",
+          "description": "Get a project",
+          "token": "projects.get.own",
+          "method": "GET",
+          "path": "/projects/:id",
+          "parameters": {
+            "path": {
+              "id": {
+                "description": "Project ID",
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "Project"
+            },
+            {
+              "status": 404,
+              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
+            }
+          ]
+        },
+        "update": {
+          "type": "operation",
+          "description": "Update a project",
+          "token": "projects.update.own",
+          "method": "PATCH",
+          "path": "/projects/:id",
+          "parameters": {
+            "path": {
+              "id": {
+                "description": "Project ID",
+                "type": "string",
+                "required": true
+              }
+            },
+            "body": {
+              "name": {
+                "description": "Project name. Max 255 characters.",
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "Project"
+            },
+            {
+              "status": 404,
+              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
+            },
+            {
+              "status": 422,
+              "type": "Error & {code: \"INVALID_DATA\"}"
+            }
+          ]
+        },
+        "delete": {
+          "type": "operation",
+          "description": "Delete a project",
+          "token": "projects.delete.own",
+          "method": "DELETE",
+          "path": "/projects/:id",
+          "parameters": {
+            "path": {
+              "id": {
+                "description": "Project ID",
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 204,
+              "type": "void"
+            },
+            {
+              "status": 404,
+              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
             }
           ]
         }

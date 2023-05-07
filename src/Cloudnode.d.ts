@@ -277,8 +277,9 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         * @returns `void` if nothing was changed.
          */
-        readonly updateIdentity: (username: string, name?: string | null) => Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity>>;
+        readonly updateIdentity: (username: string, name?: string | null) => Promise<Cloudnode.ApiResponse<Cloudnode.AccountIdentity | void>>;
         /**
          * Replace account identity
          * @PUT /account/identity
@@ -351,6 +352,70 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         readonly listPermissions: () => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Permission[]>>>;
+    };
+    projects: {
+        /**
+         * List projects
+         * @GET /projects
+         * @param limit The number of projects to return per page. No more than 100.
+         * @param page The page number. No more than 2³² (4294967296).
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly list: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Project[]>>>;
+        /**
+         * Create a project
+         * @POST /projects
+         * @param name Project name. Max 255 characters.
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly create: (name: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Project>>;
+        /**
+         * Get a project
+         * @GET /projects/:id
+         * @param id Project ID
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Project>>;
+        /**
+         * Update a project
+         * @PATCH /projects/:id
+         * @param id Project ID
+         * @param name Project name. Max 255 characters.
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly update: (id: string, name: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Project>>;
+        /**
+         * Delete a project
+         * @DELETE /projects/:id
+         * @param id Project ID
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly delete: (id: string) => Promise<Cloudnode.ApiResponse<void>>;
     };
 }
 declare namespace Cloudnode {
@@ -744,6 +809,23 @@ declare namespace Cloudnode {
             type: "Buffer";
             data: number[];
         } | null;
+    }
+    /**
+     * An isolated group of servers
+     */
+    interface Project {
+        /**
+         * The ID of the project
+         */
+        id: string;
+        /**
+         * Project name
+         */
+        name: string;
+        /**
+         * ID of the user that owns this project
+         */
+        user: string;
     }
     /**
      * Paginated response
