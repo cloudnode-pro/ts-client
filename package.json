@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/cloudnode-pro/ts-client#readme",
   "dependencies": {
-    "@types/node": "^18.11.8",
+    "@types/node": "^20.1.0",
     "listr-inquirer": "^0.1.0",
     "listr2": "^6.0.4",
     "mustache": "^4.2.0"
