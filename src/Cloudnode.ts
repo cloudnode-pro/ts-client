@@ -294,7 +294,6 @@ class Cloudnode {
          * @param newsletter The ID of the newsletter to subscribe to
          * @param email Subscriber's email address
          * @param data Additional data that this newsletter requires
-         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -302,7 +301,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
          create: async (newsletter: string, email: string, data?: Record<string, string | number | boolean>): Promise<Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>> => {
-            return await this.#sendRequest<Cloudnode.NewsletterSubscription>({"type":"operation","description":"Subscribe to newsletter","method":"POST","path":"/subscriptions","parameters":{"body":{"newsletter":{"description":"The ID of the newsletter to subscribe to","type":"string","required":true},"email":{"description":"Subscriber's email address","type":"string","required":true},"data":{"description":"Additional data that this newsletter requires","type":"Record<string, string | number | boolean>","required":false}}},"returns":[{"status":201,"type":"NewsletterSubscription"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {newsletter, email, data});
+            return await this.#sendRequest<Cloudnode.NewsletterSubscription>({"type":"operation","description":"Subscribe to newsletter","method":"POST","path":"/subscriptions","parameters":{"body":{"newsletter":{"description":"The ID of the newsletter to subscribe to","type":"string","required":true},"email":{"description":"Subscriber's email address","type":"string","required":true},"data":{"description":"Additional data that this newsletter requires","type":"Record<string, string | number | boolean>","required":false}}},"returns":[{"status":201,"type":"NewsletterSubscription"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":409,"type":"Error & {code: \"CONFLICT\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {newsletter, email, data});
          },
         /**
          * Unsubscribe from newsletter

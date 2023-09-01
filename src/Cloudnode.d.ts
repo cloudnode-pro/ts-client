@@ -97,7 +97,6 @@ declare class Cloudnode {
          * @param newsletter The ID of the newsletter to subscribe to
          * @param email Subscriber's email address
          * @param data Additional data that this newsletter requires
-         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}

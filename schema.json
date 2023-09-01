@@ -649,10 +649,6 @@
               "type": "NewsletterSubscription"
             },
             {
-              "status": 404,
-              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
-            },
-            {
               "status": 422,
               "type": "Error & {code: \"INVALID_DATA\"}"
             },
