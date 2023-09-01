@@ -40,7 +40,7 @@ console.log(newsletter._response.status); // 200
 #### Browser
 Download the browser version from `browser/{{config.name}}.js` or use our hosted version.
 ```html
-<script src="{{{config.browserSdkUrl}}}"></script>
+<script src="{{{config.browserUrl}}}"></script>
 <script>
 const {{config.instanceName}} = new {{config.name}}();
 

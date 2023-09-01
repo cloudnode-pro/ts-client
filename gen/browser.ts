@@ -4,8 +4,8 @@ import {Config} from "./Config";
 import {minify} from "terser";
 import assert from "assert";
 
-// create a browser-compatible SDK
-export async function createBrowserSDK(config: Config): Promise<void> {
+// create a browser-compatible version
+export async function createBrowser(config: Config): Promise<void> {
     const mainJs = await fs.readFile(path.join("src", config.name + ".js"), "utf-8");
     // remove imports at beginning of file and export default at end of file
     const browserJs = mainJs.replace(/^import.*$/gm, "").replace(/^export default \w+;$/gm, "");
