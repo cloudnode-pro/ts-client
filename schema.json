@@ -504,14 +504,14 @@
     }
   ],
   "operations": {
-    "newsletter": {
+    "newsletters": {
       "type": "namespace",
       "operations": {
         "list": {
           "type": "operation",
           "description": "List newsletters",
           "method": "GET",
-          "path": "/newsletter",
+          "path": "/newsletters",
           "parameters": {
             "query": {
               "limit": {
@@ -539,7 +539,7 @@
           "type": "operation",
           "description": "Get newsletter",
           "method": "GET",
-          "path": "/newsletter/:id",
+          "path": "/newsletters/:id",
           "parameters": {
             "path": {
               "id": {
@@ -559,21 +559,78 @@
               "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
             }
           ]
-        },
-        "subscribe": {
+        }
+      }
+    },
+    "subscriptions": {
+      "type": "namespace",
+      "operations": {
+        "list": {
           "type": "operation",
-          "description": "Subscribe to newsletter",
-          "method": "POST",
-          "path": "/newsletter/:id/subscribe",
+          "description": "List newsletter subscriptions",
+          "token": "newsletter.subscriptions.list.own",
+          "method": "GET",
+          "path": "/subscriptions",
+          "parameters": {
+            "query": {
+              "limit": {
+                "description": "The number of subscriptions to return per page. No more than 50.",
+                "default": "10",
+                "type": "number",
+                "required": false
+              },
+              "page": {
+                "description": "The page number. No more than 2³² (4294967296).",
+                "default": "1",
+                "type": "number",
+                "required": false
+              }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "DatedNewsletterSubscription[]"
+            }
+          ]
+        },
+        "get": {
+          "type": "operation",
+          "description": "Get newsletter subscription",
+          "method": "GET",
+          "path": "/subscriptions/:id",
           "parameters": {
             "path": {
               "id": {
-                "description": "A newsletter ID",
+                "description": "The ID of the subscription to get",
                 "type": "string",
                 "required": true
               }
+            }
+          },
+          "returns": [
+            {
+              "status": 200,
+              "type": "DatedNewsletterSubscription"
             },
+            {
+              "status": 404,
+              "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}"
+            }
+          ]
+        },
+        "create": {
+          "type": "operation",
+          "description": "Subscribe to newsletter",
+          "method": "POST",
+          "path": "/subscriptions",
+          "parameters": {
             "body": {
+              "newsletter": {
+                "description": "The ID of the newsletter to subscribe to",
+                "type": "string",
+                "required": true
+              },
               "email": {
                 "description": "Subscriber's email address",
                 "type": "string",
@@ -604,20 +661,15 @@
               "type": "Error & {code: \"CONFLICT\"}"
             }
           ]
-        }
-      }
-    },
-    "newsletters": {
-      "type": "namespace",
-      "operations": {
-        "unsubscribe": {
+        },
+        "delete": {
           "type": "operation",
-          "description": "Revoke a subscription (unsubscribe)",
-          "method": "POST",
-          "path": "/newsletters/unsubscribe",
+          "description": "Unsubscribe from newsletter",
+          "method": "DELETE",
+          "path": "/subscriptions/:id",
           "parameters": {
-            "body": {
-              "subscription": {
+            "path": {
+              "id": {
                 "description": "The ID of the subscription to revoke",
                 "type": "string",
                 "required": true
@@ -636,35 +688,6 @@
             {
               "status": 422,
               "type": "Error & {code: \"INVALID_DATA\"}"
-            }
-          ]
-        },
-        "listSubscriptions": {
-          "type": "operation",
-          "description": "List subscriptions of the authenticated user",
-          "token": "newsletter.subscriptions.list.own",
-          "method": "GET",
-          "path": "/newsletters/subscriptions",
-          "parameters": {
-            "query": {
-              "limit": {
-                "description": "The number of subscriptions to return per page. No more than 50.",
-                "default": "10",
-                "type": "number",
-                "required": false
-              },
-              "page": {
-                "description": "The page number. No more than 2³² (4294967296).",
-                "default": "1",
-                "type": "number",
-                "required": false
-              }
-            }
-          },
-          "returns": [
-            {
-              "status": 200,
-              "type": "DatedNewsletterSubscription[]"
             }
           ]
         }

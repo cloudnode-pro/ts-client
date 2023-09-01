@@ -46,10 +46,10 @@ declare class Cloudnode {
      * @throws {Cloudnode.Error} Error returned by the API
      */
     getAllPages<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.PaginatedData<T>>;
-    newsletter: {
+    newsletters: {
         /**
          * List newsletters
-         * @GET /newsletter
+         * @GET /newsletters
          * @param limit The number of newsletters to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -59,7 +59,7 @@ declare class Cloudnode {
         readonly list: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>>;
         /**
          * Get newsletter
-         * @GET /newsletter/:id
+         * @GET /newsletters/:id
          * @param id A newsletter ID
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -67,10 +67,34 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Newsletter>>;
+    };
+    subscriptions: {
+        /**
+         * List newsletter subscriptions
+         * @GET /subscriptions
+         * @param limit The number of subscriptions to return per page. No more than 50.
+         * @param page The page number. No more than 2³² (4294967296).
+         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
+         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly list: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>>;
+        /**
+         * Get newsletter subscription
+         * @GET /subscriptions/:id
+         * @param id The ID of the subscription to get
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.DatedNewsletterSubscription>>;
         /**
          * Subscribe to newsletter
-         * @POST /newsletter/:id/subscribe
-         * @param id A newsletter ID
+         * @POST /subscriptions
+         * @param newsletter The ID of the newsletter to subscribe to
          * @param email Subscriber's email address
          * @param data Additional data that this newsletter requires
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
@@ -80,32 +104,18 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>>;
-    };
-    newsletters: {
+        readonly create: (newsletter: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>>;
         /**
-         * Revoke a subscription (unsubscribe)
-         * @POST /newsletters/unsubscribe
-         * @param subscription The ID of the subscription to revoke
+         * Unsubscribe from newsletter
+         * @DELETE /subscriptions/:id
+         * @param id The ID of the subscription to revoke
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly unsubscribe: (subscription: string) => Promise<Cloudnode.ApiResponse<void>>;
-        /**
-         * List subscriptions of the authenticated user
-         * @GET /newsletters/subscriptions
-         * @param limit The number of subscriptions to return per page. No more than 50.
-         * @param page The page number. No more than 2³² (4294967296).
-         * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
-         * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
-         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
-         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
-         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
-         */
-        readonly listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>>;
+        readonly delete: (id: string) => Promise<Cloudnode.ApiResponse<void>>;
     };
     token: {
         /**
