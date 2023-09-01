@@ -471,7 +471,7 @@ class Cloudnode {
          * Update account identity
          * @PATCH /account/identity
          * @param username Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
-         * @param name Your full name. Set to `null` to remove.
+         * @param name Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -483,13 +483,13 @@ class Cloudnode {
          * @returns `void` if nothing was changed.
          */
         updateIdentity: async (username, name) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Update account identity", "token": "account.details.identity.update", "method": "PATCH", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove.", "type": "string | null", "required": false } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 204, "type": "void", "description": "`void` if nothing was changed." }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
+            return await this.#sendRequest({ "type": "operation", "description": "Update account identity", "token": "account.details.identity.update", "method": "PATCH", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`", "type": "string | null", "required": false } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 204, "type": "void", "description": "`void` if nothing was changed." }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
         },
         /**
          * Replace account identity
          * @PUT /account/identity
          * @param username Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
-         * @param name Your full name. Set to `null` to remove.
+         * @param name Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -500,7 +500,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         replaceIdentity: async (username, name) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Replace account identity", "token": "account.details.identity.update", "method": "PUT", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove.", "type": "string | null", "required": true } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
+            return await this.#sendRequest({ "type": "operation", "description": "Replace account identity", "token": "account.details.identity.update", "method": "PUT", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`", "type": "string | null", "required": true } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
         },
         /**
          * List account e-mail addresses

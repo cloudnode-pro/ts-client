@@ -1042,7 +1042,7 @@
                 "required": true
               },
               "name": {
-                "description": "Your full name. Set to `null` to remove.",
+                "description": "Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`",
                 "type": "string | null",
                 "required": false
               }
@@ -1086,7 +1086,7 @@
                 "required": true
               },
               "name": {
-                "description": "Your full name. Set to `null` to remove.",
+                "description": "Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`",
                 "type": "string | null",
                 "required": true
               }

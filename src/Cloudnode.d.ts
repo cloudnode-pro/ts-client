@@ -268,7 +268,7 @@ declare class Cloudnode {
          * Update account identity
          * @PATCH /account/identity
          * @param username Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
-         * @param name Your full name. Set to `null` to remove.
+         * @param name Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -284,7 +284,7 @@ declare class Cloudnode {
          * Replace account identity
          * @PUT /account/identity
          * @param username Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
-         * @param name Your full name. Set to `null` to remove.
+         * @param name Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
