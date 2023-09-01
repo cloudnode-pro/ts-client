@@ -31,7 +31,7 @@ class Cloudnode {
     /**
      * API version
      */
-    #apiVersion = `5.12.0`;
+    #apiVersion = `5.13.0`;
     /**
      * Client user agent
      */
@@ -221,10 +221,10 @@ class Cloudnode {
             page: 1
         };
     }
-    newsletter = {
+    newsletters = {
         /**
          * List newsletters
-         * @GET /newsletter
+         * @GET /newsletters
          * @param limit The number of newsletters to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -232,11 +232,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         list: async (limit = 10, page = 1) => {
-            return await this.#sendRequest({ "type": "operation", "description": "List newsletters", "method": "GET", "path": "/newsletter", "parameters": { "query": { "limit": { "description": "The number of newsletters to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "Newsletter[]" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, { limit: `${limit}`, page: `${page}` }, {});
+            return await this.#sendRequest({ "type": "operation", "description": "List newsletters", "method": "GET", "path": "/newsletters", "parameters": { "query": { "limit": { "description": "The number of newsletters to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "Newsletter[]" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, { limit: `${limit}`, page: `${page}` }, {});
         },
         /**
          * Get newsletter
-         * @GET /newsletter/:id
+         * @GET /newsletters/:id
          * @param id A newsletter ID
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -244,42 +244,13 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         get: async (id) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Get newsletter", "method": "GET", "path": "/newsletter/:id", "parameters": { "path": { "id": { "description": "A newsletter ID", "type": "string", "required": true } } }, "returns": [{ "status": 200, "type": "Newsletter" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
-        },
-        /**
-         * Subscribe to newsletter
-         * @POST /newsletter/:id/subscribe
-         * @param id A newsletter ID
-         * @param email Subscriber's email address
-         * @param data Additional data that this newsletter requires
-         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
-         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
-         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
-         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
-         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
-         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
-         */
-        subscribe: async (id, email, data) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Subscribe to newsletter", "method": "POST", "path": "/newsletter/:id/subscribe", "parameters": { "path": { "id": { "description": "A newsletter ID", "type": "string", "required": true } }, "body": { "email": { "description": "Subscriber's email address", "type": "string", "required": true }, "data": { "description": "Additional data that this newsletter requires", "type": "Record<string, string | number | boolean>", "required": false } } }, "returns": [{ "status": 201, "type": "NewsletterSubscription" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, { email, data });
+            return await this.#sendRequest({ "type": "operation", "description": "Get newsletter", "method": "GET", "path": "/newsletters/:id", "parameters": { "path": { "id": { "description": "A newsletter ID", "type": "string", "required": true } } }, "returns": [{ "status": 200, "type": "Newsletter" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
         },
     };
-    newsletters = {
+    subscriptions = {
         /**
-         * Revoke a subscription (unsubscribe)
-         * @POST /newsletters/unsubscribe
-         * @param subscription The ID of the subscription to revoke
-         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
-         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
-         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
-         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
-         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
-         */
-        unsubscribe: async (subscription) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Revoke a subscription (unsubscribe)", "method": "POST", "path": "/newsletters/unsubscribe", "parameters": { "body": { "subscription": { "description": "The ID of the subscription to revoke", "type": "string", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { subscription });
-        },
-        /**
-         * List subscriptions of the authenticated user
-         * @GET /newsletters/subscriptions
+         * List newsletter subscriptions
+         * @GET /subscriptions
          * @param limit The number of subscriptions to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
@@ -288,14 +259,54 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        listSubscriptions: async (limit = 10, page = 1) => {
-            return await this.#sendRequest({ "type": "operation", "description": "List subscriptions of the authenticated user", "token": "newsletter.subscriptions.list.own", "method": "GET", "path": "/newsletters/subscriptions", "parameters": { "query": { "limit": { "description": "The number of subscriptions to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "DatedNewsletterSubscription[]" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, { limit: `${limit}`, page: `${page}` }, {});
+        list: async (limit = 10, page = 1) => {
+            return await this.#sendRequest({ "type": "operation", "description": "List newsletter subscriptions", "token": "newsletter.subscriptions.list.own", "method": "GET", "path": "/subscriptions", "parameters": { "query": { "limit": { "description": "The number of subscriptions to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "DatedNewsletterSubscription[]" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, { limit: `${limit}`, page: `${page}` }, {});
+        },
+        /**
+         * Get newsletter subscription
+         * @GET /subscriptions/:id
+         * @param id The ID of the subscription to get
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        get: async (id) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Get newsletter subscription", "method": "GET", "path": "/subscriptions/:id", "parameters": { "path": { "id": { "description": "The ID of the subscription to get", "type": "string", "required": true } } }, "returns": [{ "status": 200, "type": "DatedNewsletterSubscription" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
+        },
+        /**
+         * Subscribe to newsletter
+         * @POST /subscriptions
+         * @param newsletter The ID of the newsletter to subscribe to
+         * @param email Subscriber's email address
+         * @param data Additional data that this newsletter requires
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        create: async (newsletter, email, data) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Subscribe to newsletter", "method": "POST", "path": "/subscriptions", "parameters": { "body": { "newsletter": { "description": "The ID of the newsletter to subscribe to", "type": "string", "required": true }, "email": { "description": "Subscriber's email address", "type": "string", "required": true }, "data": { "description": "Additional data that this newsletter requires", "type": "Record<string, string | number | boolean>", "required": false } } }, "returns": [{ "status": 201, "type": "NewsletterSubscription" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { newsletter, email, data });
+        },
+        /**
+         * Unsubscribe from newsletter
+         * @DELETE /subscriptions/:id
+         * @param id The ID of the subscription to revoke
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        delete: async (id) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Unsubscribe from newsletter", "method": "DELETE", "path": "/subscriptions/:id", "parameters": { "path": { "id": { "description": "The ID of the subscription to revoke", "type": "string", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
         },
     };
-    token = {
+    tokens = {
         /**
          * List tokens of user
-         * @GET /token
+         * @GET /tokens
          * @param limit The number of tokens to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @param internal Internal tokens are returned as well if this parameter is present.
@@ -306,11 +317,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         list: async (limit = 10, page = 1, internal) => {
-            return await this.#sendRequest({ "type": "operation", "description": "List tokens of user", "token": "tokens.list.own", "method": "GET", "path": "/token", "parameters": { "query": { "limit": { "description": "The number of tokens to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false }, "internal": { "description": "Internal tokens are returned as well if this parameter is present.", "type": "any", "required": false } } }, "returns": [{ "status": 200, "type": "PartialToken[]" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, { limit: `${limit}`, page: `${page}`, internal: `${internal}` }, {});
+            return await this.#sendRequest({ "type": "operation", "description": "List tokens of user", "token": "tokens.list.own", "method": "GET", "path": "/tokens", "parameters": { "query": { "limit": { "description": "The number of tokens to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false }, "internal": { "description": "Internal tokens are returned as well if this parameter is present.", "type": "any", "required": false } } }, "returns": [{ "status": 200, "type": "PartialToken[]" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, { limit: `${limit}`, page: `${page}`, internal: `${internal}` }, {});
         },
         /**
          * Create token
-         * @POST /token
+         * @POST /tokens
          * @param permissions List of permissions to grant to the token. You must already have each of these permissions with your current token.
          * @param lifetime Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
          * @param note A user-specified note to label the token. Max length: 2⁸ (256) characters.
@@ -322,11 +333,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         create: async (permissions, lifetime, note) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Create token", "token": "tokens.create.own", "method": "POST", "path": "/token", "parameters": { "body": { "permissions": { "description": "List of permissions to grant to the token. You must already have each of these permissions with your current token.", "type": "string[]", "required": true }, "lifetime": { "description": "Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).", "type": "number", "required": true }, "note": { "description": "A user-specified note to label the token. Max length: 2⁸ (256) characters.", "type": "string", "required": false } } }, "returns": [{ "status": 201, "type": "Token" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { permissions, lifetime, note });
+            return await this.#sendRequest({ "type": "operation", "description": "Create token", "token": "tokens.create.own", "method": "POST", "path": "/tokens", "parameters": { "body": { "permissions": { "description": "List of permissions to grant to the token. You must already have each of these permissions with your current token.", "type": "string[]", "required": true }, "lifetime": { "description": "Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).", "type": "number", "required": true }, "note": { "description": "A user-specified note to label the token. Max length: 2⁸ (256) characters.", "type": "string", "required": false } } }, "returns": [{ "status": 201, "type": "Token" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { permissions, lifetime, note });
         },
         /**
          * Get token details
-         * @GET /token/:id
+         * @GET /tokens/:id
          * @param id The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -337,11 +348,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         get: async (id) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Get token details", "token": "tokens.get.own", "method": "GET", "path": "/token/:id", "parameters": { "path": { "id": { "description": "The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true } } }, "returns": [{ "status": 200, "type": "Token" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
+            return await this.#sendRequest({ "type": "operation", "description": "Get token details", "token": "tokens.get.own", "method": "GET", "path": "/tokens/:id", "parameters": { "path": { "id": { "description": "The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true } } }, "returns": [{ "status": 200, "type": "Token" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
         },
         /**
          * Revoke token
-         * @DELETE /token/:id
+         * @DELETE /tokens/:id
          * @param id The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -353,11 +364,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         revoke: async (id) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Revoke token", "token": "tokens.revoke.own", "method": "DELETE", "path": "/token/:id", "parameters": { "path": { "id": { "description": "The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 400, "type": "Error & {code: \"MODIFICATION_NOT_ALLOWED\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
+            return await this.#sendRequest({ "type": "operation", "description": "Revoke token", "token": "tokens.revoke.own", "method": "DELETE", "path": "/tokens/:id", "parameters": { "path": { "id": { "description": "The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true } } }, "returns": [{ "status": 204, "type": "void" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 423, "type": "Error & {code: \"MODIFICATION_NOT_ALLOWED\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
         },
         /**
          * Get list of recent requests made with the token
-         * @GET /token/:id/requests
+         * @GET /tokens/:id/requests
          * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
          * @param limit The number of requests to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
@@ -370,15 +381,16 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         listRequests: async (id, limit = 10, page = 1) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Get list of recent requests made with the token", "token": "tokens.get.own.requests", "method": "GET", "path": "/token/:id/requests", "parameters": { "path": { "id": { "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true } }, "query": { "limit": { "description": "The number of requests to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "ShortRequest[]" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, { limit: `${limit}`, page: `${page}` }, {});
+            return await this.#sendRequest({ "type": "operation", "description": "Get list of recent requests made with the token", "token": "tokens.get.own.requests", "method": "GET", "path": "/tokens/:id/requests", "parameters": { "path": { "id": { "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true } }, "query": { "limit": { "description": "The number of requests to return per page. No more than 50.", "default": "10", "type": "number", "required": false }, "page": { "description": "The page number. No more than 2³² (4294967296).", "default": "1", "type": "number", "required": false } } }, "returns": [{ "status": 200, "type": "ShortRequest[]" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, { limit: `${limit}`, page: `${page}` }, {});
         },
         /**
          * Get a recent request by ID
-         * @GET /token/:id/requests/:request
+         * @GET /tokens/:id/requests/:request
          * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
          * @param request The ID of the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "MODIFICATION_NOT_ALLOWED"}}
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -386,13 +398,12 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         getRequest: async (id, request) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Get a recent request by ID", "token": "tokens.get.own.requests", "method": "GET", "path": "/token/:id/requests/:request", "parameters": { "path": { "id": { "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true }, "request": { "description": "The ID of the request.", "type": "string", "required": true } } }, "returns": [{ "status": 200, "type": "Request" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}`, request: `${request}` }, {}, {});
+            return await this.#sendRequest({ "type": "operation", "description": "Get a recent request by ID", "token": "tokens.get.own.requests", "method": "GET", "path": "/tokens/:id/requests/:request", "parameters": { "path": { "id": { "description": "The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true }, "request": { "description": "The ID of the request.", "type": "string", "required": true } } }, "returns": [{ "status": 200, "type": "Request" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 423, "type": "Error & {code: \"MODIFICATION_NOT_ALLOWED\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}`, request: `${request}` }, {}, {});
         },
-    };
-    tokens = {
         /**
          * Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.
-         * @POST /token/refresh
+         * @POST /tokens/:id
+         * @param id The ID of the token to refresh. Specify `current` to refresh the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
@@ -400,8 +411,8 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        refresh: async () => {
-            return await this.#sendRequest({ "type": "operation", "description": "Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.", "token": "token.refresh", "method": "POST", "path": "/token/refresh", "parameters": {}, "returns": [{ "status": 201, "type": "Token" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, {});
+        refresh: async (id) => {
+            return await this.#sendRequest({ "type": "operation", "description": "Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.", "token": "token.refresh", "method": "POST", "path": "/tokens/:id", "parameters": { "path": { "id": { "description": "The ID of the token to refresh. Specify `current` to refresh the token that was used to authenticate the request.", "type": "string | \"current\"", "required": true } } }, "returns": [{ "status": 200, "type": "Token" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, { id: `${id}` }, {}, {});
         },
     };
     auth = {
@@ -410,7 +421,7 @@ class Cloudnode {
 
 > **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.
          * @POST /auth/register
-         * @param username The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
+         * @param username The username to use for the account. Must be between 3 and 20 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
          * @param email The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.
          * @param password The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -421,7 +432,7 @@ class Cloudnode {
          * @returns Session token. Also returned in `Set-Cookie` header.
          */
         register: async (username, email, password) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Create an account and session. After signing up, a welcome e-mail is sent to confirm your e-mail address.\n\n> **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.", "method": "POST", "path": "/auth/register", "token": null, "parameters": { "body": { "username": { "description": "The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.", "type": "string", "required": true }, "email": { "description": "The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.", "type": "string", "required": true }, "password": { "description": "The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.", "type": "string", "required": true } } }, "returns": [{ "status": 201, "type": "{session: string}", "description": "Session token. Also returned in `Set-Cookie` header." }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 403, "type": "Error & {code: \"IP_REJECTED\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, email, password });
+            return await this.#sendRequest({ "type": "operation", "description": "Create an account and session. After signing up, a welcome e-mail is sent to confirm your e-mail address.\n\n> **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.", "method": "POST", "path": "/auth/register", "token": null, "parameters": { "body": { "username": { "description": "The username to use for the account. Must be between 3 and 20 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.", "type": "string", "required": true }, "email": { "description": "The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.", "type": "string", "required": true }, "password": { "description": "The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.", "type": "string", "required": true } } }, "returns": [{ "status": 201, "type": "{session: string}", "description": "Session token. Also returned in `Set-Cookie` header." }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 403, "type": "Error & {code: \"IP_REJECTED\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, email, password });
         },
         /**
          * Create a session using user ID/username/e-mail and password.
@@ -470,8 +481,8 @@ class Cloudnode {
         /**
          * Update account identity
          * @PATCH /account/identity
-         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
-         * @param name Your full name. Set to `null` to remove.
+         * @param username Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -483,13 +494,13 @@ class Cloudnode {
          * @returns `void` if nothing was changed.
          */
         updateIdentity: async (username, name) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Update account identity", "token": "account.details.identity.update", "method": "PATCH", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove.", "type": "string | null", "required": false } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 204, "type": "void", "description": "`void` if nothing was changed." }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
+            return await this.#sendRequest({ "type": "operation", "description": "Update account identity", "token": "account.details.identity.update", "method": "PATCH", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`", "type": "string | null", "required": false } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 204, "type": "void", "description": "`void` if nothing was changed." }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
         },
         /**
          * Replace account identity
          * @PUT /account/identity
-         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
-         * @param name Your full name. Set to `null` to remove.
+         * @param username Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -500,7 +511,7 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         replaceIdentity: async (username, name) => {
-            return await this.#sendRequest({ "type": "operation", "description": "Replace account identity", "token": "account.details.identity.update", "method": "PUT", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove.", "type": "string | null", "required": true } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
+            return await this.#sendRequest({ "type": "operation", "description": "Replace account identity", "token": "account.details.identity.update", "method": "PUT", "path": "/account/identity", "parameters": { "body": { "username": { "description": "Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.", "type": "string", "required": true }, "name": { "description": "Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`", "type": "string | null", "required": true } } }, "returns": [{ "status": 200, "type": "AccountIdentity" }, { "status": 404, "type": "Error & {code: \"RESOURCE_NOT_FOUND\"}" }, { "status": 409, "type": "Error & {code: \"CONFLICT\"}" }, { "status": 422, "type": "Error & {code: \"INVALID_DATA\"}" }, { "status": 401, "type": "Error & {code: \"UNAUTHORIZED\"}" }, { "status": 403, "type": "Error & {code: \"NO_PERMISSION\"}" }, { "status": 429, "type": "Error & {code: \"RATE_LIMITED\"}" }, { "status": 500, "type": "Error & {code: \"INTERNAL_SERVER_ERROR\"}" }, { "status": 503, "type": "Error & {code: \"MAINTENANCE\"}" }] }, {}, {}, { username, name });
         },
         /**
          * List account e-mail addresses

@@ -46,10 +46,10 @@ declare class Cloudnode {
      * @throws {Cloudnode.Error} Error returned by the API
      */
     getAllPages<T>(response: Cloudnode.ApiResponse<Cloudnode.PaginatedData<T>>): Promise<Cloudnode.PaginatedData<T>>;
-    newsletter: {
+    newsletters: {
         /**
          * List newsletters
-         * @GET /newsletter
+         * @GET /newsletters
          * @param limit The number of newsletters to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -59,7 +59,7 @@ declare class Cloudnode {
         readonly list: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.Newsletter[]>>>;
         /**
          * Get newsletter
-         * @GET /newsletter/:id
+         * @GET /newsletters/:id
          * @param id A newsletter ID
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -67,36 +67,11 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Newsletter>>;
-        /**
-         * Subscribe to newsletter
-         * @POST /newsletter/:id/subscribe
-         * @param id A newsletter ID
-         * @param email Subscriber's email address
-         * @param data Additional data that this newsletter requires
-         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
-         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
-         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
-         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
-         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
-         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
-         */
-        readonly subscribe: (id: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>>;
     };
-    newsletters: {
+    subscriptions: {
         /**
-         * Revoke a subscription (unsubscribe)
-         * @POST /newsletters/unsubscribe
-         * @param subscription The ID of the subscription to revoke
-         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
-         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
-         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
-         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
-         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
-         */
-        readonly unsubscribe: (subscription: string) => Promise<Cloudnode.ApiResponse<void>>;
-        /**
-         * List subscriptions of the authenticated user
-         * @GET /newsletters/subscriptions
+         * List newsletter subscriptions
+         * @GET /subscriptions
          * @param limit The number of subscriptions to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
@@ -105,12 +80,46 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly listSubscriptions: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>>;
+        readonly list: (limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.DatedNewsletterSubscription[]>>>;
+        /**
+         * Get newsletter subscription
+         * @GET /subscriptions/:id
+         * @param id The ID of the subscription to get
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly get: (id: string) => Promise<Cloudnode.ApiResponse<Cloudnode.DatedNewsletterSubscription>>;
+        /**
+         * Subscribe to newsletter
+         * @POST /subscriptions
+         * @param newsletter The ID of the newsletter to subscribe to
+         * @param email Subscriber's email address
+         * @param data Additional data that this newsletter requires
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "CONFLICT"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly create: (newsletter: string, email: string, data?: Record<string, string | number | boolean>) => Promise<Cloudnode.ApiResponse<Cloudnode.NewsletterSubscription>>;
+        /**
+         * Unsubscribe from newsletter
+         * @DELETE /subscriptions/:id
+         * @param id The ID of the subscription to revoke
+         * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
+         * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
+         * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
+         * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
+         */
+        readonly delete: (id: string) => Promise<Cloudnode.ApiResponse<void>>;
     };
-    token: {
+    tokens: {
         /**
          * List tokens of user
-         * @GET /token
+         * @GET /tokens
          * @param limit The number of tokens to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @param internal Internal tokens are returned as well if this parameter is present.
@@ -123,7 +132,7 @@ declare class Cloudnode {
         readonly list: (limit?: number, page?: number, internal?: any) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>>;
         /**
          * Create token
-         * @POST /token
+         * @POST /tokens
          * @param permissions List of permissions to grant to the token. You must already have each of these permissions with your current token.
          * @param lifetime Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
          * @param note A user-specified note to label the token. Max length: 2⁸ (256) characters.
@@ -137,7 +146,7 @@ declare class Cloudnode {
         readonly create: (permissions: string[], lifetime: number, note?: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
         /**
          * Get token details
-         * @GET /token/:id
+         * @GET /tokens/:id
          * @param id The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -150,7 +159,7 @@ declare class Cloudnode {
         readonly get: (id: string | "current") => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
         /**
          * Revoke token
-         * @DELETE /token/:id
+         * @DELETE /tokens/:id
          * @param id The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -164,7 +173,7 @@ declare class Cloudnode {
         readonly revoke: (id: string | "current") => Promise<Cloudnode.ApiResponse<void>>;
         /**
          * Get list of recent requests made with the token
-         * @GET /token/:id/requests
+         * @GET /tokens/:id/requests
          * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
          * @param limit The number of requests to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
@@ -179,11 +188,12 @@ declare class Cloudnode {
         readonly listRequests: (id: string | "current", limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>>;
         /**
          * Get a recent request by ID
-         * @GET /token/:id/requests/:request
+         * @GET /tokens/:id/requests/:request
          * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
          * @param request The ID of the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "MODIFICATION_NOT_ALLOWED"}}
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -191,11 +201,10 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         readonly getRequest: (id: string | "current", request: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Request>>;
-    };
-    tokens: {
         /**
          * Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.
-         * @POST /token/refresh
+         * @POST /tokens/:id
+         * @param id The ID of the token to refresh. Specify `current` to refresh the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
@@ -203,7 +212,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly refresh: () => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
+        readonly refresh: (id: string | "current") => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
     };
     auth: {
         /**
@@ -211,7 +220,7 @@ declare class Cloudnode {
 
 > **Note**: Registering an account can only be performed from residential IP. Proxying this endpoint will likely not work. Creating multiple/alternate accounts is not allowed as per the Terms of Service.
          * @POST /auth/register
-         * @param username The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
+         * @param username The username to use for the account. Must be between 3 and 20 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.
          * @param email The e-mail address to register. A valid unique non-disposable e-mail that can receive mail is required.
          * @param password The password to use for the account. Must be at least 15 characters, or 8 characters if it contains a mix of letters, numbers and symbols.
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -267,8 +276,8 @@ declare class Cloudnode {
         /**
          * Update account identity
          * @PATCH /account/identity
-         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
-         * @param name Your full name. Set to `null` to remove.
+         * @param username Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -283,8 +292,8 @@ declare class Cloudnode {
         /**
          * Replace account identity
          * @PUT /account/identity
-         * @param username Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
-         * @param name Your full name. Set to `null` to remove.
+         * @param username Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.
+         * @param name Your full name. Set to `null` to remove. Min 2 characters, max 32. Allowed characters (lowercase as well): A–Z `',-.,` and `ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞSŸ`
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "CONFLICT"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
