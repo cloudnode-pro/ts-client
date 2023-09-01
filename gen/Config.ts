@@ -20,7 +20,7 @@ export interface Config {
     apiVersion: string;
 
     /**
-     * Link to hosted browser SDK
+     * Link to hosted browser version
      */
-    browserSdkUrl: string;
+    browserUrl: string;
 }

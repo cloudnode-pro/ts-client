@@ -18,8 +18,8 @@
   "keywords": [
     "cloudnode",
     "api",
-    "sdk",
-    "client"
+    "client",
+    "library"
   ],
   "author": "Cloudnode",
   "license": "GPL-3.0",

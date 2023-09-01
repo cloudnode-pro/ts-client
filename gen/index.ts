@@ -8,7 +8,7 @@ import Package from "./Package";
 import {addExtraReturns} from "./util.js";
 import * as child_process from "child_process";
 import {promisify} from "util";
-import {createBrowserSDK} from "./browser.js";
+import {createBrowser} from "./browser.js";
 
 // load `/schema.json`
 const schema: Schema = addExtraReturns(JSON.parse(await fs.readFile("schema.json", "utf8")));
@@ -34,8 +34,8 @@ await source(schema, config, pkg);
 // build
 await promisify(child_process.exec)("npm run build");
 
-// generate browser SDK
-await createBrowserSDK(config);
+// generate browser version
+await createBrowser(config);
 
 // generate doc schema
 const docSchema = await generateDocSchema(schema, config, pkg);
