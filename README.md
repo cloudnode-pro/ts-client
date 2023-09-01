@@ -1,7 +1,7 @@
 # Cloudnode API SDK
 
 ![Client Version: 2.1.0](https://img.shields.io/badge/Client%20Version-2.1.0-%2316a34a)
-![API Version: 5.12.0](https://img.shields.io/badge/API%20Version-5.12.0-%232563eb)
+![API Version: 5.12.1](https://img.shields.io/badge/API%20Version-5.12.1-%232563eb)
 ![build: passing](https://img.shields.io/badge/build-passing-%2316a34a)
 ![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)
 
