@@ -1,4 +1,4 @@
-# {{config.name}} API SDK
+# {{config.name}} API Client
 
 {{{shield.version}}}
 {{{shield.apiVersion}}}
@@ -38,7 +38,7 @@ console.log(newsletter._response.status); // 200
 ```
 
 #### Browser
-Download the browser SDK from `browser/{{config.name}}.js` or use our hosted version.
+Download the browser version from `browser/{{config.name}}.js` or use our hosted version.
 ```html
 <script src="{{{config.browserSdkUrl}}}"></script>
 <script>

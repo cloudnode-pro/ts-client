@@ -1,6 +1,6 @@
 import Schema from "../gen/Schema";
 /**
- * A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
+ * A client library for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
  * @class
  */
 declare class Cloudnode {
