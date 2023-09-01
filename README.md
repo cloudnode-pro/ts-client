@@ -40,7 +40,7 @@ console.log(newsletter._response.status); // 200
 #### Browser
 Download the browser version from `browser/Cloudnode.js` or use our hosted version.
 ```html
-<script src=""></script>
+<script src="https://cdn.jsdelivr.net/npm/cloudnode-ts@latest/browser/Cloudnode.min.js"></script>
 <script>
 const cloudnode = new Cloudnode();
 
