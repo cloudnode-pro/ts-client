@@ -923,7 +923,7 @@
           "parameters": {
             "body": {
               "username": {
-                "description": "The username to use for the account. Must be between 3 and 32 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.",
+                "description": "The username to use for the account. Must be between 3 and 20 characters long. Cannot start with `user_`. May contain only letters, numbers, dashes and underscores. Must be unique.",
                 "type": "string",
                 "required": true
               },
@@ -1037,7 +1037,7 @@
           "parameters": {
             "body": {
               "username": {
-                "description": "Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.",
+                "description": "Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.",
                 "type": "string",
                 "required": true
               },
@@ -1081,7 +1081,7 @@
           "parameters": {
             "body": {
               "username": {
-                "description": "Your unique username. Between 3 and 64 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.",
+                "description": "Your unique username. Between 3 and 20 characters. Only letters, numbers, dashes and underscores. May not start with `user_`.",
                 "type": "string",
                 "required": true
               },
