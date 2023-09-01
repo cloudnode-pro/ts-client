@@ -1,11 +1,11 @@
-# Cloudnode API SDK
+# Cloudnode API Client
 
 ![Client Version: 2.1.0](https://img.shields.io/badge/Client%20Version-2.1.0-%2316a34a)
 ![API Version: 5.12.1](https://img.shields.io/badge/API%20Version-5.12.1-%232563eb)
 ![build: passing](https://img.shields.io/badge/build-passing-%2316a34a)
 ![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)
 
-A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https:&#x2F;&#x2F;github.com&#x2F;cloudnode-pro&#x2F;ts-client#documentation)
+A client library for the Cloudnode API, written in TypeScript. [Documentation](https:&#x2F;&#x2F;github.com&#x2F;cloudnode-pro&#x2F;ts-client#documentation)
 
 ## Install
 ```shell
@@ -38,7 +38,7 @@ console.log(newsletter._response.status); // 200
 ```
 
 #### Browser
-Download the browser SDK from `browser/Cloudnode.js` or use our hosted version.
+Download the browser version from `browser/Cloudnode.js` or use our hosted version.
 ```html
 <script src="https://cdn.jsdelivr.net/npm/cloudnode-ts@latest/browser/Cloudnode.min.js"></script>
 <script>
@@ -136,7 +136,7 @@ console.log(newsletter._response.status); // 200
 
 ## Class: `Cloudnode`
 
-A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
+A client library for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
 
 <a name="new-cloudnodetoken-options"></a>
 
@@ -647,7 +647,7 @@ Refresh current token. The token that was used to authenticate the request will 
 
 ## Namespace: `Cloudnode`
 
-A client SDK for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
+A client library for the Cloudnode API, written in TypeScript. [Documentation](https://github.com/cloudnode-pro/ts-client#documentation)
 
 <a name="class-cloudnodeapiresponset"></a>
 
