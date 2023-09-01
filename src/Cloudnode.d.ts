@@ -116,10 +116,10 @@ declare class Cloudnode {
          */
         readonly delete: (id: string) => Promise<Cloudnode.ApiResponse<void>>;
     };
-    token: {
+    tokens: {
         /**
          * List tokens of user
-         * @GET /token
+         * @GET /tokens
          * @param limit The number of tokens to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @param internal Internal tokens are returned as well if this parameter is present.
@@ -132,7 +132,7 @@ declare class Cloudnode {
         readonly list: (limit?: number, page?: number, internal?: any) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>>;
         /**
          * Create token
-         * @POST /token
+         * @POST /tokens
          * @param permissions List of permissions to grant to the token. You must already have each of these permissions with your current token.
          * @param lifetime Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
          * @param note A user-specified note to label the token. Max length: 2⁸ (256) characters.
@@ -146,7 +146,7 @@ declare class Cloudnode {
         readonly create: (permissions: string[], lifetime: number, note?: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
         /**
          * Get token details
-         * @GET /token/:id
+         * @GET /tokens/:id
          * @param id The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -159,7 +159,7 @@ declare class Cloudnode {
         readonly get: (id: string | "current") => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
         /**
          * Revoke token
-         * @DELETE /token/:id
+         * @DELETE /tokens/:id
          * @param id The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -173,7 +173,7 @@ declare class Cloudnode {
         readonly revoke: (id: string | "current") => Promise<Cloudnode.ApiResponse<void>>;
         /**
          * Get list of recent requests made with the token
-         * @GET /token/:id/requests
+         * @GET /tokens/:id/requests
          * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
          * @param limit The number of requests to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
@@ -188,11 +188,12 @@ declare class Cloudnode {
         readonly listRequests: (id: string | "current", limit?: number, page?: number) => Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>>;
         /**
          * Get a recent request by ID
-         * @GET /token/:id/requests/:request
+         * @GET /tokens/:id/requests/:request
          * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
          * @param request The ID of the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "MODIFICATION_NOT_ALLOWED"}}
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -200,11 +201,10 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
         readonly getRequest: (id: string | "current", request: string) => Promise<Cloudnode.ApiResponse<Cloudnode.Request>>;
-    };
-    tokens: {
         /**
          * Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.
-         * @POST /token/refresh
+         * @POST /tokens/:id
+         * @param id The ID of the token to refresh. Specify `current` to refresh the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
@@ -212,7 +212,7 @@ declare class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-        readonly refresh: () => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
+        readonly refresh: (id: string | "current") => Promise<Cloudnode.ApiResponse<Cloudnode.Token>>;
     };
     auth: {
         /**

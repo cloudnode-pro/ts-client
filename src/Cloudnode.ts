@@ -317,10 +317,10 @@ class Cloudnode {
             return await this.#sendRequest<void>({"type":"operation","description":"Unsubscribe from newsletter","method":"DELETE","path":"/subscriptions/:id","parameters":{"path":{"id":{"description":"The ID of the subscription to revoke","type":"string","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
          },
     } as const;
-    public token = {
+    public tokens = {
         /**
          * List tokens of user
-         * @GET /token
+         * @GET /tokens
          * @param limit The number of tokens to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
          * @param internal Internal tokens are returned as well if this parameter is present.
@@ -331,11 +331,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
          list: async (limit: number = 10, page: number = 1, internal?: any): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>> => {
-            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>({"type":"operation","description":"List tokens of user","token":"tokens.list.own","method":"GET","path":"/token","parameters":{"query":{"limit":{"description":"The number of tokens to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false},"internal":{"description":"Internal tokens are returned as well if this parameter is present.","type":"any","required":false}}},"returns":[{"status":200,"type":"PartialToken[]"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {limit: `${limit}`, page: `${page}`, internal: `${internal}`}, {});
+            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.PartialToken[]>>({"type":"operation","description":"List tokens of user","token":"tokens.list.own","method":"GET","path":"/tokens","parameters":{"query":{"limit":{"description":"The number of tokens to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false},"internal":{"description":"Internal tokens are returned as well if this parameter is present.","type":"any","required":false}}},"returns":[{"status":200,"type":"PartialToken[]"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {limit: `${limit}`, page: `${page}`, internal: `${internal}`}, {});
          },
         /**
          * Create token
-         * @POST /token
+         * @POST /tokens
          * @param permissions List of permissions to grant to the token. You must already have each of these permissions with your current token.
          * @param lifetime Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).
          * @param note A user-specified note to label the token. Max length: 2⁸ (256) characters.
@@ -347,11 +347,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
          create: async (permissions: string[], lifetime: number, note?: string): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
-            return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Create token","token":"tokens.create.own","method":"POST","path":"/token","parameters":{"body":{"permissions":{"description":"List of permissions to grant to the token. You must already have each of these permissions with your current token.","type":"string[]","required":true},"lifetime":{"description":"Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).","type":"number","required":true},"note":{"description":"A user-specified note to label the token. Max length: 2⁸ (256) characters.","type":"string","required":false}}},"returns":[{"status":201,"type":"Token"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {permissions, lifetime, note});
+            return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Create token","token":"tokens.create.own","method":"POST","path":"/tokens","parameters":{"body":{"permissions":{"description":"List of permissions to grant to the token. You must already have each of these permissions with your current token.","type":"string[]","required":true},"lifetime":{"description":"Lifetime of the token in seconds. If null, the token will never expire (not recommended). Max: 31560000 (1 year). Min: 60 (1 minute).","type":"number","required":true},"note":{"description":"A user-specified note to label the token. Max length: 2⁸ (256) characters.","type":"string","required":false}}},"returns":[{"status":201,"type":"Token"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {permissions, lifetime, note});
          },
         /**
          * Get token details
-         * @GET /token/:id
+         * @GET /tokens/:id
          * @param id The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -362,11 +362,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
          get: async (id: string | "current"): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
-            return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Get token details","token":"tokens.get.own","method":"GET","path":"/token/:id","parameters":{"path":{"id":{"description":"The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true}}},"returns":[{"status":200,"type":"Token"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
+            return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Get token details","token":"tokens.get.own","method":"GET","path":"/tokens/:id","parameters":{"path":{"id":{"description":"The ID of the token to get. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true}}},"returns":[{"status":200,"type":"Token"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
          },
         /**
          * Revoke token
-         * @DELETE /token/:id
+         * @DELETE /tokens/:id
          * @param id The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
@@ -378,11 +378,11 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
          revoke: async (id: string | "current"): Promise<Cloudnode.ApiResponse<void>> => {
-            return await this.#sendRequest<void>({"type":"operation","description":"Revoke token","token":"tokens.revoke.own","method":"DELETE","path":"/token/:id","parameters":{"path":{"id":{"description":"The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.","type":"string | \"current\"","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":400,"type":"Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
+            return await this.#sendRequest<void>({"type":"operation","description":"Revoke token","token":"tokens.revoke.own","method":"DELETE","path":"/tokens/:id","parameters":{"path":{"id":{"description":"The ID of the token to revoke. Specify `current` to revoke the token that was used to authenticate the request.","type":"string | \"current\"","required":true}}},"returns":[{"status":204,"type":"void"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":423,"type":"Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
          },
         /**
          * Get list of recent requests made with the token
-         * @GET /token/:id/requests
+         * @GET /tokens/:id/requests
          * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
          * @param limit The number of requests to return per page. No more than 50.
          * @param page The page number. No more than 2³² (4294967296).
@@ -395,15 +395,16 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
          listRequests: async (id: string | "current", limit: number = 10, page: number = 1): Promise<Cloudnode.ApiResponse<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>> => {
-            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>({"type":"operation","description":"Get list of recent requests made with the token","token":"tokens.get.own.requests","method":"GET","path":"/token/:id/requests","parameters":{"path":{"id":{"description":"The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true}},"query":{"limit":{"description":"The number of requests to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"ShortRequest[]"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {limit: `${limit}`, page: `${page}`}, {});
+            return await this.#sendRequest<Cloudnode.PaginatedData<Cloudnode.ShortRequest[]>>({"type":"operation","description":"Get list of recent requests made with the token","token":"tokens.get.own.requests","method":"GET","path":"/tokens/:id/requests","parameters":{"path":{"id":{"description":"The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true}},"query":{"limit":{"description":"The number of requests to return per page. No more than 50.","default":"10","type":"number","required":false},"page":{"description":"The page number. No more than 2³² (4294967296).","default":"1","type":"number","required":false}}},"returns":[{"status":200,"type":"ShortRequest[]"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {limit: `${limit}`, page: `${page}`}, {});
          },
         /**
          * Get a recent request by ID
-         * @GET /token/:id/requests/:request
+         * @GET /tokens/:id/requests/:request
          * @param id The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.
          * @param request The ID of the request.
          * @throws {Cloudnode.Error & {code: "RESOURCE_NOT_FOUND"}}
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
+         * @throws {Cloudnode.Error & {code: "MODIFICATION_NOT_ALLOWED"}}
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
          * @throws {Cloudnode.Error & {code: "RATE_LIMITED"}}
@@ -411,13 +412,12 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
          getRequest: async (id: string | "current", request: string): Promise<Cloudnode.ApiResponse<Cloudnode.Request>> => {
-            return await this.#sendRequest<Cloudnode.Request>({"type":"operation","description":"Get a recent request by ID","token":"tokens.get.own.requests","method":"GET","path":"/token/:id/requests/:request","parameters":{"path":{"id":{"description":"The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true},"request":{"description":"The ID of the request.","type":"string","required":true}}},"returns":[{"status":200,"type":"Request"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`, request: `${request}`}, {}, {});
+            return await this.#sendRequest<Cloudnode.Request>({"type":"operation","description":"Get a recent request by ID","token":"tokens.get.own.requests","method":"GET","path":"/tokens/:id/requests/:request","parameters":{"path":{"id":{"description":"The ID of the token. Specify `current` to get information about the token that was used to authenticate the request.","type":"string | \"current\"","required":true},"request":{"description":"The ID of the request.","type":"string","required":true}}},"returns":[{"status":200,"type":"Request"},{"status":404,"type":"Error & {code: \"RESOURCE_NOT_FOUND\"}"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":423,"type":"Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`, request: `${request}`}, {}, {});
          },
-    } as const;
-    public tokens = {
         /**
          * Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.
-         * @POST /token/refresh
+         * @POST /tokens/:id
+         * @param id The ID of the token to refresh. Specify `current` to refresh the token that was used to authenticate the request.
          * @throws {Cloudnode.Error & {code: "INVALID_DATA"}}
          * @throws {Cloudnode.Error & {code: "UNAUTHORIZED"}}
          * @throws {Cloudnode.Error & {code: "NO_PERMISSION"}}
@@ -425,8 +425,8 @@ class Cloudnode {
          * @throws {Cloudnode.Error & {code: "INTERNAL_SERVER_ERROR"}}
          * @throws {Cloudnode.Error & {code: "MAINTENANCE"}}
          */
-         refresh: async (): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
-            return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.","token":"token.refresh","method":"POST","path":"/token/refresh","parameters":{},"returns":[{"status":201,"type":"Token"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {}, {}, {});
+         refresh: async (id: string | "current"): Promise<Cloudnode.ApiResponse<Cloudnode.Token>> => {
+            return await this.#sendRequest<Cloudnode.Token>({"type":"operation","description":"Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.","token":"token.refresh","method":"POST","path":"/tokens/:id","parameters":{"path":{"id":{"description":"The ID of the token to refresh. Specify `current` to refresh the token that was used to authenticate the request.","type":"string | \"current\"","required":true}}},"returns":[{"status":200,"type":"Token"},{"status":422,"type":"Error & {code: \"INVALID_DATA\"}"},{"status":401,"type":"Error & {code: \"UNAUTHORIZED\"}"},{"status":403,"type":"Error & {code: \"NO_PERMISSION\"}"},{"status":429,"type":"Error & {code: \"RATE_LIMITED\"}"},{"status":500,"type":"Error & {code: \"INTERNAL_SERVER_ERROR\"}"},{"status":503,"type":"Error & {code: \"MAINTENANCE\"}"}]}, {id: `${id}`}, {}, {});
          },
     } as const;
     public auth = {

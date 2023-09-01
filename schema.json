@@ -689,7 +689,7 @@
         }
       }
     },
-    "token": {
+    "tokens": {
       "type": "namespace",
       "operations": {
         "list": {
@@ -697,7 +697,7 @@
           "description": "List tokens of user",
           "token": "tokens.list.own",
           "method": "GET",
-          "path": "/token",
+          "path": "/tokens",
           "parameters": {
             "query": {
               "limit": {
@@ -731,7 +731,7 @@
           "description": "Create token",
           "token": "tokens.create.own",
           "method": "POST",
-          "path": "/token",
+          "path": "/tokens",
           "parameters": {
             "body": {
               "permissions": {
@@ -767,7 +767,7 @@
           "description": "Get token details",
           "token": "tokens.get.own",
           "method": "GET",
-          "path": "/token/:id",
+          "path": "/tokens/:id",
           "parameters": {
             "path": {
               "id": {
@@ -797,7 +797,7 @@
           "description": "Revoke token",
           "token": "tokens.revoke.own",
           "method": "DELETE",
-          "path": "/token/:id",
+          "path": "/tokens/:id",
           "parameters": {
             "path": {
               "id": {
@@ -821,7 +821,7 @@
               "type": "Error & {code: \"INVALID_DATA\"}"
             },
             {
-              "status": 400,
+              "status": 423,
               "type": "Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"
             }
           ]
@@ -831,7 +831,7 @@
           "description": "Get list of recent requests made with the token",
           "token": "tokens.get.own.requests",
           "method": "GET",
-          "path": "/token/:id/requests",
+          "path": "/tokens/:id/requests",
           "parameters": {
             "path": {
               "id": {
@@ -875,7 +875,7 @@
           "description": "Get a recent request by ID",
           "token": "tokens.get.own.requests",
           "method": "GET",
-          "path": "/token/:id/requests/:request",
+          "path": "/tokens/:id/requests/:request",
           "parameters": {
             "path": {
               "id": {
@@ -902,24 +902,31 @@
             {
               "status": 422,
               "type": "Error & {code: \"INVALID_DATA\"}"
+            },
+            {
+              "status": 423,
+              "type": "Error & {code: \"MODIFICATION_NOT_ALLOWED\"}"
             }
           ]
-        }
-      }
-    },
-    "tokens": {
-      "type": "namespace",
-      "operations": {
+        },
         "refresh": {
           "type": "operation",
           "description": "Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely.",
           "token": "token.refresh",
           "method": "POST",
-          "path": "/token/refresh",
-          "parameters": {},
+          "path": "/tokens/:id",
+          "parameters": {
+            "path": {
+              "id": {
+                "description": "The ID of the token to refresh. Specify `current` to refresh the token that was used to authenticate the request.",
+                "type": "string | \"current\"",
+                "required": true
+              }
+            }
+          },
           "returns": [
             {
-              "status": 201,
+              "status": 200,
               "type": "Token"
             },
             {

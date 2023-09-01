@@ -100,13 +100,13 @@ console.log(newsletter._response.status); // 200
    - [`cloudnode.subscriptions.delete(id)`](#cloudnodesubscriptionsdeleteid)
    - [`cloudnode.subscriptions.get(id)`](#cloudnodesubscriptionsgetid)
    - [`cloudnode.subscriptions.list([limit], [page])`](#cloudnodesubscriptionslistlimit-page)
-   - [`cloudnode.token.create(permissions, lifetime, [note])`](#cloudnodetokencreatepermissions-lifetime-note)
-   - [`cloudnode.token.get(id)`](#cloudnodetokengetid)
-   - [`cloudnode.token.getRequest(id, request)`](#cloudnodetokengetrequestid-request)
-   - [`cloudnode.token.list([limit], [page], [internal])`](#cloudnodetokenlistlimit-page-internal)
-   - [`cloudnode.token.listRequests(id, [limit], [page])`](#cloudnodetokenlistrequestsid-limit-page)
-   - [`cloudnode.token.revoke(id)`](#cloudnodetokenrevokeid)
-   - [`cloudnode.tokens.refresh()`](#cloudnodetokensrefresh)
+   - [`cloudnode.tokens.create(permissions, lifetime, [note])`](#cloudnodetokenscreatepermissions-lifetime-note)
+   - [`cloudnode.tokens.get(id)`](#cloudnodetokensgetid)
+   - [`cloudnode.tokens.getRequest(id, request)`](#cloudnodetokensgetrequestid-request)
+   - [`cloudnode.tokens.list([limit], [page], [internal])`](#cloudnodetokenslistlimit-page-internal)
+   - [`cloudnode.tokens.listRequests(id, [limit], [page])`](#cloudnodetokenslistrequestsid-limit-page)
+   - [`cloudnode.tokens.refresh(id)`](#cloudnodetokensrefreshid)
+   - [`cloudnode.tokens.revoke(id)`](#cloudnodetokensrevokeid)
 
  - [Namespace: `Cloudnode`](#namespace-cloudnode)
    - [Class: `Cloudnode.ApiResponse<T>`](#class-cloudnodeapiresponset)
@@ -538,9 +538,9 @@ List newsletter subscriptions. Requires token with scope `newsletter.subscriptio
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
-<a name="cloudnodetokencreatepermissions-lifetime-note"></a>
+<a name="cloudnodetokenscreatepermissions-lifetime-note"></a>
 
-### `cloudnode.token.create(permissions, lifetime, [note])`
+### `cloudnode.tokens.create(permissions, lifetime, [note])`
 
 Create token. Requires token with scope `tokens.create.own`.
 
@@ -555,9 +555,9 @@ Create token. Requires token with scope `tokens.create.own`.
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
-<a name="cloudnodetokengetid"></a>
+<a name="cloudnodetokensgetid"></a>
 
-### `cloudnode.token.get(id)`
+### `cloudnode.tokens.get(id)`
 
 Get token details. Requires token with scope `tokens.get.own`.
 
@@ -571,9 +571,9 @@ Get token details. Requires token with scope `tokens.get.own`.
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
-<a name="cloudnodetokengetrequestid-request"></a>
+<a name="cloudnodetokensgetrequestid-request"></a>
 
-### `cloudnode.token.getRequest(id, request)`
+### `cloudnode.tokens.getRequest(id, request)`
 
 Get a recent request by ID. Requires token with scope `tokens.get.own.requests`.
 
@@ -582,15 +582,16 @@ Get a recent request by ID. Requires token with scope `tokens.get.own.requests`.
  - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.Request](#interface-cloudnoderequest)>></code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MODIFICATION_NOT_ALLOWED"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
-<a name="cloudnodetokenlistlimit-page-internal"></a>
+<a name="cloudnodetokenslistlimit-page-internal"></a>
 
-### `cloudnode.token.list([limit], [page], [internal])`
+### `cloudnode.tokens.list([limit], [page], [internal])`
 
 List tokens of user. Requires token with scope `tokens.list.own`.
 
@@ -604,9 +605,9 @@ List tokens of user. Requires token with scope `tokens.list.own`.
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
-<a name="cloudnodetokenlistrequestsid-limit-page"></a>
+<a name="cloudnodetokenslistrequestsid-limit-page"></a>
 
-### `cloudnode.token.listRequests(id, [limit], [page])`
+### `cloudnode.tokens.listRequests(id, [limit], [page])`
 
 Get list of recent requests made with the token. Requires token with scope `tokens.get.own.requests`.
 
@@ -622,9 +623,24 @@ Get list of recent requests made with the token. Requires token with scope `toke
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
 
-<a name="cloudnodetokenrevokeid"></a>
+<a name="cloudnodetokensrefreshid"></a>
 
-### `cloudnode.token.revoke(id)`
+### `cloudnode.tokens.refresh(id)`
+
+Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely. Requires token with scope `token.refresh`.
+
+ - `id` <code>string | "current"</code> The ID of the token to refresh. Specify `current` to refresh the token that was used to authenticate the request.
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.Token](#interface-cloudnodetoken)>></code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
+ - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
+
+<a name="cloudnodetokensrevokeid"></a>
+
+### `cloudnode.tokens.revoke(id)`
 
 Revoke token. Requires token with scope `tokens.revoke.own`.
 
@@ -633,21 +649,6 @@ Revoke token. Requires token with scope `tokens.revoke.own`.
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RESOURCE_NOT_FOUND"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MODIFICATION_NOT_ALLOWED"}</code>
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INTERNAL_SERVER_ERROR"}</code>
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "MAINTENANCE"}</code>
-
-<a name="cloudnodetokensrefresh"></a>
-
-### `cloudnode.tokens.refresh()`
-
-Refresh current token. The token that was used to authenticate the request will be deleted. A new token with a new ID but the same permissions will be created and returned. The lifespan of the new token will be the same as the old one, starting from the time of the request. This operation effectively allows a token to be used indefinitely. Requires token with scope `token.refresh`.
-
-
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.ApiResponse](#class-cloudnodeapiresponset)&lt;[Cloudnode.Token](#interface-cloudnodetoken)>></code>
- - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "INVALID_DATA"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "UNAUTHORIZED"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "NO_PERMISSION"}</code>
  - Throws: <code>[Cloudnode.Error](#interface-cloudnodeerror) & {code: "RATE_LIMITED"}</code>
