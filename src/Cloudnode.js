@@ -35,7 +35,7 @@ class Cloudnode {
     /**
      * Client user agent
      */
-    #userAgent = `cloudnode/2.1.0`;
+    #userAgent = `cloudnode/0.0.0-dev`;
     /**
      * Construct a new Cloudnode API client
      * @param token API token to use for requests
