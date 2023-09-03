@@ -1,9 +1,10 @@
 # Cloudnode API Client
 
-![Client Version: 3.0.0](https://img.shields.io/badge/Client%20Version-3.0.0-%2316a34a)
+[![npm](https://img.shields.io/npm/v/cloudnode-ts)](https://www.npmjs.com/package/cloudnode-ts)
 ![API Version: 5.13.0](https://img.shields.io/badge/API%20Version-5.13.0-%232563eb)
 ![build: passing](https://img.shields.io/badge/build-passing-%2316a34a)
-![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)
+[![CodeQL](https://github.com/cloudnode-pro/ts-client/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/cloudnode-pro/ts-client/actions/workflows/github-code-scanning/codeql)
+[![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)](https://www.npmjs.com/package/cloudnode-ts)
 
 A client library for the Cloudnode API, written in TypeScript. [Documentation](https:&#x2F;&#x2F;github.com&#x2F;cloudnode-pro&#x2F;ts-client#documentation)
 

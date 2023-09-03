@@ -240,10 +240,11 @@ export async function generateReadme (docMD: string, config: Config, pkg: Packag
         });
     });
     const shield = {
-        version: `![Client Version: ${pkg.version}](https://img.shields.io/badge/Client%20Version-${pkg.version}-%2316a34a)`,
+        version: `[![npm](https://img.shields.io/npm/v/cloudnode-ts)](https://www.npmjs.com/package/cloudnode-ts)`,
         apiVersion: `![API Version: ${config.apiVersion}](https://img.shields.io/badge/API%20Version-${config.apiVersion}-%232563eb)`,
         build: `![build: ${buildStatus ? "passing" : "failing"}](https://img.shields.io/badge/build-${buildStatus ? "passing" : "failing"}-%23${buildStatus ? "16a34a" : "dc2626"})`,
-        downloads: `![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)`
+        codeQl: "[![CodeQL](https://github.com/cloudnode-pro/ts-client/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/cloudnode-pro/ts-client/actions/workflows/github-code-scanning/codeql)",
+        downloads: `[![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)](https://www.npmjs.com/package/cloudnode-ts)`,
     };
     const rendered = Mustache.render(template, {config, pkg, docMD, shield});
     await fs.writeFile("README.md", rendered);
