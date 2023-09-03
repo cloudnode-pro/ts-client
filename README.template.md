@@ -3,6 +3,7 @@
 {{{shield.version}}}
 {{{shield.apiVersion}}}
 {{{shield.build}}}
+{{{shield.codeQl}}}
 {{{shield.downloads}}}
 
 {{pkg.description}}
