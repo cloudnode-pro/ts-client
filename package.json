@@ -8,8 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "generate": "./scripts/generate.sh",
-    "readme": "node ./gen/readme.js",
-    "tag": "node scripts/tag"
+    "readme": "node ./gen/readme.js"
   },
   "repository": {
     "type": "git",
