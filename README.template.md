@@ -1,10 +1,10 @@
 # {{config.name}} API Client
 
-{{{shield.version}}}
+[![npm](https://img.shields.io/npm/v/cloudnode-ts)](https://www.npmjs.com/package/cloudnode-ts)
 {{{shield.apiVersion}}}
-{{{shield.build}}}
-{{{shield.codeQl}}}
-{{{shield.downloads}}}
+[![Build](https://github.com/cloudnode-pro/ts-client/actions/workflows/build.yml/badge.svg)](https://github.com/cloudnode-pro/ts-client/actions/workflows/build.yml)
+[![CodeQL](https://github.com/cloudnode-pro/ts-client/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/cloudnode-pro/ts-client/actions/workflows/github-code-scanning/codeql)
+[![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)](https://www.npmjs.com/package/cloudnode-ts)
 
 {{pkg.description}}
 

@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/cloudnode-ts)](https://www.npmjs.com/package/cloudnode-ts)
 ![API Version: 5.13.0](https://img.shields.io/badge/API%20Version-5.13.0-%232563eb)
-![build: passing](https://img.shields.io/badge/build-passing-%2316a34a)
+[![Build](https://github.com/cloudnode-pro/ts-client/actions/workflows/build.yml/badge.svg)](https://github.com/cloudnode-pro/ts-client/actions/workflows/build.yml)
 [![CodeQL](https://github.com/cloudnode-pro/ts-client/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/cloudnode-pro/ts-client/actions/workflows/github-code-scanning/codeql)
 [![npm downloads](https://img.shields.io/npm/dt/cloudnode-ts?label=downloads)](https://www.npmjs.com/package/cloudnode-ts)
 
