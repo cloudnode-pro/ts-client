@@ -150,14 +150,13 @@ class Cloudnode {
         const verA = [partsA[0] || "0", partsA[1] || "0"];
         const verB = [partsB[0] || "0", partsB[1] || "0"];
         if (verA[0] !== verB[0])
-            return "incompatible";
+            return Cloudnode.CompatibilityStatus.INCOMPATIBLE;
         if (verA[1] !== verB[1])
-            return "outdated";
-        return "compatible";
+            return Cloudnode.CompatibilityStatus.OUTDATED;
+        return Cloudnode.CompatibilityStatus.COMPATIBLE;
     }
     /**
      * Check compatibility with the API
-     * @returns `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
      */
     async checkCompatibility() {
         const data = await (await fetch(new URL("../", this.#options.baseUrl).toString(), {
@@ -727,5 +726,23 @@ class Cloudnode {
         return Object.assign(new R.ApiResponse(response), data);
     }
     Cloudnode.makeApiResponse = makeApiResponse;
+    /**
+     * API client compatibility status
+     */
+    let CompatibilityStatus;
+    (function (CompatibilityStatus) {
+        /**
+         * Fully compatible (API patch version may differ)
+         */
+        CompatibilityStatus["COMPATIBLE"] = "compatible";
+        /**
+         * Compatible, but outdated (i.e. existing APIs will work, but you are missing out on new features).
+         */
+        CompatibilityStatus["OUTDATED"] = "outdated";
+        /**
+         * API has implemented breaking changes which are not compatible with this client.
+         */
+        CompatibilityStatus["INCOMPATIBLE"] = "incompatible";
+    })(CompatibilityStatus = Cloudnode.CompatibilityStatus || (Cloudnode.CompatibilityStatus = {}));
 })(Cloudnode || (Cloudnode = {}));
 export default Cloudnode;

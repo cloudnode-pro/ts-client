@@ -153,21 +153,20 @@ class {{config.name}} {
      * @param a First version
      * @param b Second version
      */
-    #compareVersions(a: string, b: string): "compatible" | "outdated" | "incompatible" {
+    #compareVersions(a: string, b: string): Cloudnode.CompatibilityStatus {
         const partsA = a.split(".");
         const partsB = b.split(".");
 
         const verA = [partsA[0] || "0", partsA[1] || "0"];
         const verB = [partsB[0] || "0", partsB[1] || "0"];
 
-        if (verA[0] !== verB[0]) return "incompatible";
-        if (verA[1] !== verB[1]) return "outdated";
-        return "compatible";
+        if (verA[0] !== verB[0]) return Cloudnode.CompatibilityStatus.INCOMPATIBLE;
+        if (verA[1] !== verB[1]) return Cloudnode.CompatibilityStatus.OUTDATED;
+        return Cloudnode.CompatibilityStatus.COMPATIBLE;
     }
 
     /**
      * Check compatibility with the API
-     * @returns `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
      */
     public async checkCompatibility() {
         const data: any = await (await fetch(new URL("../", this.#options.baseUrl).toString(), {
@@ -430,6 +429,26 @@ namespace {{config.name}} {
          * This requires {@link Options.autoRetry} to be enabled.
          */
         maxRetries: number;
+    }
+
+    /**
+     * API client compatibility status
+     */
+    export enum CompatibilityStatus {
+        /**
+         * Fully compatible (API patch version may differ)
+         */
+        COMPATIBLE = "compatible",
+
+        /**
+         * Compatible, but outdated (i.e. existing APIs will work, but you are missing out on new features).
+         */
+        OUTDATED = "outdated",
+
+        /**
+         * API has implemented breaking changes which are not compatible with this client.
+         */
+        INCOMPATIBLE = "incompatible",
     }
 }
 
