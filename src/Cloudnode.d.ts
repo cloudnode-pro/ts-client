@@ -13,9 +13,8 @@ declare class Cloudnode {
     constructor(token?: string, options?: Partial<Cloudnode.Options>);
     /**
      * Check compatibility with the API
-     * @returns `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
      */
-    checkCompatibility(): Promise<"compatible" | "outdated" | "incompatible">;
+    checkCompatibility(): Promise<Cloudnode.CompatibilityStatus>;
     /**
      * Get another page of paginated results
      * @param response Response to get a different page of
@@ -938,6 +937,23 @@ declare namespace Cloudnode {
          * This requires {@link Options.autoRetry} to be enabled.
          */
         maxRetries: number;
+    }
+    /**
+     * API client compatibility status
+     */
+    enum CompatibilityStatus {
+        /**
+         * Fully compatible (API patch version may differ)
+         */
+        COMPATIBLE = "compatible",
+        /**
+         * Compatible, but outdated (i.e. existing APIs will work, but you are missing out on new features).
+         */
+        OUTDATED = "outdated",
+        /**
+         * API has implemented breaking changes which are not compatible with this client.
+         */
+        INCOMPATIBLE = "incompatible"
     }
 }
 export default Cloudnode;

@@ -112,6 +112,7 @@ console.log(newsletter._response.status); // 200
  - [Namespace: `Cloudnode`](#namespace-cloudnode)
    - [Class: `Cloudnode.ApiResponse<T>`](#class-cloudnodeapiresponset)
    - [Class: `Cloudnode.RawResponse`](#class-cloudnoderawresponse)
+   - [Enum: `Cloudnode.CompatibilityStatus`](#enum-cloudnodecompatibilitystatus)
    - [Interface: `Cloudnode.AccountDetails`](#interface-cloudnodeaccountdetails)
    - [Interface: `Cloudnode.AccountEmail`](#interface-cloudnodeaccountemail)
    - [Interface: `Cloudnode.AccountIdentity`](#interface-cloudnodeaccountidentity)
@@ -200,7 +201,7 @@ Get all other pages of paginated results and return the complete data
 Check compatibility with the API
 
 
- - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;"compatible" | "outdated" | "incompatible"></code> `compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)
+ - Returns: <code>[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Cloudnode.CompatibilityStatus](#enum-cloudnodecompatibilitystatus)></code>
 
 
 <a name="cloudnodeaccountchangepasswordcurrentpassword-newpassword"></a>
@@ -684,6 +685,16 @@ Raw API response
  - `status` <code>[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)</code> The status code of the response. (read-only)
  - `statusText` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The status message corresponding to the status code. (e.g., `OK` for `200`). (read-only)
  - `url` <code>[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)</code> The URL of the response. (read-only)
+
+<a name="enum-cloudnodecompatibilitystatus"></a>
+
+### Enum: `Cloudnode.CompatibilityStatus`
+
+API client compatibility status
+
+ - `COMPATIBLE` <code>"compatible"</code> Fully compatible (API patch version may differ)
+ - `OUTDATED` <code>"outdated"</code> Compatible, but outdated (i.e. existing APIs will work, but you are missing out on new features).
+ - `INCOMPATIBLE` <code>"incompatible"</code> API has implemented breaking changes which are not compatible with this client.
 
 <a name="interface-cloudnodeaccountdetails"></a>
 

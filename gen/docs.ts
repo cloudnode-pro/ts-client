@@ -34,6 +34,12 @@ export const globalTypes = {
         new DocSchema.Property("maxRetryDelay", "number", "The maximum number of seconds that is acceptable to wait before retrying a failed request.\nThis requires `autoRetry` to be enabled."),
         new DocSchema.Property("maxRetries", "number", "The maximum number of times to retry a failed request.\nThis requires `autoRetry` to be enabled.")
     ]),
+    compatibilityStatus: (config: Config) => new DocSchema.Group(config.name + ".CompatibilityStatus", "Enum", "API client compatibility status", [
+        new DocSchema.Property("COMPATIBLE", '"compatible"', "Fully compatible (API patch version may differ)"),
+        new DocSchema.Property("OUTDATED", '"outdated"', "Compatible, but outdated (i.e. existing APIs will work, but you are missing out on new features)."),
+        new DocSchema.Property("INCOMPATIBLE", '"incompatible"', "API has implemented breaking changes which are not compatible with this client."),
+    ]),
+
 } as const;
 
 /**
@@ -53,6 +59,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
     mainNamespace.properties.push(globalTypes.apiResponse(config));
     mainNamespace.properties.push(globalTypes.rawResponse(config));
     mainNamespace.properties.push(globalTypes.options(config));
+    mainNamespace.properties.push(globalTypes.compatibilityStatus(config));
     const operations: (Schema.Operation & {name: string})[] = [];
     for (const [name, operation] of Object.entries(schema.operations)) {
         if (operation.type === "operation") operations.push({name, ...operation});
@@ -104,8 +111,7 @@ export function generateDocSchema (schema: Schema, config: Config, pkg: Package)
         description: "All of the data in 1 page"
     }, [{type: `${config.name}.Error`, description: "Error returned by the API"}]));
     always.push(new DocSchema.Method(`${config.instanceName}.checkCompatibility`, "Check compatibility with the API", [], {
-        type: `Promise<"compatible" | "outdated" | "incompatible">`,
-        description: "`compatible` - versions are fully compatible (only patch version may differ), `outdated` - compatible, but new features unavailable (minor version differs), `incompatible` - breaking changes (major version differs)"
+        type: `Promise<Cloudnode.CompatibilityStatus>`
     }, []));
     mainClass.properties.unshift(...always);
     mainNamespace.properties.sort((a, b) => a.displayName.localeCompare(b.displayName));

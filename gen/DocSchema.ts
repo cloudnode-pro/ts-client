@@ -100,7 +100,7 @@ namespace DocSchema {
         public readonly description: string;
         public readonly properties: (Property | Group)[];
 
-        constructor(name: string, type: "Class" | "Interface" | "Namespace", description: string, properties: Property[]) {
+        constructor(name: string, type: "Class" | "Interface" | "Namespace" | "Enum", description: string, properties: Property[]) {
             super(name, type, undefined, true);
             this.description = description;
             this.properties = properties;
@@ -111,7 +111,7 @@ namespace DocSchema {
         }
 
         public override content(config: Config, schema: Schema): string {
-            return `${this.description}${["Interface", "Class"].includes(this.type) ? `\n\n${this.properties.map(p => " - " + p.inlineContent(config, schema)).join("\n")}` : ""}`;
+            return `${this.description}${["Interface", "Class", "Enum"].includes(this.type) ? `\n\n${this.properties.map(p => " - " + p.inlineContent(config, schema)).join("\n")}` : ""}`;
         }
 
         public inlineContent(): string {
