@@ -30,7 +30,7 @@
     "@types/mustache": "^4.2.1",
     "@types/node": "^20.6.0",
     "listr-inquirer": "^0.1.0",
-    "listr2": "^6.6.1",
+    "listr2": "^7.0.1",
     "mustache": "^4.2.0",
     "terser": "^5.15.1",
     "typescript": "^5.0.2"
